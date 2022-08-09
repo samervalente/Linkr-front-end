@@ -1,3 +1,4 @@
+
 import styled from 'styled-components';
 import CreatePost from '../components/CreatePost';
 import Top from '../components/Top';
@@ -59,3 +60,4 @@ const LeftSide = styled.div`
     border-radius: 16px;
     margin-left: 25px;
 `;
+

@@ -1,17 +1,25 @@
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState } from "react";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Timeline from "./pages/Timeline";
+import UserContext from "./context/UserContext";
+
 
 function App() {
+  const [token, setToken] = useState("");
+  const contextValue = { token, setToken };
   return (
-    <BrowserRouter>
+    <UserContext.Provider value={contextValue}>
+      <BrowserRouter>
         <Routes>
             <Route path="/" element={<Login/>} />
             <Route path="/signup" element={<Register/>} />
             <Route path='/timeline' element={<Timeline />} /> 
         </Routes>
-    </BrowserRouter>
+      </BrowserRouter>
+    </UserContext.Provider>
   );
 }
 
