@@ -55,6 +55,41 @@ const Container = styled.div`
     }
 
 
+    @media(max-width: 768px) {
+        flex-direction: column;
+
+        .leftSide{
+        background-color: var(--black);
+        width: 100%;
+        height: 175px;
+        padding-left:0;
+        align-items: center;
+
+        .title{
+            font-size:76px;
+        }
+
+        p{
+            font-size:23px;
+            line-height: 30px;
+            width: 70%;
+            text-align: justify;
+            
+        }
+    }
+
+        .rightSide{
+            background-color: var(--gray);
+            width: 100%;
+            height: calc(100vh - 175px);
+            
+        }
+    
+  }
+
+  
+
+
 `
 
 

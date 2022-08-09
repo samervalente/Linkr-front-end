@@ -19,8 +19,6 @@ export default function RegisterForm(){
        const response =  await sendRegisterData(userData)
        setRegisterProcess(false)
        response === 201 ? navigate("/") : alert(response)
-
-         
     }
 
     return(
@@ -39,14 +37,11 @@ export default function RegisterForm(){
 
             <Input placeholder={'confirm password'} onChange={(e) => 
                 setUserData({...userData, confirmPassword:e.target.value})} type={'password'} />
-
-           
-            
+ 
             {registerProcess?  <Button label={'Sign Up'} variant={'disable'} /> :  <Button label={'Sign Up'} type={'submit'} /> }
             <Link to="/">
                 <span>Switch back to log in</span>
             </Link>
-            
         </Form>
     )
 }
@@ -66,4 +61,12 @@ const Form = styled.form`
         text-decoration: none;
         color:white;
     }
+
+    @media(max-width:768px){
+        a{
+            font-size:17px;
+        }
+    }
+
+    
 `
