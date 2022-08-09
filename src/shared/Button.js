@@ -18,6 +18,9 @@ const ButtonSection = styled.button`
     border: none;
     cursor:pointer;
 
-
+    @media(max-width: 768px) {
+    height: 55px;
+    font-size:22px;
+}
 
 `  
