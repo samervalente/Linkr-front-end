@@ -6,7 +6,7 @@ import { sendLoginData } from "../services/auth";
 import UserContext from "../context/UserContext";
 
 export default function RegisterForm() {
-  const { setToken, token } = useContext(UserContext);
+  const { setToken } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -21,7 +21,8 @@ export default function RegisterForm() {
         password,
       };
       const response = await sendLoginData(userData);
-      setToken(response.data);
+      setToken(response);
+      localStorage.setItem("token", response);
       navigate("/timeline");
     } catch (error) {
       setEmail("");
