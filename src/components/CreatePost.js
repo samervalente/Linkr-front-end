@@ -1,41 +1,60 @@
 import styled from 'styled-components';
 import { useState } from 'react';
+import { sendPost } from '../services/post';
 
-export default function CreatePost() {
+export default function CreatePost({ token }) {
     const [url, setUrl] = useState('');
-    const [description, setDescription] = useState('');
+    const [text, setText] = useState('');
     const [loading, setLoading] = useState(false);
 
-    function createPost (event) {
+    async function createPost(event) {
         event.preventDefault();
         setLoading(true);
-        console.log("enviado");
+
+        const body = text ? { url, text } : { url };
+
+        const config = {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        };
+        const response = await sendPost(body, config);
+
+        if (response === 201) {
+            setUrl('');
+            setText('');
+            setLoading(false);
+            //atualizar posts
+        } else {
+            setLoading(false);
+            alert("Houve um erro ao publicar seu link");
+        }
     }
 
     return (
         <Conteiner>
-        <img src='https://classic.exame.com/wp-content/uploads/2020/06/Bob-Esponja.png?w=550' alt='user' />
-        <Form onSubmit={createPost}>
-            <p>What are you going to share today?</p>
-            <Input 
-                type="url" 
-                disabled={loading} 
-                placeholder='http://...' 
-                value={url} 
-                onChange={(e) => setUrl(e.target.value)} 
-                required 
-            />
-            <TextArea
-                disabled={loading} 
-                placeholder='Ex: Awesome article about #javascript' 
-                value={description} 
-                onChange={(e) => setDescription(e.target.value)} 
-            />
-            <Button type="submit" disabled={loading}>
-                {loading ? 'Publishing' : 'Publish'}
-            </Button>
-        </Form>
-    </Conteiner>
+            <img src='https://classic.exame.com/wp-content/uploads/2020/06/Bob-Esponja.png?w=550' alt='user' />
+            <Form onSubmit={createPost}>
+                <p>What are you going to share today?</p>
+                <Input
+                    type="url"
+                    disabled={loading}
+                    placeholder='http://...'
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    required
+                />
+                <TextArea
+                    disabled={loading}
+                    placeholder='Ex: Awesome article about #javascript'
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                />
+                <Button type="submit" disabled={loading}>
+                    {loading ? 'Publishing' : 'Publish'}
+                </Button>
+            </Form>
+        </Conteiner>
     )
 }
 

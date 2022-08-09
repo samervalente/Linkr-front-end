@@ -1,9 +1,12 @@
-
+import { useContext } from 'react';
+import UserContext from "../context/UserContext";
 import styled from 'styled-components';
 import CreatePost from '../components/CreatePost';
 import Top from '../components/Top';
 
 export default function Timeline() {
+    const { token } = useContext(UserContext);
+
     return (
         <Conteiner>
             <Top />
@@ -11,7 +14,7 @@ export default function Timeline() {
                 <Title>timeline</Title>
                 <Sides>
                     <RightSide>
-                        {<CreatePost />}
+                        {<CreatePost token ={token} />}
                         <div>aqui vão os posts da timeline</div>
                     </RightSide>
                     <LeftSide></LeftSide>
