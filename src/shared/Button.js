@@ -1,13 +1,13 @@
 import styled from "styled-components";
 
-export default function Input({label, type}){
+export default function Input({label, type, variant}){
     return (
-        <ButtonSection type={type}>{label}</ButtonSection>
+        <ButtonSection variant={variant} type={type}>{label}</ButtonSection>
     )
 }
 
 const ButtonSection = styled.button`
-    background-color: var(--blue);
+    background-color: ${props => props.variant === 'disable' ? 'var(--ligthgray)': 'var(--blue)'};
     color:white;
     height: 65px;
     width: 80%;
@@ -17,5 +17,7 @@ const ButtonSection = styled.button`
     font-family: 'Oswald';
     border: none;
     cursor:pointer;
+
+
 
 `  

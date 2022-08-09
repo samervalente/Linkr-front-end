@@ -6,15 +6,20 @@ import { Link, useNavigate } from "react-router-dom";
 import { sendRegisterData } from "../services/auth";
 
 
+
 export default function RegisterForm(){
     const [userData, setUserData] = useState({})
     const navigate = useNavigate()
+    const [registerProcess, setRegisterProcess] = useState(false)
     
     async function handleSubmit(e){
         e.preventDefault()
-
+       
+        setRegisterProcess(true)
        const response =  await sendRegisterData(userData)
+       setRegisterProcess(false)
        response === 201 ? navigate("/") : alert(response)
+
          
     }
 
@@ -35,11 +40,13 @@ export default function RegisterForm(){
             <Input placeholder={'confirm password'} onChange={(e) => 
                 setUserData({...userData, confirmPassword:e.target.value})} type={'password'} />
 
-            <Button label={'Sign Up'} type={'submit'} />
+           
             
+            {registerProcess?  <Button label={'Sign Up'} variant={'disable'} /> :  <Button label={'Sign Up'} type={'submit'} /> }
             <Link to="/">
                 <span>Switch back to log in</span>
             </Link>
+            
         </Form>
     )
 }
