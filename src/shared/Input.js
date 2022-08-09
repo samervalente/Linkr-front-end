@@ -27,4 +27,12 @@ const InputSection = styled.input`
     
 }
 
+@media(max-width: 768px) {
+    height: 55px;
+
+    ::placeholder{
+        font-size:22px;
+    }
+}
+
 `  
