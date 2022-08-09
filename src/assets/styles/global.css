@@ -1,0 +1,15 @@
+*{
+    box-sizing: border-box;
+}
+
+:root{
+    --black:#151515;
+    --gray: #333333;
+    --blue: #1877F2;
+    --ligthgray: #9F9F9F;
+}
+
+.title{
+    font-family: 'Passion One', sans-serif;
+    font-weight: 700;
+}
