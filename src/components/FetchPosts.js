@@ -10,6 +10,7 @@ export default function FetchPosts({ post }) {
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(0);
   const { token } = useContext(UserContext);
+  console.log(post.id);
   return (
     <PostBox>
       <LeftTop>
