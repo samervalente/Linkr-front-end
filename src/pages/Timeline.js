@@ -1,13 +1,20 @@
 import styled from "styled-components";
 import CreatePost from "../components/CreatePost";
 import Top from "../components/Top";
-import { useState, useContext } from "react";
+import { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
 
 export default function Timeline() {
-  const { token, menuDisplay, setMenuDisplay } = useContext(UserContext);
-  const tokenStorage = localStorage.getItem("token");
-  console.log(tokenStorage);
+  const navigate = useNavigate();
+  const { token, imageProfile, menuDisplay, setMenuDisplay  } = useContext(UserContext);
+
+   useEffect(() => {
+    if (!token || !imageProfile) {
+      navigate('/');
+    } 
+   }, []);
+
   function checkMenu() {
     if (menuDisplay) {
       setMenuDisplay(false);
@@ -20,7 +27,7 @@ export default function Timeline() {
         <Title>timeline</Title>
         <Sides>
           <RightSide>
-            {<CreatePost token ={token} />}
+            {<CreatePost token ={ token } imageProfile={ imageProfile } />}
             <div>aqui vão os posts da timeline</div>
           </RightSide>
           <LeftSide></LeftSide>

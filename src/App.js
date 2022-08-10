@@ -7,8 +7,9 @@ import UserContext from "./context/UserContext";
 
 function App() {
   const [token, setToken] = useState("");
+  const [imageProfile, setImageProfile] = useState("");
   const [menuDisplay, setMenuDisplay] = useState(false);
-  const contextValue = { token, setToken, menuDisplay, setMenuDisplay };
+  const contextValue = { token, setToken, imageProfile, setImageProfile, menuDisplay, setMenuDisplay };
   return (
     <UserContext.Provider value={contextValue}>
       <BrowserRouter>

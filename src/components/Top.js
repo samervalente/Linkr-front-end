@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
 
 export default function Top() {
-  const { setToken, menuDisplay, setMenuDisplay } = useContext(UserContext);
+  const { setToken, imageProfile, setImageProfile, menuDisplay, setMenuDisplay } = useContext(UserContext);
   const navigate = useNavigate();
   function checkMenu() {
     if (menuDisplay) {
@@ -23,6 +23,8 @@ export default function Top() {
   function logout() {
     localStorage.removeItem("token");
     setToken("");
+    localStorage.removeItem("image");
+    setImageProfile("");
     navigate("/");
   }
 
@@ -37,7 +39,7 @@ export default function Top() {
             <AiOutlineDown color="white" size="26px" />
           )}
           <img
-            src="https://classic.exame.com/wp-content/uploads/2020/06/Bob-Esponja.png?w=550"
+            src={imageProfile}
             alt="user"
           />
         </ImageSide>
