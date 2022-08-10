@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
 import axios from 'axios';
+import { getTrending } from "../services/post";
 import { Oval} from "react-loader-spinner";
 
 export default function Timeline() {
@@ -13,6 +14,7 @@ export default function Timeline() {
   const [posts, setPost] = useState([]);
   const { token, imageProfile, menuDisplay, setMenuDisplay } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
+  const [trending, setTrending] = useState([])
 
   useEffect(() => {
     if (!token || !imageProfile) {
@@ -31,13 +33,24 @@ export default function Timeline() {
       setPost(response.data)
       setIsLoading(false)
 
-      console.log(isLoading)
     })
 
     
     promise.catch(response => console.log("erro"))
 
   }, []);
+
+  useEffect( () => {
+    async function fetchData(){
+      const trendingTopics = await getTrending()
+      setTrending(trendingTopics)
+    }
+   
+    fetchData()
+    
+  }, [])
+
+
 
 
   function checkMenu() {
@@ -66,7 +79,15 @@ export default function Timeline() {
               <p>There are no posts yet</p>
             )}
           </RightSide>
-          <LeftSide></LeftSide>
+          <LeftSide>
+              <div className="trendingTitle">
+                <h1>trending</h1>
+              </div>
+              <div className="divBar"></div>
+              <ul>
+              {trending.map(obj => <li>#{obj.tag}</li>)}
+              </ul>
+          </LeftSide>
         </Sides>
       </Content>
     </Conteiner>
@@ -112,6 +133,32 @@ const LeftSide = styled.div`
   background-color: #171717;
   border-radius: 16px;
   margin-left: 25px;
+
+  font-family: 'Oswald';
+
+  .trendingTitle{
+    padding: 10px 16px;
+    h1{
+    font-size: 27px;
+  }
+  }
+
+  .divBar{
+    width: 100%;
+    background: rgba(72, 72, 72, 1);
+    border: 1px solid rgba(72, 72, 72, 1)
+  }
+
+  ul{
+    padding: 10px 16px;
+
+    li{
+      margin-bottom: 12px;
+      font-size:19px;
+    }
+  }
+
+  color:white;
 `;
 
 
