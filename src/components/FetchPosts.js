@@ -28,6 +28,7 @@ const PostBox = styled.div`
     height: 276px;
     background-color: #171717;
     border-radius: 16px;
+    margin-bottom: 16px;
 
     img{
         width: 50px;
@@ -41,6 +42,7 @@ const PostBox = styled.div`
 
 const TopBox = styled.div`
     display: flex;
+    
 
     h1{
         font-family: 'Lato';
