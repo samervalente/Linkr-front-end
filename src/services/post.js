@@ -26,3 +26,13 @@ export async function getPosts(config) {
       return err.response.data;
     });
 }
+
+export async function getTrending(){
+    return axios.get(getUrlAPI("trending"))
+    .then(res => {
+      return res.data
+    })
+    .catch(err => {
+      return "Não foi possível carregar o trending"
+    })
+}
