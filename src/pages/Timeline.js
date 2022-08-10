@@ -28,16 +28,11 @@ export default function Timeline() {
     }
     const promise = axios.get(`http://localhost:4000/posts`, config);
     promise.then(response => {
-      console.log(response.data)
-     
-      setPost(response.data)
+      setPost([])
       setIsLoading(false)
-
     })
 
-    
     promise.catch(response => console.log("erro"))
-
   }, []);
 
   useEffect( () => {
@@ -49,8 +44,6 @@ export default function Timeline() {
     fetchData()
     
   }, [])
-
-
 
   function checkMenu() {
     if (menuDisplay) {
