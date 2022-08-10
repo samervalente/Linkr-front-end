@@ -11,12 +11,13 @@ export default function RegisterForm(){
     const [userData, setUserData] = useState({})
     const navigate = useNavigate()
     const [registerProcess, setRegisterProcess] = useState(false)
-    
+   
     async function handleSubmit(e){
         e.preventDefault()
        
-        setRegisterProcess(true)
+       setRegisterProcess(true)
        const response =  await sendRegisterData(userData)
+       console.log(response)
        setRegisterProcess(false)
        response === 201 ? navigate("/") : alert(response)
     }

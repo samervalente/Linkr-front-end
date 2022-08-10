@@ -11,6 +11,7 @@ export async function sendPost(body, config) {
       return res.status;
     })
     .catch((err) => {
+      console.log(err)
       return err.response.data;
     });
 }

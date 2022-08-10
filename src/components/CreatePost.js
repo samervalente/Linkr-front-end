@@ -1,28 +1,32 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { sendPost } from '../services/post';
+import { filterPostHashtags } from '../utils/filterPostHashtags';
 
 export default function CreatePost({ token, imageProfile }) {
-    const [url, setUrl] = useState('');
-    const [text, setText] = useState('');
+   
     const [loading, setLoading] = useState(false);
+    const [body, setBody] = useState({
+        url:"",
+        text:"" ,
+        hashtags:[]
+    })
+
 
     async function createPost(event) {
         event.preventDefault();
         setLoading(true);
-
-        const body = text ? { url, text } : { url };
-
+        
         const config = {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
         };
+        
+       
         const response = await sendPost(body, config);
 
         if (response === 201) {
-            setUrl('');
-            setText('');
             setLoading(false);
             //atualizar posts
         } else {
@@ -30,6 +34,9 @@ export default function CreatePost({ token, imageProfile }) {
             alert("Houve um erro ao publicar seu link");
         }
     }
+    
+
+
 
     return (
         <Conteiner>
@@ -40,15 +47,15 @@ export default function CreatePost({ token, imageProfile }) {
                     type="url"
                     disabled={loading}
                     placeholder='http://...'
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
+                    value={body.url}
+                    onChange={(e) => setBody({...body, url:e.target.value})}
                     required
                 />
                 <TextArea
                     disabled={loading}
                     placeholder='Ex: Awesome article about #javascript'
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
+                    value={body.text}
+                    onChange={(e) => setBody({...body, text: e.target.value, hashtags: filterPostHashtags(e.target.value)})}
                 />
                 <Button type="submit" disabled={loading}>
                     {loading ? 'Publishing' : 'Publish'}
