@@ -2,14 +2,21 @@ import styled from "styled-components";
 import { TiPencil } from "react-icons/ti";
 import { CgTrash } from "react-icons/cg";
 import { FiHeart } from "react-icons/fi";
+import { AiFillHeart } from "react-icons/ai";
+import { useState, useContext } from "react";
+import UserContext from "../context/UserContext";
 
-export default function fetchPosts({ post }) {
+export default function FetchPosts({ post }) {
+  const [isLiked, setIsLiked] = useState(false);
+  const [likes, setLikes] = useState(0);
+  const { token } = useContext(UserContext);
   return (
     <PostBox>
       <LeftTop>
         <LeftSide>
           <img src={post.imageProfile} />
-          <Heart />
+          {isLiked ? <FillHeart /> : <Heart />}
+          <span>{likes} likes</span>
         </LeftSide>
         <TopBox>
           <div>
@@ -72,6 +79,12 @@ const LeftSide = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  span {
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 400;
+    margin-top: 6px;
+  }
 `;
 
 const LeftTop = styled.div`
@@ -84,7 +97,7 @@ const LinkBox = styled.div`
   border: 1px solid #4d4d4d;
   border-radius: 11px;
   margin-left: 86px;
-  margin-top: -10px;
+  margin-top: -28px;
 `;
 //style icons:
 
@@ -102,4 +115,10 @@ const Pencil = styled(TiPencil)`
 const Trash = styled(CgTrash)`
   width: 20px;
   height: 20px;
+`;
+
+const FillHeart = styled(AiFillHeart)`
+  width: 20px;
+  height: 20px;
+  color: red;
 `;
