@@ -44,7 +44,7 @@ export default function Timeline() {
         <Title>timeline</Title>
         <Sides>
           <RightSide>
-            {<CreatePost token={token} imageProfile={imageProfile} />}
+            {<CreatePost token={token} imageProfile={imageProfile} setPost={setPost} />}
             {
               posts.length !== 0
                 ?
