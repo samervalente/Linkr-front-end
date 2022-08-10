@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { sendPost } from '../services/post';
 
-export default function CreatePost({ token }) {
+export default function CreatePost({ token, imageProfile }) {
     const [url, setUrl] = useState('');
     const [text, setText] = useState('');
     const [loading, setLoading] = useState(false);
@@ -33,7 +33,7 @@ export default function CreatePost({ token }) {
 
     return (
         <Conteiner>
-            <img src='https://classic.exame.com/wp-content/uploads/2020/06/Bob-Esponja.png?w=550' alt='user' />
+            <img src={imageProfile} alt='user' />
             <Form onSubmit={createPost}>
                 <p>What are you going to share today?</p>
                 <Input

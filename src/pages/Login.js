@@ -6,12 +6,16 @@ import UserContext from "../context/UserContext";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { setToken } = useContext(UserContext);
+  const { setToken, setImageProfile } = useContext(UserContext);
   const tokenStorage = localStorage.getItem("token");
-  if (tokenStorage) {
+  const imageStorage = localStorage.getItem("image");
+  
+  if (tokenStorage && imageStorage) {
     setToken(tokenStorage);
+    setImageProfile(imageStorage);
     navigate("/timeline");
   }
+  
   return (
     <>
       <Container>
