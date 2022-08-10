@@ -6,11 +6,13 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
 import axios from 'axios';
+import { Oval} from "react-loader-spinner";
 
 export default function Timeline() {
   const navigate = useNavigate();
   const [posts, setPost] = useState([]);
   const { token, imageProfile, menuDisplay, setMenuDisplay } = useContext(UserContext);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!token || !imageProfile) {
@@ -25,8 +27,14 @@ export default function Timeline() {
     const promise = axios.get(`http://localhost:4000/posts`, config);
     promise.then(response => {
       console.log(response.data)
+     
       setPost(response.data)
+      setIsLoading(false)
+
+      console.log(isLoading)
     })
+
+    
     promise.catch(response => console.log("erro"))
 
   }, []);
@@ -46,16 +54,17 @@ export default function Timeline() {
           <RightSide>
             {<CreatePost token={token} imageProfile={imageProfile} />}
             {
-              posts.length !== 0
-                ?
-                <>{posts.map(post => {
+              <>{posts.map(post => {
                   return (
                     <FetchPosts post={post} />
-                  )
-                })}</>
-                :
-                <></>
+                  )})
+                }
+              </>
             }
+            {isLoading && <Oval />}
+            {!isLoading && posts.length === 0 && (
+              <p>There are no posts yet</p>
+            )}
           </RightSide>
           <LeftSide></LeftSide>
         </Sides>
@@ -94,6 +103,7 @@ const RightSide = styled.div`
   width: 611px;
   display: flex;
   flex-direction: column;
+  align-items: center;  
 `;
 
 const LeftSide = styled.div`
@@ -103,3 +113,5 @@ const LeftSide = styled.div`
   border-radius: 16px;
   margin-left: 25px;
 `;
+
+
