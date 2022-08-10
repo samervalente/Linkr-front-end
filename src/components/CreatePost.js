@@ -7,16 +7,16 @@ import { sendPost, getPosts } from '../services/post';
 
 export default function CreatePost({ token, imageProfile, setPost }) {
     const [loading, setLoading] = useState(false);
-    const [body, setBody] = useState({
-        url:"",
-        text:"" ,
-        hashtags:[]
-    })
-
+    const [url, setUrl] = useState('');
+    const [text, setText] = useState('');
 
     async function createPost(event) {
         event.preventDefault();
         setLoading(true);
+        const hashtags = text ? await filterPostHashtags(text) : [];
+        console.log(hashtags);
+
+        const body = text ? { url, text, hashtags } : { url, hashtags };
         
         const config = {
             headers: {
@@ -24,10 +24,11 @@ export default function CreatePost({ token, imageProfile, setPost }) {
             }
         };
         
-       
         const response = await sendPost(body, config);
 
         if (response === 201) {
+            setUrl('');
+            setText('');
             setLoading(false);
             fetchPosts();
         } else {
@@ -60,15 +61,15 @@ export default function CreatePost({ token, imageProfile, setPost }) {
                     type="url"
                     disabled={loading}
                     placeholder='http://...'
-                    value={body.url}
-                    onChange={(e) => setBody({...body, url:e.target.value})}
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
                     required
                 />
                 <TextArea
                     disabled={loading}
                     placeholder='Ex: Awesome article about #javascript'
-                    value={body.text}
-                    onChange={(e) => setBody({...body, text: e.target.value, hashtags: filterPostHashtags(e.target.value)})}
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
                 />
                 <Button type="submit" disabled={loading}>
                     {loading ? 'Publishing' : 'Publish'}
@@ -76,9 +77,10 @@ export default function CreatePost({ token, imageProfile, setPost }) {
             </Form>
         </Conteiner>
     )
-}
+} 
 
 const Conteiner = styled.div`
+    width: 611px;
     height: 209px;
     display: flex;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
