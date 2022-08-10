@@ -14,3 +14,14 @@ export async function sendPost(body, config) {
       return err.response.data;
     });
 }
+
+export async function getPosts(config) {
+  return axios
+    .get(getUrlAPI("posts"), config)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      return err.response.data;
+    });
+}
