@@ -1,17 +1,56 @@
 import styled from "styled-components";
-import { AiOutlineDown } from "react-icons/ai";
+import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import UserContext from "../context/UserContext";
 
 export default function Top() {
+  const { setToken, menuDisplay, setMenuDisplay } = useContext(UserContext);
+  const navigate = useNavigate();
+  function checkMenu() {
+    if (menuDisplay) {
+      setMenuDisplay(false);
+    }
+  }
+  function menu() {
+    if (menuDisplay) {
+      setMenuDisplay(false);
+    } else {
+      setMenuDisplay(true);
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem("token");
+    setToken("");
+    navigate("/");
+  }
+
   return (
     <Conteiner>
-      <h1>linkr</h1>
-      <ImageSide>
-        <AiOutlineDown color="white" size="26px" />
-        <img
-          src="https://classic.exame.com/wp-content/uploads/2020/06/Bob-Esponja.png?w=550"
-          alt="user"
-        />
-      </ImageSide>
+      <Header onClick={checkMenu}>
+        <h1>linkr</h1>
+        <ImageSide onClick={menu}>
+          {menuDisplay ? (
+            <AiOutlineUp color="white" size="26px" />
+          ) : (
+            <AiOutlineDown color="white" size="26px" />
+          )}
+          <img
+            src="https://classic.exame.com/wp-content/uploads/2020/06/Bob-Esponja.png?w=550"
+            alt="user"
+          />
+        </ImageSide>
+      </Header>
+      {menuDisplay ? (
+        <Logout>
+          <div onClick={logout}>
+            <span>Logout</span>
+          </div>
+        </Logout>
+      ) : (
+        <></>
+      )}
     </Conteiner>
   );
 }
@@ -22,10 +61,6 @@ const Conteiner = styled.div`
   background-color: #151515;
   position: fixed;
   top: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 25px;
   z-index: 1;
   h1 {
     font-family: "Passion One", cursive;
@@ -47,4 +82,30 @@ const ImageSide = styled.div`
   width: 86px;
   align-items: center;
   justify-content: space-between;
+  cursor: pointer;
+`;
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 25px;
+  height: 100%;
+`;
+
+const Logout = styled.div`
+  height: 40px;
+  width: 120px;
+  position: fixed;
+  right: 0;
+  border-radius: 0px 0px 0px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #171717;
+  span {
+    color: #ffffff;
+    size: 17px;
+    cursor: pointer;
+  }
 `;

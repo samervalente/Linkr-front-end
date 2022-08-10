@@ -5,11 +5,16 @@ import { useState, useContext } from "react";
 import UserContext from "../context/UserContext";
 
 export default function Timeline() {
-  const { token } = useContext(UserContext);
+  const { token, menuDisplay, setMenuDisplay } = useContext(UserContext);
   const tokenStorage = localStorage.getItem("token");
   console.log(tokenStorage);
+  function checkMenu() {
+    if (menuDisplay) {
+      setMenuDisplay(false);
+    }
+  }
   return (
-    <Conteiner>
+    <Conteiner onClick={checkMenu}>
       <Top />
       <Content>
         <Title>timeline</Title>
