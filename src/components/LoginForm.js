@@ -6,7 +6,7 @@ import { sendLoginData } from "../services/auth";
 import UserContext from "../context/UserContext";
 
 export default function RegisterForm() {
-  const { setToken, token } = useContext(UserContext);
+  const { setToken } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -24,6 +24,7 @@ export default function RegisterForm() {
     
     if (response) {
       setToken(response);
+      localStorage.setItem("token", response);
       navigate("/timeline");
     } else {
       setEmail("");

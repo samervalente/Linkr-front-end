@@ -1,7 +1,17 @@
 import styled from "styled-components";
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import LoginForm from "../components/LoginForm";
+import UserContext from "../context/UserContext";
 
 export default function Login() {
+  const navigate = useNavigate();
+  const { setToken } = useContext(UserContext);
+  const tokenStorage = localStorage.getItem("token");
+  if (tokenStorage) {
+    setToken(tokenStorage);
+    navigate("/timeline");
+  }
   return (
     <>
       <Container>
