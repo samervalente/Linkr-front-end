@@ -80,6 +80,7 @@ export default function CreatePost({ token, imageProfile, setPost }) {
 } 
 
 const Conteiner = styled.div`
+    width: 611px;
     height: 209px;
     display: flex;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
