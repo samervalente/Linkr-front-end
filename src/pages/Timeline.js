@@ -52,7 +52,6 @@ export default function Timeline() {
 
 
 
-
   function checkMenu() {
     if (menuDisplay) {
       setMenuDisplay(false);
@@ -85,7 +84,7 @@ export default function Timeline() {
               </div>
               <div className="divBar"></div>
               <ul>
-              {trending.map(obj => <li>#{obj.tag}</li>)}
+              {trending.length > 0 ? trending.map(obj => <li>#{obj.tag}</li>): "Carregando..."}
               </ul>
           </LeftSide>
         </Sides>
