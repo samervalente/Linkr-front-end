@@ -15,7 +15,7 @@ export default function Timeline() {
         <Title>timeline</Title>
         <Sides>
           <RightSide>
-            {<CreatePost />}
+            {<CreatePost token ={token} />}
             <div>aqui vão os posts da timeline</div>
           </RightSide>
           <LeftSide></LeftSide>

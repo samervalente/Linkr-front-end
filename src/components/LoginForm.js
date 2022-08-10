@@ -15,16 +15,18 @@ export default function RegisterForm() {
   async function handleSubmit(e) {
     e.preventDefault();
     setLoginProcess(true);
-    try {
-      const userData = {
-        email,
-        password,
-      };
-      const response = await sendLoginData(userData);
+
+    const userData = {
+      email,
+      password,
+    };
+    const response = await sendLoginData(userData);
+    
+    if (response) {
       setToken(response);
       localStorage.setItem("token", response);
       navigate("/timeline");
-    } catch (error) {
+    } else {
       setEmail("");
       setPassword("");
       alert(
