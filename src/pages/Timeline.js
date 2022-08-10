@@ -2,8 +2,35 @@
 import styled from 'styled-components';
 import CreatePost from '../components/CreatePost';
 import Top from '../components/Top';
+import FetchPosts from '../components/FetchPosts';
+import { useContext, useEffect, useState} from "react";
+import axios from 'axios';
+import UserContext from "../context/UserContext";
 
 export default function Timeline() {
+
+    const [posts, setPost] = useState([]);
+    const { token } = useContext(UserContext);
+
+    
+    useEffect(()=>{
+
+        const config = {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+
+        const promise = axios.get(`${process.env.REACT_APP_API_URL}/posts`, config);
+        promise.then(response => {
+            console.log(response.data)
+            setPost(response.data)
+        })
+        promise.catch(response => console.log("erro"))
+
+    }, [])
+
+
     return (
         <Conteiner>
             <Top />
@@ -12,7 +39,17 @@ export default function Timeline() {
                 <Sides>
                     <RightSide>
                         {<CreatePost />}
-                        <div>aqui vão os posts da timeline</div>
+                        {
+                            posts.length !== 0
+                            ?
+                            <>{posts.map(post => {
+                                return (
+                                    <FetchPosts post={post} />
+                                )
+                            })}</>
+                            :
+                            <></>
+                        }
                     </RightSide>
                     <LeftSide></LeftSide>
                 </Sides>
