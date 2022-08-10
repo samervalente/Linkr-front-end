@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { sendPost } from '../services/post';
+
 import { filterPostHashtags } from '../utils/filterPostHashtags';
 
-export default function CreatePost({ token, imageProfile }) {
-   
+import { sendPost, getPosts } from '../services/post';
+
+export default function CreatePost({ token, imageProfile, setPost }) {
     const [loading, setLoading] = useState(false);
     const [body, setBody] = useState({
         url:"",
@@ -28,7 +29,7 @@ export default function CreatePost({ token, imageProfile }) {
 
         if (response === 201) {
             setLoading(false);
-            //atualizar posts
+            fetchPosts();
         } else {
             setLoading(false);
             alert("Houve um erro ao publicar seu link");
@@ -36,7 +37,19 @@ export default function CreatePost({ token, imageProfile }) {
     }
     
 
-
+    async function fetchPosts() {
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const response = await getPosts(config);
+        if (response) {
+            setPost(response);
+        } else {
+            alert("An error occured while trying to fetch the posts, please refresh the page");
+        }
+    }
 
     return (
         <Conteiner>
