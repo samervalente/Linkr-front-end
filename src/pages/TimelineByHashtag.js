@@ -72,7 +72,7 @@ export default function Timeline() {
         <Title># {hashtag}</Title>
         <Sides>
           <RightSide>
-            {<CreatePost token={token} imageProfile={imageProfile} setPost={setPost} hashtagName={hashtag} setTrending={setTrending} />}
+            
             {
               <>{posts.map(post => {
                   return (

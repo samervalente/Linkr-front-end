@@ -134,6 +134,7 @@ export default function Timeline() {
               : 
               <></>}
           </RightSide>
+          
           <LeftSide>
               <div className="trendingTitle">
                 <h1>trending</h1>
@@ -143,6 +144,7 @@ export default function Timeline() {
               {trendingTopics}
               </ul>
           </LeftSide>
+          
         </Sides>
       </Content>
     </Conteiner>
@@ -173,7 +175,11 @@ const Title = styled.h1`
 
 const Sides = styled.div`
   display: flex;
+  width: 100%;
+  
 `;
+
+
 
 const RightSide = styled.div`
   width: 611px;
@@ -190,7 +196,6 @@ const LeftSide = styled.div`
   border-radius: 16px;
   margin-left: 25px;
   color:white;
-
 
   font-family: 'Oswald';
 

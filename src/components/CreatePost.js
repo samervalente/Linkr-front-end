@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { sendPost, getPosts, getPostsByHashtagName, getTrending } from '../services/post';
 
-export default function CreatePost({ token, imageProfile, setPost, hashtagName, setTrending }) {
+export default function CreatePost({ token, imageProfile, setPost }) {
     const [loading, setLoading] = useState(false);
     const [url, setUrl] = useState('');
     const [text, setText] = useState('');
@@ -39,10 +39,10 @@ export default function CreatePost({ token, imageProfile, setPost, hashtagName, 
                 Authorization: `Bearer ${token}`
             }
         }
-        const response = hashtagName? await getPostsByHashtagName(hashtagName) : await getPosts(config)
+        const response =await getPosts(config)
         if (response) {
            const trendingAtualized =  await getTrending()
-            setTrending(trendingAtualized)
+            
             setPost(response);
             
         } else {
