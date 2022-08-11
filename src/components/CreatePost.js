@@ -14,8 +14,7 @@ export default function CreatePost({ token, imageProfile, setPost }) {
         event.preventDefault();
         setLoading(true);
         const hashtags = text ? await filterPostHashtags(text) : [];
-        console.log(hashtags);
-
+       
         const body = text ? { url, text, hashtags } : { url, hashtags };
         
         const config = {
