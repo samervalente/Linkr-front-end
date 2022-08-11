@@ -1,4 +1,5 @@
 import styled, { withTheme } from "styled-components";
+import axios from "axios";
 import { TiPencil } from "react-icons/ti";
 import { CgTrash } from "react-icons/cg";
 import { FiHeart } from "react-icons/fi";
@@ -10,30 +11,89 @@ import { ReactTagify } from "react-tagify";
 
 import { updatePost } from "../services/post";
 
-
-export default function FetchPosts({ post, userId, setDependency, fetchDependency}) {
+export default function FetchPosts({
+  post,
+  userId,
+  setDependency,
+  fetchDependency,
+}) {
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(0);
   const [isEditing, setEditing] = useState(false);
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState(post.description);
   const { token } = useContext(UserContext);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  //LIKE PART
+  useEffect(() => {
+    const promise = axios.get(`http://localhost:4000/likes/${post.id}`, config);
+    promise.then((response) => {
+      if (response.data) {
+        setIsLiked(true);
+      }
+    });
+
+    promise.catch((error) => {
+      console.error("error");
+    });
+  }, []);
+
+  function like() {
+    const promise = axios.post(
+      `http://localhost:4000/likes`,
+      {
+        postId: post.id,
+      },
+      config
+    );
+    promise.then((response) => {
+      if (response.status === 201) {
+        setIsLiked(true);
+      }
+    });
+
+    promise.catch((error) => {
+      console.error("error");
+    });
+  }
+
+  function dislike() {
+    const promise = axios.delete(
+      `http://localhost:4000/likes/${post.id}`,
+      config
+    );
+    promise.then((response) => {
+      if (response.status === 200) {
+        setIsLiked(false);
+      }
+    });
+
+    promise.catch((error) => {
+      console.error("error");
+    });
+  }
+
+  // LIKE END
   const inputRef = useRef(null);
   const toggleEditing = () => {
     setEditing(!isEditing);
-    setText('');
+    setText("");
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       setLoading(true);
       editPost();
-    } else if (e.key === 'Escape') {
+    } else if (e.key === "Escape") {
       setEditing(false);
-      setText('');
+      setText("");
     }
   };
 
@@ -41,8 +101,8 @@ export default function FetchPosts({ post, userId, setDependency, fetchDependenc
     const body = text ? { text } : null;
     const config = {
       headers: {
-        "Authorization": `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     };
 
     const response = await updatePost(post.id, body, config);
@@ -51,7 +111,7 @@ export default function FetchPosts({ post, userId, setDependency, fetchDependenc
       setLoading(false);
       setEditing(false);
       setDescription(text);
-      setText('');
+      setText("");
     } else {
       setLoading(false);
       alert("Não foi possível salvar as alterações");
@@ -64,53 +124,54 @@ export default function FetchPosts({ post, userId, setDependency, fetchDependenc
     }
   }, [isEditing]);
 
-  function choiceHashtag(name){
-    name = name.replace("#","").toLowerCase()
-    navigate(`/hashtag/${name}`)
-    setDependency(!fetchDependency)
-    
+  function choiceHashtag(name) {
+    name = name.replace("#", "").toLowerCase();
+    navigate(`/hashtag/${name}`);
+    setDependency(!fetchDependency);
   }
-const tagStyle = {
-  color:'white',
-  fontWeight:700,
-  cursor:'pointer'
-
-}
+  const tagStyle = {
+    color: "white",
+    fontWeight: 700,
+    cursor: "pointer",
+  };
 
   return (
     <PostBox>
       <LeftTop>
         <LeftSide>
           <img src={post.imageProfile} />
-          {isLiked ? <FillHeart /> : <Heart />}
+          {isLiked ? <FillHeart onClick={dislike} /> : <Heart onClick={like} />}
           <span>{likes} likes</span>
         </LeftSide>
         <TopBox>
           <h1>
             {post.name}{" "}
-            {userId === post.userId ? <span><Pencil onClick={toggleEditing} /> <Trash /></span> : null}
-            {" "}
+            {userId === post.userId ? (
+              <span>
+                <Pencil onClick={toggleEditing} /> <Trash />
+              </span>
+            ) : null}{" "}
           </h1>
-          {isEditing ?
-            (
-              <TextArea
-                ref={inputRef}
-                disabled={loading}
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                onKeyDown={handleKeyDown}
-              />
-            ) : (
-
-              <>
-                <p>
-                <ReactTagify tagStyle={tagStyle} tagClicked={tag => choiceHashtag(tag)} >
+          {isEditing ? (
+            <TextArea
+              ref={inputRef}
+              disabled={loading}
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+          ) : (
+            <>
+              <p>
+                <ReactTagify
+                  tagStyle={tagStyle}
+                  tagClicked={(tag) => choiceHashtag(tag)}
+                >
                   {post.description}
                 </ReactTagify>
               </p>
-              </>
-            )
-          }
+            </>
+          )}
         </TopBox>
       </LeftTop>
 
@@ -124,7 +185,6 @@ const tagStyle = {
         <Image>
           <img src={post.urlImage}></img>
         </Image>
-
       </a>
     </PostBox>
   );
@@ -145,7 +205,7 @@ const PostBox = styled.div`
     margin: 18px;
   }
 
-  a{
+  a {
     width: 503px;
     height: 155px;
     border: 1px solid #4d4d4d;
@@ -205,50 +265,47 @@ const Texts = styled.div`
   flex-direction: column;
   justify-content: space-around;
   margin-left: 20px;
-  font-family: 'Lato';  
+  font-family: "Lato";
 
-  h1{
+  h1 {
     color: #cecece;
     font-size: 16px;
   }
 
-  h2{
-    color:#9B9595;
+  h2 {
+    color: #9b9595;
     font-size: 11px;
     text-align: justify;
   }
 
-  h4{
+  h4 {
     color: #cecece;
     font-size: 11px;
   }
-`
-
-const Image = styled.div`
-  img{
-    border-radius: 0px 12px 13px 0px;
-  }
-
-`
-
-const TextArea = styled.textarea`
-    height: 44px;
-    width: 100%;
-    margin: 8px 0;
-    background-color: #efefef;
-    text-indent: 10px;
-    color: #4C4C4C;
-    border: none;
-    outline: none;
-    border-radius: 7px;
-    font-family: 'Lato', sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 17px;
-    resize: none;
 `;
 
+const Image = styled.div`
+  img {
+    border-radius: 0px 12px 13px 0px;
+  }
+`;
 
+const TextArea = styled.textarea`
+  height: 44px;
+  width: 100%;
+  margin: 8px 0;
+  background-color: #efefef;
+  text-indent: 10px;
+  color: #4c4c4c;
+  border: none;
+  outline: none;
+  border-radius: 7px;
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  resize: none;
+`;
 
 //style icons:
 
