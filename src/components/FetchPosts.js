@@ -41,7 +41,7 @@ export default function FetchPosts({
       }
     });
     promise2.then((response) => {
-      setLikes(response.data.count);
+      setLikes(Number(response.data.count));
     });
 
     promise.catch((error) => {
