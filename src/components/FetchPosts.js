@@ -8,12 +8,16 @@ import UserContext from "../context/UserContext";
 import { Link, useNavigate } from "react-router-dom";
 import { ReactTagify } from "react-tagify";
 
+import { updatePost } from "../services/post";
+
+
 export default function FetchPosts({ post, userId, setDependency, fetchDependency}) {
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(0);
   const [isEditing, setEditing] = useState(false);
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
+  const [description, setDescription] = useState(post.description);
   const { token } = useContext(UserContext);
   const navigate = useNavigate()
 
@@ -22,16 +26,37 @@ export default function FetchPosts({ post, userId, setDependency, fetchDependenc
     setEditing(!isEditing);
     setText('');
   };
-  
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      //fazer a requisição aqui, desabilitar botão e reabilitar botão
-      console.log("enter");
+      setLoading(true);
+      editPost();
     } else if (e.key === 'Escape') {
       setEditing(false);
       setText('');
     }
   };
+
+  async function editPost() {
+    const body = text ? { text } : null;
+    const config = {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    };
+
+    const response = await updatePost(post.id, body, config);
+
+    if (response === 200) {
+      setLoading(false);
+      setEditing(false);
+      setDescription(text);
+      setText('');
+    } else {
+      setLoading(false);
+      alert("Não foi possível salvar as alterações");
+    }
+  }
 
   useEffect(() => {
     if (isEditing) {
@@ -76,12 +101,14 @@ const tagStyle = {
                 onKeyDown={handleKeyDown}
               />
             ) : (
-              
-              <p>
+
+              <>
+                <p>
                 <ReactTagify tagStyle={tagStyle} tagClicked={tag => choiceHashtag(tag)} >
                   {post.description}
                 </ReactTagify>
               </p>
+              </>
             )
           }
         </TopBox>

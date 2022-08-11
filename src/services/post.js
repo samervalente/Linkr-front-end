@@ -48,3 +48,15 @@ export async function getPostsByHashtagName(hashtagName){
     return err.response.data
   })
 }
+
+export async function updatePost(id, body, config) {
+  return axios
+    .put(getUrlAPI(`posts/${id}`), body, config)
+    .then((res) => {
+      return res.status;
+    })
+    .catch((err) => {
+      console.log(err)
+      return err.response.data;
+    });
+}
