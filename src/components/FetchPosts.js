@@ -6,6 +6,7 @@ import { AiFillHeart } from "react-icons/ai";
 import { useState, useContext, useRef, useEffect } from "react";
 import UserContext from "../context/UserContext";
 import { Link } from "react-router-dom";
+import { updatePost } from "../services/post";
 
 export default function FetchPosts({ post, userId }) {
   const [isLiked, setIsLiked] = useState(false);
@@ -13,6 +14,7 @@ export default function FetchPosts({ post, userId }) {
   const [isEditing, setEditing] = useState(false);
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
+  const [description, setDescription] = useState(post.description);
   const { token } = useContext(UserContext);
 
   const inputRef = useRef(null);
@@ -20,16 +22,37 @@ export default function FetchPosts({ post, userId }) {
     setEditing(!isEditing);
     setText('');
   };
-  
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      //fazer a requisição aqui, desabilitar botão e reabilitar botão
-      console.log("enter");
+      setLoading(true);
+      editPost();
     } else if (e.key === 'Escape') {
       setEditing(false);
       setText('');
     }
   };
+
+  async function editPost() {
+    const body = text ? { text } : null;
+    const config = {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    };
+
+    const response = await updatePost(post.id, body, config);
+
+    if (response === 200) {
+      setLoading(false);
+      setEditing(false);
+      setDescription(text);
+      setText('');
+    } else {
+      setLoading(false);
+      alert("Não foi possível salvar as alterações");
+    }
+  }
 
   useEffect(() => {
     if (isEditing) {
@@ -61,7 +84,7 @@ export default function FetchPosts({ post, userId }) {
                 onKeyDown={handleKeyDown}
               />
             ) : (
-              <p>{post.description}</p>
+              <p>{description}</p>
             )
           }
         </TopBox>
