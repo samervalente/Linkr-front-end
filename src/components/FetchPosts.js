@@ -3,15 +3,39 @@ import { TiPencil } from "react-icons/ti";
 import { CgTrash } from "react-icons/cg";
 import { FiHeart } from "react-icons/fi";
 import { AiFillHeart } from "react-icons/ai";
-import { useState, useContext } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import UserContext from "../context/UserContext";
 import { Link } from "react-router-dom";
 
 export default function FetchPosts({ post, userId }) {
-
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(0);
+  const [isEditing, setEditing] = useState(false);
+  const [text, setText] = useState('');
+  const [loading, setLoading] = useState(false);
   const { token } = useContext(UserContext);
+
+  const inputRef = useRef(null);
+  const toggleEditing = () => {
+    setEditing(!isEditing);
+    setText('');
+  };
+  
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      //fazer a requisição aqui, desabilitar botão e reabilitar botão
+      console.log("enter");
+    } else if (e.key === 'Escape') {
+      setEditing(false);
+      setText('');
+    }
+  };
+
+  useEffect(() => {
+    if (isEditing) {
+      inputRef.current.focus();
+    }
+  }, [isEditing]);
 
   return (
     <PostBox>
@@ -22,14 +46,24 @@ export default function FetchPosts({ post, userId }) {
           <span>{likes} likes</span>
         </LeftSide>
         <TopBox>
-          <div>
-            <h1>
-              {post.name}{" "}
-              {userId === post.userId ? <span><Pencil /> <Trash /></span> : null}
-              {" "}
-            </h1>
-            <p>{post.description}</p>
-          </div>
+          <h1>
+            {post.name}{" "}
+            {userId === post.userId ? <span><Pencil onClick={toggleEditing} /> <Trash /></span> : null}
+            {" "}
+          </h1>
+          {isEditing ?
+            (
+              <TextArea
+                ref={inputRef}
+                disabled={loading}
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+            ) : (
+              <p>{post.description}</p>
+            )
+          }
         </TopBox>
       </LeftTop>
 
@@ -42,8 +76,8 @@ export default function FetchPosts({ post, userId }) {
 
         <Image>
           <img src={post.urlImage}></img>
-        </Image>        
-      
+        </Image>
+
       </a>
     </PostBox>
   );
@@ -51,7 +85,7 @@ export default function FetchPosts({ post, userId }) {
 
 const PostBox = styled.div`
   width: 611px;
-  height: 276px;
+  min-height: 276px;
   background-color: #171717;
   border-radius: 16px;
   margin-bottom: 16px;
@@ -79,6 +113,7 @@ const PostBox = styled.div`
 
 const TopBox = styled.div`
   display: flex;
+  flex-direction: column;
 
   h1 {
     width: 495px;
@@ -94,7 +129,7 @@ const TopBox = styled.div`
   p {
     font-family: "Lato";
     color: #b7b7b7;
-    margin-top: 8px;
+    margin: 8px 0;
   }
 `;
 
@@ -142,13 +177,29 @@ const Texts = styled.div`
   }
 `
 
-
-const Image =styled.div`
+const Image = styled.div`
   img{
     border-radius: 0px 12px 13px 0px;
   }
 
 `
+
+const TextArea = styled.textarea`
+    height: 44px;
+    width: 100%;
+    margin: 8px 0;
+    background-color: #efefef;
+    text-indent: 10px;
+    color: #4C4C4C;
+    border: none;
+    outline: none;
+    border-radius: 7px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    resize: none;
+`;
 
 //style icons:
 
