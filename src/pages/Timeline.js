@@ -112,10 +112,10 @@ export default function Timeline() {
           <RightSide>
             {<CreatePost token={token} imageProfile={imageProfile} setPost={setPost} setUserId={setUserId} setTrending={setTrending} />}
             {
-              <>{posts.map((post, index) => {
-                  return (
-                    <FetchPosts key={index} post={post} userId={userId} />
-                  )})
+              <>{posts.length > 0 ? posts.map((post, index) => {
+                return (
+                  <FetchPosts key={index} post={post} userId={userId} />
+                )}): "Carregando posts..."
                 }
               </>
             }
