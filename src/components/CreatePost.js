@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { sendPost, getPosts, getPostsByHashtagName, getTrending } from '../services/post';
 
-export default function CreatePost({ token, imageProfile, setPost }) {
+export default function CreatePost({ token, imageProfile, setPost, setUserId }) {
     const [loading, setLoading] = useState(false);
     const [url, setUrl] = useState('');
     const [text, setText] = useState('');
@@ -43,7 +43,8 @@ export default function CreatePost({ token, imageProfile, setPost }) {
         if (response) {
            const trendingAtualized =  await getTrending()
             
-            setPost(response);
+            setPost(response.posts);
+            setUserId(response.userId);
             
         } else {
             alert("An error occured while trying to fetch the posts, please refresh the page");

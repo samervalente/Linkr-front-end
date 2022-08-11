@@ -12,10 +12,10 @@ import Modal from "react-modal";
 
 Modal.setAppElement('#root');
 
-
 export default function Timeline() {
   const navigate = useNavigate();
   const [posts, setPost] = useState([]);
+  const [userId, setUserId] = useState('');
   const { token, imageProfile, menuDisplay, setMenuDisplay } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
   const [trending, setTrending] = useState([])
@@ -34,16 +34,15 @@ export default function Timeline() {
     
     const promise = axios.get(`http://localhost:4000/posts`, config);
     promise.then(response => {
-      setPost(response.data)
+      setPost(response.data.posts);
+      setUserId(response.data.userId);
       setIsLoading(false)
-    })
+    });
 
-    
     promise.catch((error) => {
       console.error("error")
       setIsModalOpen(true)
-    })
-
+    });
   }, []);
 
   const customStyle = { 
@@ -91,8 +90,6 @@ export default function Timeline() {
       setIsModalOpen(false)
   }
 
-
-
   function checkMenu() {
     if (menuDisplay) {
       setMenuDisplay(false);
@@ -113,11 +110,11 @@ export default function Timeline() {
         <Title>timeline</Title>
         <Sides>
           <RightSide>
-            {<CreatePost token={token} imageProfile={imageProfile} setPost={setPost} setTrending={setTrending} />}
+            {<CreatePost token={token} imageProfile={imageProfile} setPost={setPost} setUserId={setUserId} setTrending={setTrending} />}
             {
-              <>{posts.map(post => {
+              <>{posts.map((post, index) => {
                   return (
-                    <FetchPosts post={post} />
+                    <FetchPosts key={index} post={post} userId={userId} />
                   )})
                 }
               </>
