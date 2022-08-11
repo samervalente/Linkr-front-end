@@ -7,14 +7,14 @@ import { sendPost, getPosts } from '../services/post';
 
 export default function CreatePost({ token, imageProfile, setPost }) {
     const [loading, setLoading] = useState(false);
-    const [url, setUrl] = useState('');
+    const [url, setUrl] = useState('https://github.com/samervalente/Linkr-front-end');
     const [text, setText] = useState('');
 
     async function createPost(event) {
         event.preventDefault();
         setLoading(true);
         const hashtags = text ? await filterPostHashtags(text) : [];
-        console.log(hashtags);
+        
 
         const body = text ? { url, text, hashtags } : { url, hashtags };
         
