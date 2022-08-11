@@ -1,22 +1,17 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-
-import { filterPostHashtags } from '../utils/filterPostHashtags';
-
 import { sendPost, getPosts } from '../services/post';
 
 export default function CreatePost({ token, imageProfile, setPost }) {
     const [loading, setLoading] = useState(false);
-    const [url, setUrl] = useState('https://github.com/samervalente/Linkr-front-end');
+    const [url, setUrl] = useState('');
     const [text, setText] = useState('');
 
     async function createPost(event) {
         event.preventDefault();
         setLoading(true);
-        const hashtags = text ? await filterPostHashtags(text) : [];
-        
 
-        const body = text ? { url, text, hashtags } : { url, hashtags };
+        const body = text ? { url, text } : { url };
         
         const config = {
             headers: {
