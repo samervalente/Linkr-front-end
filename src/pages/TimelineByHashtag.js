@@ -15,7 +15,7 @@ export default function Timeline() {
   const { token, imageProfile, menuDisplay, setMenuDisplay } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
   const [trending, setTrending] = useState([])
- 
+  const {hashtag} = useParams()
  
 
   useEffect(() => {
@@ -23,13 +23,8 @@ export default function Timeline() {
       navigate('/');
       return
     }
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
-    
-    const promise = axios.get(`http://localhost:4000/posts`, config);
+   
+    const promise = axios.get(`http://localhost:4000/posts/${hashtag}`);
     promise.then(response => {
       setPost(response.data)
       setIsLoading(false)
@@ -40,13 +35,7 @@ export default function Timeline() {
 
   useEffect( () => {
     async function fetchData(){
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-      
-      const trendingTopics = await getTrending(config)
+      const trendingTopics = await getTrending()
       setTrending(trendingTopics)
     }
    
@@ -60,10 +49,19 @@ export default function Timeline() {
     }
   }
 
+  function fetchPostsByHashtagName(name){
+    const promise = axios.get(`http://localhost:4000/posts/${name}`);
+    promise.then(response => {
+      setPost(response.data)
+      setIsLoading(false)
+    })
+  }
+
+
   const trendingTopics = trending.length > 0? 
   trending.map((hashtag) => {
     return <Link to={`/hashtag/${hashtag.tag}`}>
-          <li>#{hashtag.tag}</li>
+          <li onClick={() => fetchPostsByHashtagName(hashtag.tag)}>#{hashtag.tag}</li>
       </Link>
   }):  "Searching for hashtags..."
 
@@ -71,10 +69,10 @@ export default function Timeline() {
     <Conteiner onClick={checkMenu}>
       <Top />
       <Content>
-        <Title>timeline</Title>
+        <Title># {hashtag}</Title>
         <Sides>
           <RightSide>
-            {<CreatePost token={token} imageProfile={imageProfile} setPost={setPost} setTrending={setTrending} />}
+            {<CreatePost token={token} imageProfile={imageProfile} setPost={setPost} hashtagName={hashtag} setTrending={setTrending} />}
             {
               <>{posts.map(post => {
                   return (

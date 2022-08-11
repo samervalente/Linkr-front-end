@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { sendPost, getPosts } from '../services/post';
+import { sendPost, getPosts, getPostsByHashtagName, getTrending } from '../services/post';
 
-export default function CreatePost({ token, imageProfile, setPost }) {
+export default function CreatePost({ token, imageProfile, setPost, hashtagName, setTrending }) {
     const [loading, setLoading] = useState(false);
     const [url, setUrl] = useState('');
     const [text, setText] = useState('');
@@ -10,11 +10,9 @@ export default function CreatePost({ token, imageProfile, setPost }) {
     async function createPost(event) {
         event.preventDefault();
         setLoading(true);
-
-
+        
         const body = text ? { url, text } : { url };
 
-        
         const config = {
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -41,9 +39,12 @@ export default function CreatePost({ token, imageProfile, setPost }) {
                 Authorization: `Bearer ${token}`
             }
         }
-        const response = await getPosts(config);
+        const response = hashtagName? await getPostsByHashtagName(hashtagName) : await getPosts(config)
         if (response) {
+           const trendingAtualized =  await getTrending()
+            setTrending(trendingAtualized)
             setPost(response);
+            
         } else {
             alert("An error occured while trying to fetch the posts, please refresh the page");
         }
