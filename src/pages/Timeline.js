@@ -12,7 +12,6 @@ import Modal from "react-modal";
 
 Modal.setAppElement('#root');
 
-
 export default function Timeline() {
   const navigate = useNavigate();
   const [posts, setPost] = useState([]);
@@ -21,8 +20,6 @@ export default function Timeline() {
   const [trending, setTrending] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  
-  
   useEffect(() => {
     if (!token || !imageProfile) {
       navigate('/');
@@ -37,17 +34,12 @@ export default function Timeline() {
     promise.then(response => {
       setPost(response.data)
       setIsLoading(false)
+    });
 
-      
-
-    })
-
-    
     promise.catch((error) => {
       console.error("error")
       setIsModalOpen(true)
-    })
-
+    });
   }, []);
 
   const customStyle = { 
@@ -88,9 +80,6 @@ export default function Timeline() {
     if(isModalOpen)
       setIsModalOpen(false)
   }
-
-
-
 
   function checkMenu() {
     if (menuDisplay) {

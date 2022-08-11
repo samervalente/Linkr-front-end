@@ -162,11 +162,13 @@ const Heart = styled(FiHeart)`
 const Pencil = styled(TiPencil)`
   width: 20px;
   height: 20px;
+  cursor: pointer;
 `;
 
 const Trash = styled(CgTrash)`
   width: 20px;
   height: 20px;
+  cursor: pointer;
 `;
 
 const FillHeart = styled(AiFillHeart)`
