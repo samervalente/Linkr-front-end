@@ -8,6 +8,7 @@ import { useState, useContext, useRef, useEffect } from "react";
 import UserContext from "../context/UserContext";
 import { Link, useNavigate } from "react-router-dom";
 import { ReactTagify } from "react-tagify";
+import ReactTooltip from "react-tooltip";
 
 import { updatePost } from "../services/post";
 
@@ -151,7 +152,12 @@ export default function FetchPosts({
         <LeftSide>
           <img src={post.imageProfile} />
           {isLiked ? <FillHeart onClick={dislike} /> : <Heart onClick={like} />}
-          <span>{likes} likes</span>
+          <a data-tip data-for="likes">
+            <span>{likes} likes</span>
+          </a>
+          <ReactTooltip id="likes" place="bottom" type="dark">
+            <span>Hi!</span>
+          </ReactTooltip>
         </LeftSide>
         <TopBox>
           <h1>
@@ -185,18 +191,19 @@ export default function FetchPosts({
           )}
         </TopBox>
       </LeftTop>
+      <LinkPart>
+        <a href={post.url} target="_blank">
+          <Texts>
+            <h1>{post.urlTitle}</h1>
+            <h2>{post.urlDescription}</h2>
+            <h4>{post.url}</h4>
+          </Texts>
 
-      <a href={post.url} target="_blank">
-        <Texts>
-          <h1>{post.urlTitle}</h1>
-          <h2>{post.urlDescription}</h2>
-          <h4>{post.url}</h4>
-        </Texts>
-
-        <Image>
-          <img src={post.urlImage}></img>
-        </Image>
-      </a>
+          <Image>
+            <img src={post.urlImage}></img>
+          </Image>
+        </a>
+      </LinkPart>
     </PostBox>
   );
 }
@@ -215,7 +222,9 @@ const PostBox = styled.div`
     object-fit: cover;
     margin: 18px;
   }
+`;
 
+const LinkPart = styled.div`
   a {
     width: 503px;
     height: 155px;
