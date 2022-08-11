@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
 
 export default function Top() {
@@ -31,7 +31,9 @@ export default function Top() {
   return (
     <Conteiner>
       <Header onClick={checkMenu}>
-        <h1>linkr</h1>
+        <Link to="/timeline">
+          <h1>linkr</h1>
+        </Link>
         <ImageSide onClick={menu}>
           {menuDisplay ? (
             <AiOutlineUp color="white" size="26px" />
@@ -64,12 +66,17 @@ const Conteiner = styled.div`
   position: fixed;
   top: 0;
   z-index: 1;
+
+  a{
+    text-decoration: none;
+  }
   h1 {
     font-family: "Passion One", cursive;
     font-weight: 700;
     font-size: 49px;
     line-height: 54px;
     color: #ffffff;
+    
   }
   img {
     width: 53px;
@@ -110,4 +117,6 @@ const Logout = styled.div`
     size: 17px;
     cursor: pointer;
   }
+
+ 
 `;

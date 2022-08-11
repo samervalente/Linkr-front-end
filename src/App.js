@@ -3,6 +3,7 @@ import { useState } from "react";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Timeline from "./pages/Timeline";
+import TimelineByHashtag from "./pages/TimelineByHashtag";
 import UserContext from "./context/UserContext";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Register />} />
           <Route path="/timeline" element={<Timeline />} />
+          <Route path="/hashtag/:hashtag" element={<TimelineByHashtag />} />
         </Routes>
       </BrowserRouter>
     </UserContext.Provider>
