@@ -84,7 +84,7 @@ export default function Timeline() {
    
     fetchData()
     
-  }, [])
+  }, [fetchDependency])
 
   function closeModal(){
     if(isModalOpen)

@@ -120,14 +120,14 @@ export default function FetchPosts({
     };
 
     const response = await updatePost(post.id, body, config);
-    const trendingAtualized =  await getTrending()
-    setTrending(trendingAtualized)
+    setDependency(!fetchDependency);
+
 
     if (response === 200) {
       setLoading(false);
       setEditing(false);
       setDescription(text);
-      setDependency(!fetchDependency);
+     
       setText("");
     } else {
       setLoading(false);
@@ -190,7 +190,7 @@ export default function FetchPosts({
               <p>
                 <ReactTagify
                   tagStyle={tagStyle}
-                  tagClicked={(tag) => alert(tag)}
+                  tagClicked={(tag) => choiceHashtag(tag)}
                 >
                   {post.description}
                 </ReactTagify>
