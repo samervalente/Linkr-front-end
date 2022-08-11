@@ -28,7 +28,7 @@ export default function Timeline() {
     }
     const promise = axios.get(`http://localhost:4000/posts`, config);
     promise.then(response => {
-      setPost([])
+      setPost(response.data)
       setIsLoading(false)
     })
 
