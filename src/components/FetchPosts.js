@@ -10,13 +10,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { ReactTagify } from "react-tagify";
 import ReactTooltip from "react-tooltip";
 
-import { updatePost } from "../services/post";
+import { updatePost, getTrending } from "../services/post";
 
 export default function FetchPosts({
   post,
   userId,
   setDependency,
   fetchDependency,
+  setTrending
+  
 }) {
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(0);
@@ -32,6 +34,7 @@ export default function FetchPosts({
       Authorization: `Bearer ${token}`,
     },
   };
+ 
   //LIKE PART
   useEffect(() => {
     const promise = axios.get(`http://localhost:4000/likes/${post.id}`, config);
@@ -117,11 +120,14 @@ export default function FetchPosts({
     };
 
     const response = await updatePost(post.id, body, config);
+    const trendingAtualized =  await getTrending()
+    setTrending(trendingAtualized)
 
     if (response === 200) {
       setLoading(false);
       setEditing(false);
       setDescription(text);
+      setDependency(!fetchDependency);
       setText("");
     } else {
       setLoading(false);
@@ -136,7 +142,9 @@ export default function FetchPosts({
   }, [isEditing]);
 
   function choiceHashtag(name) {
+    
     name = name.replace("#", "").toLowerCase();
+    
     navigate(`/hashtag/${name}`);
     setDependency(!fetchDependency);
   }
@@ -182,11 +190,12 @@ export default function FetchPosts({
               <p>
                 <ReactTagify
                   tagStyle={tagStyle}
-                  tagClicked={(tag) => choiceHashtag(tag)}
+                  tagClicked={(tag) => alert(tag)}
                 >
-                  {description}
+                  {post.description}
                 </ReactTagify>
               </p>
+             
             </>
           )}
         </TopBox>

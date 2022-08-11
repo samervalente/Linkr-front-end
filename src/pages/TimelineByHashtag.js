@@ -12,7 +12,7 @@ import { Oval} from "react-loader-spinner";
 
 export default function Timeline() {
   const navigate = useNavigate();
-  const [posts, setPost] = useState([]);
+  const [post, setPost] = useState([]);
   const { token, imageProfile, menuDisplay, setMenuDisplay } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
   const [trending, setTrending] = useState([])
@@ -27,7 +27,7 @@ export default function Timeline() {
     }
    
     const promise = axios.get(`http://localhost:4000/posts/${hashtag}`);
-    promise.then(response => {
+      promise.then(response => {
       setPost(response.data)
       setIsLoading(false)
     })
@@ -54,10 +54,13 @@ export default function Timeline() {
   }
 
   function fetchPostsByHashtagName(name){
+    setDependency(!fetchDependency)
+    setIsLoading(false)
     const promise = axios.get(`http://localhost:4000/posts/${name}`);
     promise.then(response => {
+      
       setPost(response.data)
-      setIsLoading(false)
+      
     })
   }
 
@@ -78,15 +81,15 @@ export default function Timeline() {
           <RightSide>
             
             {
-              <>{posts.map(post => {
+              <>{post.map(post => {
                   return (
-                    <FetchPosts post={post} setDependency={setDependency} fetchDependency={fetchDependency} />
+                    <FetchPosts post={post} setDependency={setDependency} fetchDependency={fetchDependency} setTrending={setTrending}  />
                   )})
                 }
               </>
             }
             {isLoading && <Oval />}
-            {!isLoading && posts.length === 0 && (
+            {!isLoading && post.length === 0 && (
               <p>There are no posts yet</p>
             )}
           </RightSide>
