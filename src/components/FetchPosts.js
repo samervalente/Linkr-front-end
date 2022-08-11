@@ -7,7 +7,7 @@ import { useState, useContext } from "react";
 import UserContext from "../context/UserContext";
 import { Link } from "react-router-dom";
 
-export default function FetchPosts({ post }) {
+export default function FetchPosts({ post, userId }) {
 
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(0);
@@ -25,9 +25,8 @@ export default function FetchPosts({ post }) {
           <div>
             <h1>
               {post.name}{" "}
-              <span>
-                <Pencil /> <Trash />
-              </span>{" "}
+              {userId === post.userId ? <span><Pencil /> <Trash /></span> : null}
+              {" "}
             </h1>
             <p>{post.description}</p>
           </div>
