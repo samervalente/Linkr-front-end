@@ -105,7 +105,7 @@ const tagStyle = {
               <>
                 <p>
                 <ReactTagify tagStyle={tagStyle} tagClicked={tag => choiceHashtag(tag)} >
-                  {post.description}
+                  {description}
                 </ReactTagify>
               </p>
               </>
