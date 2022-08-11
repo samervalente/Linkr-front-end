@@ -1,14 +1,17 @@
-import styled from "styled-components";
+import styled, { withTheme } from "styled-components";
 import { TiPencil } from "react-icons/ti";
 import { CgTrash } from "react-icons/cg";
 import { FiHeart } from "react-icons/fi";
 import { AiFillHeart } from "react-icons/ai";
 import { useState, useContext, useRef, useEffect } from "react";
 import UserContext from "../context/UserContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { ReactTagify } from "react-tagify";
+
 import { updatePost } from "../services/post";
 
-export default function FetchPosts({ post, userId }) {
+
+export default function FetchPosts({ post, userId, setDependency, fetchDependency}) {
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(0);
   const [isEditing, setEditing] = useState(false);
@@ -16,6 +19,7 @@ export default function FetchPosts({ post, userId }) {
   const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState(post.description);
   const { token } = useContext(UserContext);
+  const navigate = useNavigate()
 
   const inputRef = useRef(null);
   const toggleEditing = () => {
@@ -60,6 +64,19 @@ export default function FetchPosts({ post, userId }) {
     }
   }, [isEditing]);
 
+  function choiceHashtag(name){
+    name = name.replace("#","").toLowerCase()
+    navigate(`/hashtag/${name}`)
+    setDependency(!fetchDependency)
+    
+  }
+const tagStyle = {
+  color:'white',
+  fontWeight:700,
+  cursor:'pointer'
+
+}
+
   return (
     <PostBox>
       <LeftTop>
@@ -84,7 +101,14 @@ export default function FetchPosts({ post, userId }) {
                 onKeyDown={handleKeyDown}
               />
             ) : (
-              <p>{description}</p>
+
+              <>
+                <p>
+                <ReactTagify tagStyle={tagStyle} tagClicked={tag => choiceHashtag(tag)} >
+                  {post.description}
+                </ReactTagify>
+              </p>
+              </>
             )
           }
         </TopBox>
@@ -223,6 +247,8 @@ const TextArea = styled.textarea`
     line-height: 17px;
     resize: none;
 `;
+
+
 
 //style icons:
 

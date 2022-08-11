@@ -9,6 +9,7 @@ import axios from 'axios';
 import { getTrending } from "../services/post";
 import { Oval} from "react-loader-spinner";
 
+
 export default function Timeline() {
   const navigate = useNavigate();
   const [posts, setPost] = useState([]);
@@ -16,6 +17,7 @@ export default function Timeline() {
   const [isLoading, setIsLoading] = useState(true);
   const [trending, setTrending] = useState([])
   const {hashtag} = useParams()
+  const [fetchDependency, setDependency] = useState(false)
  
 
   useEffect(() => {
@@ -30,8 +32,10 @@ export default function Timeline() {
       setIsLoading(false)
     })
 
-    promise.catch(response => console.log("erro"))
-  }, []);
+    promise.catch( () => alert("Unable to render posts"))
+  }, [fetchDependency]);
+
+ 
 
   useEffect( () => {
     async function fetchData(){
@@ -76,7 +80,7 @@ export default function Timeline() {
             {
               <>{posts.map(post => {
                   return (
-                    <FetchPosts post={post} />
+                    <FetchPosts post={post} setDependency={setDependency} fetchDependency={fetchDependency} />
                   )})
                 }
               </>
@@ -174,11 +178,34 @@ const LeftSide = styled.div`
       color:white;
     }
 
-    overflow-y: scroll;
+    overflow:auto;
 
     ::-webkit-scrollbar {
-    display: none;
+    background:none;
+    width: 8px;
+    height: 2 em;
+     
+  
   }
+
+  ::-webkit-scrollbar-track {
+    background-color: #171717;
+  border-radius: 100vw;
+  margin-block: 0.5em;
+}
+
+:-webkit-scrollbar-thumb {
+  width: 5px;
+  background: hsl(120 100% 20% / 1);
+  border: 0.25em solid red 3px;
+  border-radius: 100vw;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ligthgray);
+ 
+  border-radius: 16px;
+}
 
     -ms-overflow-style: none; 
     scrollbar-width: none; 
