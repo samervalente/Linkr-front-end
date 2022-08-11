@@ -38,6 +38,8 @@ export default function Timeline() {
       setPost(response.data)
       setIsLoading(false)
 
+      
+
     })
 
     
