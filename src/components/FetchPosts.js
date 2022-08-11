@@ -34,13 +34,21 @@ export default function FetchPosts({
   //LIKE PART
   useEffect(() => {
     const promise = axios.get(`http://localhost:4000/likes/${post.id}`, config);
+    const promise2 = axios.get(`http://localhost:4000/likes/count/${post.id}`);
     promise.then((response) => {
       if (response.data) {
         setIsLiked(true);
       }
     });
+    promise2.then((response) => {
+      setLikes(response.data.count);
+    });
 
     promise.catch((error) => {
+      console.error("error");
+    });
+
+    promise2.catch((error) => {
       console.error("error");
     });
   }, []);
@@ -56,6 +64,7 @@ export default function FetchPosts({
     promise.then((response) => {
       if (response.status === 201) {
         setIsLiked(true);
+        setLikes(likes + 1);
       }
     });
 
@@ -72,6 +81,7 @@ export default function FetchPosts({
     promise.then((response) => {
       if (response.status === 200) {
         setIsLiked(false);
+        setLikes(likes - 1);
       }
     });
 
@@ -153,22 +163,22 @@ export default function FetchPosts({
             ) : null}{" "}
           </h1>
 
-          {isEditing ?
-            (
-              <TextArea
-                ref={inputRef}
-                disabled={loading}
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                onKeyDown={handleKeyDown}
-              />
-            ) : (
-
-              <>
-                <p>
-                <ReactTagify tagStyle={tagStyle} tagClicked={tag => choiceHashtag(tag)} >
+          {isEditing ? (
+            <TextArea
+              ref={inputRef}
+              disabled={loading}
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+          ) : (
+            <>
+              <p>
+                <ReactTagify
+                  tagStyle={tagStyle}
+                  tagClicked={(tag) => choiceHashtag(tag)}
+                >
                   {description}
-
                 </ReactTagify>
               </p>
             </>
