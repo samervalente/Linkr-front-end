@@ -152,22 +152,23 @@ export default function FetchPosts({
               </span>
             ) : null}{" "}
           </h1>
-          {isEditing ? (
-            <TextArea
-              ref={inputRef}
-              disabled={loading}
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-          ) : (
-            <>
-              <p>
-                <ReactTagify
-                  tagStyle={tagStyle}
-                  tagClicked={(tag) => choiceHashtag(tag)}
-                >
-                  {post.description}
+
+          {isEditing ?
+            (
+              <TextArea
+                ref={inputRef}
+                disabled={loading}
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+            ) : (
+
+              <>
+                <p>
+                <ReactTagify tagStyle={tagStyle} tagClicked={tag => choiceHashtag(tag)} >
+                  {description}
+
                 </ReactTagify>
               </p>
             </>
