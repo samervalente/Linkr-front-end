@@ -12,7 +12,7 @@ import ReactTooltip from "react-tooltip";
 import { updatePost, getTrending } from "../services/post";
 import Modal from "react-modal";
 
-Modal.setAppElement('#root');
+Modal.setAppElement("#root");
 
 export default function FetchPosts({
   post,
@@ -29,8 +29,7 @@ export default function FetchPosts({
   const { token } = useContext(UserContext);
   const [names, setNames] = useState([]);
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const config = {
     headers: {
@@ -136,6 +135,10 @@ export default function FetchPosts({
   }
 
   // LIKE END
+
+  function redirectUser() {
+    navigate(`/user/${post.userId}`);
+  }
   const inputRef = useRef(null);
   const toggleEditing = () => {
     setEditing(!isEditing);
@@ -193,16 +196,17 @@ export default function FetchPosts({
 
   //MODAL
 
-  function openModal(){
-    if(isModalOpen)
-      setIsModalOpen(true)
+  function openModal() {
+    if (isModalOpen) setIsModalOpen(true);
   }
 
   return (
     <PostBox>
       <LeftTop>
         <LeftSide>
-          <img src={post.imageProfile} />
+          <ClickSyle onClick={redirectUser}>
+            <img src={post.imageProfile} />
+          </ClickSyle>
           {isLiked ? <FillHeart onClick={dislike} /> : <Heart onClick={like} />}
           <a data-tip data-for={`${post.id}`}>
             <span>{likes} likes</span>
@@ -210,11 +214,9 @@ export default function FetchPosts({
           {isLiked ? (
             <ReactTooltip id={`${post.id}`} place="bottom" type="light">
               Você
-                {names.length > 0 ? (
-                  `, ${names[0].name} and others ${likes - 2} people`
-                  ) : (
-                  ` and others 0 people`
-                )} 
+              {names.length > 0
+                ? `, ${names[0].name} and others ${likes - 2} people`
+                : ` and others 0 people`}
             </ReactTooltip>
           ) : (
             <ReactTooltip id={`${post.id}`} place="bottom" type="light">
@@ -230,7 +232,7 @@ export default function FetchPosts({
         </LeftSide>
         <TopBox>
           <h1>
-            {post.name}{" "}
+            <ClickSyle onClick={redirectUser}>{post.name} </ClickSyle>
             {userId === post.userId ? (
               <span>
                 <Pencil onClick={toggleEditing} /> <Trash />
@@ -383,7 +385,6 @@ const Image = styled.div`
     width: 155px;
     height: 157px;
     border-radius: 0px 12px 13px 0px;
-    
   }
 `;
 
@@ -428,4 +429,8 @@ const FillHeart = styled(AiFillHeart)`
   width: 20px;
   height: 20px;
   color: red;
+`;
+
+const ClickSyle = styled.div`
+  cursor: pointer;
 `;
