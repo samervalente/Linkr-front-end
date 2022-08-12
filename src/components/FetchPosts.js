@@ -209,8 +209,12 @@ export default function FetchPosts({
           </a>
           {isLiked ? (
             <ReactTooltip id={`${post.id}`} place="bottom" type="light">
-              Você{names.length > 0 ? `, ${names[0].name}` : <></>} and others{" "}
-              {likes - 2} people
+              Você
+                {names.length > 0 ? (
+                  `, ${names[0].name} and others ${likes - 2} people`
+                  ) : (
+                  ` and others 0 people`
+                )} 
             </ReactTooltip>
           ) : (
             <ReactTooltip id={`${post.id}`} place="bottom" type="light">
