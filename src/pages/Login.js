@@ -1,20 +1,14 @@
 import styled from "styled-components";
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import LoginForm from "../components/LoginForm";
 import UserContext from "../context/UserContext";
+import { checkToken } from "../utils/tokenValidation";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { setToken, setImageProfile } = useContext(UserContext);
-  const tokenStorage = localStorage.getItem("token");
-  const imageStorage = localStorage.getItem("image");
-  
-  if (tokenStorage && imageStorage) {
-    setToken(tokenStorage);
-    setImageProfile(imageStorage);
-    navigate("/timeline");
-  }
+  const { setToken, setImageProfile, page } = useContext(UserContext);
+  checkToken(navigate, setToken, setImageProfile, page);
   
   return (
     <>

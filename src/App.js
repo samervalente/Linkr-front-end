@@ -4,13 +4,17 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Timeline from "./pages/Timeline";
 import TimelineByHashtag from "./pages/TimelineByHashtag";
+import User from "./pages/User.js";
 import UserContext from "./context/UserContext";
 
 function App() {
   const [token, setToken] = useState("");
   const [imageProfile, setImageProfile] = useState("");
   const [menuDisplay, setMenuDisplay] = useState(false);
-  const contextValue = { token, setToken, imageProfile, setImageProfile, menuDisplay, setMenuDisplay };
+
+  const [page, setPage] = useState('timeline');
+  const contextValue = { token, setToken, imageProfile, setImageProfile, menuDisplay, setMenuDisplay, page, setPage };
+
   return (
     <UserContext.Provider value={contextValue}>
       <BrowserRouter>
@@ -19,6 +23,7 @@ function App() {
           <Route path="/signup" element={<Register />} />
           <Route path="/timeline" element={<Timeline />} />
           <Route path="/hashtag/:hashtag" element={<TimelineByHashtag />} />
+          <Route path="/user/:id" element={<User />} />
         </Routes>
       </BrowserRouter>
     </UserContext.Provider>

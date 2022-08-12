@@ -9,36 +9,43 @@ import UserContext from "../context/UserContext";
 import { Link, useNavigate } from "react-router-dom";
 import { ReactTagify } from "react-tagify";
 import ReactTooltip from "react-tooltip";
-
 import { updatePost, getTrending } from "../services/post";
+import Modal from "react-modal";
+
+Modal.setAppElement("#root");
 
 export default function FetchPosts({
   post,
   userId,
   setDependency,
   fetchDependency,
-  setTrending
-  
+  setTrending,
 }) {
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(0);
   const [isEditing, setEditing] = useState(false);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
-  const [description, setDescription] = useState(post.description);
   const { token } = useContext(UserContext);
+  const [names, setNames] = useState([]);
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   };
- 
+
   //LIKE PART
+
   useEffect(() => {
     const promise = axios.get(`http://localhost:4000/likes/${post.id}`, config);
     const promise2 = axios.get(`http://localhost:4000/likes/count/${post.id}`);
+    const promise3 = axios.get(
+      `http://localhost:4000/likes/names/${post.id}`,
+      config
+    );
     promise.then((response) => {
       if (response.data) {
         setIsLiked(true);
@@ -48,11 +55,20 @@ export default function FetchPosts({
       setLikes(Number(response.data.count));
     });
 
+    promise3.then((response) => {
+      const nameResponse = response.data;
+      setNames(nameResponse);
+    });
+
     promise.catch((error) => {
       console.error("error");
     });
 
     promise2.catch((error) => {
+      console.error("error");
+    });
+
+    promise3.catch((error) => {
       console.error("error");
     });
   }, []);
@@ -75,6 +91,18 @@ export default function FetchPosts({
     promise.catch((error) => {
       console.error("error");
     });
+
+    const promise2 = axios.get(
+      `http://localhost:4000/likes/names/${post.id}`,
+      config
+    );
+    promise2.then((response) => {
+      const nameResponse = response.data;
+      setNames(nameResponse);
+    });
+    promise2.catch((error) => {
+      console.error("error");
+    });
   }
 
   function dislike() {
@@ -86,6 +114,18 @@ export default function FetchPosts({
       if (response.status === 200) {
         setIsLiked(false);
         setLikes(likes - 1);
+        const promise2 = axios.get(
+          `http://localhost:4000/likes/names/${post.id}`,
+          config
+        );
+        promise2.then((response) => {
+          const nameResponse = response.data;
+
+          setNames(nameResponse);
+        });
+        promise2.catch((error) => {
+          console.error("error");
+        });
       }
     });
 
@@ -95,6 +135,10 @@ export default function FetchPosts({
   }
 
   // LIKE END
+
+  function redirectUser() {
+    navigate(`/user/${post.userId}`);
+  }
   const inputRef = useRef(null);
   const toggleEditing = () => {
     setEditing(!isEditing);
@@ -120,14 +164,11 @@ export default function FetchPosts({
     };
 
     const response = await updatePost(post.id, body, config);
-    setDependency(!fetchDependency);
-
 
     if (response === 200) {
+      setDependency(!fetchDependency);
       setLoading(false);
       setEditing(false);
-      setDescription(text);
-     
       setText("");
     } else {
       setLoading(false);
@@ -142,9 +183,8 @@ export default function FetchPosts({
   }, [isEditing]);
 
   function choiceHashtag(name) {
-    
     name = name.replace("#", "").toLowerCase();
-    
+
     navigate(`/hashtag/${name}`);
     setDependency(!fetchDependency);
   }
@@ -154,29 +194,50 @@ export default function FetchPosts({
     cursor: "pointer",
   };
 
+  //MODAL
+
+  function openModal() {
+    if (isModalOpen) setIsModalOpen(true);
+  }
+
   return (
     <PostBox>
-      <LeftTop>
-        <LeftSide>
+      <LeftSide>
+        <ClickSyle onClick={redirectUser}>
           <img src={post.imageProfile} />
-          {isLiked ? <FillHeart onClick={dislike} /> : <Heart onClick={like} />}
-          <a data-tip data-for="likes">
-            <span>{likes} likes</span>
-          </a>
-          <ReactTooltip id="likes" place="bottom" type="dark">
-            <span>Hi!</span>
+        </ClickSyle>
+        {isLiked ? <FillHeart onClick={dislike} /> : <Heart onClick={like} />}
+        <a data-tip data-for={`${post.id}`}>
+          <span>{likes} likes</span>
+        </a>
+        {isLiked ? (
+          <ReactTooltip id={`${post.id}`} place="bottom" type="light">
+            Você
+            {names.length > 0
+              ? `, ${names[0].name} and others ${likes - 2} people`
+              : ` and others 0 people`}
           </ReactTooltip>
-        </LeftSide>
+        ) : (
+          <ReactTooltip id={`${post.id}`} place="bottom" type="light">
+            {names.length > 1
+              ? `${names[0].name}, ${names[1].name} and others ${likes - 2
+              } people`
+              : names.length === 1
+                ? `${names[0].name} and others 0 people`
+                : "0 likes"}
+          </ReactTooltip>
+        )}
+      </LeftSide>
+      <RightTop>
         <TopBox>
           <h1>
-            {post.name}{" "}
+            <ClickSyle onClick={redirectUser}>{post.name} </ClickSyle>
             {userId === post.userId ? (
               <span>
                 <Pencil onClick={toggleEditing} /> <Trash />
               </span>
             ) : null}{" "}
           </h1>
-
           {isEditing ? (
             <TextArea
               ref={inputRef}
@@ -195,24 +256,22 @@ export default function FetchPosts({
                   {post.description}
                 </ReactTagify>
               </p>
-             
             </>
           )}
         </TopBox>
-      </LeftTop>
-      <LinkPart>
-        <a href={post.url} target="_blank">
-          <Texts>
-            <h1>{post.urlTitle}</h1>
-            <h2>{post.urlDescription}</h2>
-            <h4>{post.url}</h4>
-          </Texts>
-
-          <Image>
-            <img src={post.urlImage}></img>
-          </Image>
-        </a>
-      </LinkPart>
+        <LinkPart>
+          <a href={post.url} target="_blank">
+            <Texts>
+              <h1>{post.urlTitle}</h1>
+              <h2>{post.urlDescription}</h2>
+              <h4>{post.url}</h4>
+            </Texts>
+            <Image>
+              <img src={post.urlImage}></img>
+            </Image>
+          </a>
+        </LinkPart>
+      </RightTop>
     </PostBox>
   );
 }
@@ -223,27 +282,20 @@ const PostBox = styled.div`
   background-color: #171717;
   border-radius: 16px;
   margin-bottom: 16px;
-
-  img {
-    width: 50px;
-    height: 50px;
-    border-radius: 25px;
-    object-fit: cover;
-    margin: 18px;
-  }
+  display: flex;
+  padding: 18px;
 `;
 
 const LinkPart = styled.div`
   a {
-    width: 503px;
-    height: 155px;
+    height: 159px;
     border: 1px solid #4d4d4d;
     border-radius: 11px;
-    margin-left: 86px;
-    margin-top: -28px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     text-decoration: none;
+    position: relative;
   }
 `;
 
@@ -256,7 +308,6 @@ const TopBox = styled.div`
     font-family: "Lato";
     color: #ffffff;
     font-size: 19px;
-    margin-top: 19px;
     font-weight: 400;
     display: flex;
     justify-content: space-between;
@@ -266,6 +317,7 @@ const TopBox = styled.div`
     font-family: "Lato";
     color: #b7b7b7;
     margin: 8px 0;
+    min-height: 44px;
   }
 `;
 
@@ -273,8 +325,15 @@ const LeftSide = styled.div`
   width: 90px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    object-fit: cover;
+    margin-bottom: 18px;
+  }
   span {
     color: #ffffff;
     font-size: 12px;
@@ -283,8 +342,10 @@ const LeftSide = styled.div`
   }
 `;
 
-const LeftTop = styled.div`
+const RightTop = styled.div`
   display: flex;
+  flex-direction: column;
+  margin: 0 20px;
 `;
 
 const Texts = styled.div`
@@ -314,8 +375,13 @@ const Texts = styled.div`
 `;
 
 const Image = styled.div`
-  img {
-    border-radius: 0px 12px 13px 0px;
+  display: flex;
+  align-items: center;
+    img {
+    width: 155px;
+    height: 157px;
+    border-radius: 0px 11px 11px 0px;
+    object-fit: cover;
   }
 `;
 
@@ -360,4 +426,8 @@ const FillHeart = styled(AiFillHeart)`
   width: 20px;
   height: 20px;
   color: red;
+`;
+
+const ClickSyle = styled.div`
+  cursor: pointer;
 `;
