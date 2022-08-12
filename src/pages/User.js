@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import CreatePost from "../components/CreatePost";
 import Top from "../components/Top";
 import FetchPosts from "../components/FetchPosts";
 import { useContext, useEffect, useState } from "react";
@@ -26,9 +25,7 @@ export default function User() {
   console.log(posts);
   useEffect(() => {
     if (!token || !imageProfile) {
-
       setPage(`user/${id}`);
-
       navigate("/");
       return;
     }
@@ -113,7 +110,7 @@ export default function User() {
 
   return (
     <Conteiner onClick={checkMenu}>
-      <Top />
+      <Top setDependency={setDependency} fetchDependency={fetchDependency} />
       <Content>
         <Title>
           {posts.length > 0 ? `${posts[0].name}'s posts ` : "Carregando..."}

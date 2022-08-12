@@ -6,7 +6,7 @@ import UserContext from "../context/UserContext";
 import { DebounceInput } from "react-debounce-input";
 import { getUsers } from "../services/users";
 
-export default function Top() {
+export default function Top({ fetchDependency, setDependency }) {
   const {
     token,
     setToken,
@@ -42,6 +42,7 @@ export default function Top() {
   }
 
   function redirectUser(id) {
+    setDependency(!fetchDependency);
     navigate(`/user/${id}`);
   }
 
