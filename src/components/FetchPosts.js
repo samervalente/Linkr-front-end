@@ -202,34 +202,33 @@ export default function FetchPosts({
 
   return (
     <PostBox>
-      <LeftTop>
-        <LeftSide>
-          <ClickSyle onClick={redirectUser}>
-            <img src={post.imageProfile} />
-          </ClickSyle>
-          {isLiked ? <FillHeart onClick={dislike} /> : <Heart onClick={like} />}
-          <a data-tip data-for={`${post.id}`}>
-            <span>{likes} likes</span>
-          </a>
-          {isLiked ? (
-            <ReactTooltip id={`${post.id}`} place="bottom" type="light">
-              Você
-              {names.length > 0
-                ? `, ${names[0].name} and others ${likes - 2} people`
-                : ` and others 0 people`}
-            </ReactTooltip>
-          ) : (
-            <ReactTooltip id={`${post.id}`} place="bottom" type="light">
-              {names.length > 1
-                ? `${names[0].name}, ${names[1].name} and others ${
-                    likes - 2
-                  } people`
-                : names.length === 1
+      <LeftSide>
+        <ClickSyle onClick={redirectUser}>
+          <img src={post.imageProfile} />
+        </ClickSyle>
+        {isLiked ? <FillHeart onClick={dislike} /> : <Heart onClick={like} />}
+        <a data-tip data-for={`${post.id}`}>
+          <span>{likes} likes</span>
+        </a>
+        {isLiked ? (
+          <ReactTooltip id={`${post.id}`} place="bottom" type="light">
+            Você
+            {names.length > 0
+              ? `, ${names[0].name} and others ${likes - 2} people`
+              : ` and others 0 people`}
+          </ReactTooltip>
+        ) : (
+          <ReactTooltip id={`${post.id}`} place="bottom" type="light">
+            {names.length > 1
+              ? `${names[0].name}, ${names[1].name} and others ${likes - 2
+              } people`
+              : names.length === 1
                 ? `${names[0].name} and others 0 people`
                 : "0 likes"}
-            </ReactTooltip>
-          )}
-        </LeftSide>
+          </ReactTooltip>
+        )}
+      </LeftSide>
+      <RightTop>
         <TopBox>
           <h1>
             <ClickSyle onClick={redirectUser}>{post.name} </ClickSyle>
@@ -239,7 +238,6 @@ export default function FetchPosts({
               </span>
             ) : null}{" "}
           </h1>
-
           {isEditing ? (
             <TextArea
               ref={inputRef}
@@ -261,20 +259,19 @@ export default function FetchPosts({
             </>
           )}
         </TopBox>
-      </LeftTop>
-      <LinkPart>
-        <a href={post.url} target="_blank">
-          <Texts>
-            <h1>{post.urlTitle}</h1>
-            <h2>{post.urlDescription}</h2>
-            <h4>{post.url}</h4>
-          </Texts>
-
-          <Image>
-            <img src={post.urlImage}></img>
-          </Image>
-        </a>
-      </LinkPart>
+        <LinkPart>
+          <a href={post.url} target="_blank">
+            <Texts>
+              <h1>{post.urlTitle}</h1>
+              <h2>{post.urlDescription}</h2>
+              <h4>{post.url}</h4>
+            </Texts>
+            <Image>
+              <img src={post.urlImage}></img>
+            </Image>
+          </a>
+        </LinkPart>
+      </RightTop>
     </PostBox>
   );
 }
@@ -285,24 +282,15 @@ const PostBox = styled.div`
   background-color: #171717;
   border-radius: 16px;
   margin-bottom: 16px;
-
-  img {
-    width: 50px;
-    height: 50px;
-    border-radius: 25px;
-    object-fit: cover;
-    margin: 18px;
-  }
+  display: flex;
+  padding: 18px;
 `;
 
 const LinkPart = styled.div`
   a {
-    width: 504px;
     height: 159px;
     border: 1px solid #4d4d4d;
     border-radius: 11px;
-    margin-left: 86px;
-    margin-top: -28px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -320,7 +308,6 @@ const TopBox = styled.div`
     font-family: "Lato";
     color: #ffffff;
     font-size: 19px;
-    margin-top: 19px;
     font-weight: 400;
     display: flex;
     justify-content: space-between;
@@ -330,6 +317,7 @@ const TopBox = styled.div`
     font-family: "Lato";
     color: #b7b7b7;
     margin: 8px 0;
+    min-height: 44px;
   }
 `;
 
@@ -337,8 +325,15 @@ const LeftSide = styled.div`
   width: 90px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    object-fit: cover;
+    margin-bottom: 18px;
+  }
   span {
     color: #ffffff;
     font-size: 12px;
@@ -347,8 +342,10 @@ const LeftSide = styled.div`
   }
 `;
 
-const LeftTop = styled.div`
+const RightTop = styled.div`
   display: flex;
+  flex-direction: column;
+  margin: 0 20px;
 `;
 
 const Texts = styled.div`
@@ -380,11 +377,11 @@ const Texts = styled.div`
 const Image = styled.div`
   display: flex;
   align-items: center;
-  margin-right: -18px;
-  img {
+    img {
     width: 155px;
     height: 157px;
-    border-radius: 0px 12px 13px 0px;
+    border-radius: 0px 11px 11px 0px;
+    object-fit: cover;
   }
 `;
 
