@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import CreatePost from "../components/CreatePost";
 import Top from "../components/Top";
 import FetchPosts from '../components/FetchPosts';
 import { useContext, useEffect, useState } from "react";
@@ -15,7 +14,7 @@ export default function Timeline() {
 
   const [posts, setPost] = useState([]);
   const [userId, setUserId] = useState('');
-  const { token, imageProfile, menuDisplay, setMenuDisplay } = useContext(UserContext);
+  const { token, imageProfile, menuDisplay, setMenuDisplay, setPage } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
   const [trending, setTrending] = useState([])
   const {hashtag} = useParams()
@@ -24,16 +23,15 @@ export default function Timeline() {
 
   useEffect(() => {
     if (!token || !imageProfile) {
+      setPage(`hashtag/${hashtag}`);
       navigate('/');
       return
     }
-
     const config = {
       headers: {
           Authorization: `Bearer ${token}`
       }
   }
-   
 
     const promise = axios.get(`http://localhost:4000/posts/${hashtag}`, config);
     promise.then(response => {
@@ -81,8 +79,8 @@ export default function Timeline() {
 
 
   const trendingTopics = trending.length > 0? 
-  trending.map((hashtag) => {
-    return <Link to={`/hashtag/${hashtag.tag}`}>
+  trending.map((hashtag, index) => {
+    return <Link key={index} to={`/hashtag/${hashtag.tag}`}>
           <li onClick={() => fetchPostsByHashtagName(hashtag.tag)}>#{hashtag.tag}</li>
       </Link>
   }):  "Searching for hashtags..."
@@ -94,19 +92,10 @@ export default function Timeline() {
         <Title># {hashtag}</Title>
         <Sides>
           <RightSide>
-            
-            {
-
-              <>{posts.map((post, index )=> {
-                  return (
-                    <FetchPosts key={index} post={post} userId={userId} setTrending={setTrending} setDependency={setDependency} fetchDependency={fetchDependency}  />
-                  )})
-                }
-              </>
-            }
-            {isLoading && <Oval />}
-            {!isLoading && posts.length === 0 && (
-              <p>There are no posts yet</p>
+            {posts.length > 0 ? (
+              posts.map((post, index) => <FetchPosts key={index} post={post} userId={userId} setTrending={setTrending} setDependency={setDependency} fetchDependency={fetchDependency} />)
+            ) : (
+              isLoading ? <><Load>"Carregando posts..."</Load><Oval /></> : <Load>There are no posts with this tag</Load>
             )}
           </RightSide>
           <LeftSide>
@@ -229,10 +218,13 @@ const LeftSide = styled.div`
     -ms-overflow-style: none; 
     scrollbar-width: none; 
   }
+`;
 
-
-
-
+const Load = styled.div`
+  font-family: 'Lato';
+  color: #FFFFFF;
+  margin-top: 20px;
+  margin-bottom: 40px;
 `;
 
 
