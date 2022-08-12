@@ -26,7 +26,7 @@ export default function User() {
   console.log(posts);
   useEffect(() => {
     if (!token || !imageProfile) {
-      setPage(`/user/${id}`);
+      setPage(`user/${id}`);
       navigate("/");
       return;
     }

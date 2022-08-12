@@ -4,7 +4,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Timeline from "./pages/Timeline";
 import TimelineByHashtag from "./pages/TimelineByHashtag";
-import User from "./pages/User.js";
+import User from "./pages/User";
 import UserContext from "./context/UserContext";
 
 function App() {
@@ -12,8 +12,17 @@ function App() {
   const [imageProfile, setImageProfile] = useState("");
   const [menuDisplay, setMenuDisplay] = useState(false);
 
-  const [page, setPage] = useState('timeline');
-  const contextValue = { token, setToken, imageProfile, setImageProfile, menuDisplay, setMenuDisplay, page, setPage };
+  const [page, setPage] = useState("timeline");
+  const contextValue = {
+    token,
+    setToken,
+    imageProfile,
+    setImageProfile,
+    menuDisplay,
+    setMenuDisplay,
+    page,
+    setPage,
+  };
 
   return (
     <UserContext.Provider value={contextValue}>
