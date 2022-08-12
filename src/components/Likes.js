@@ -1,22 +1,16 @@
-import styled, { withTheme } from "styled-components";
+import styled from "styled-components";
 import axios from "axios";
 import { FiHeart } from "react-icons/fi";
 import { AiFillHeart } from "react-icons/ai";
-import { useState, useContext, useRef, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import UserContext from "../context/UserContext";
-import { Link, useNavigate } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
 
-export default function Likes({ post, userId, setDependency, fetchDependency }) {
+export default function Likes({ post }) {
     const [isLiked, setIsLiked] = useState(false);
     const [likes, setLikes] = useState(0);
-    const [isEditing, setEditing] = useState(false);
-    const [text, setText] = useState("");
-    const [loading, setLoading] = useState(false);
     const { token } = useContext(UserContext);
     const [names, setNames] = useState([]);
-    const navigate = useNavigate();
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const config = {
         headers: {
@@ -31,6 +25,8 @@ export default function Likes({ post, userId, setDependency, fetchDependency }) 
         promise.then((response) => {
             if (response.data) {
                 setIsLiked(true);
+            } else {
+                setIsLiked(false);
             }
         });
         promise2.then((response) => {
@@ -53,7 +49,7 @@ export default function Likes({ post, userId, setDependency, fetchDependency }) 
         promise3.catch((error) => {
             console.error("error");
         });
-    }, []);
+    }, [post]);
 
     function like() {
         const promise = axios.post(

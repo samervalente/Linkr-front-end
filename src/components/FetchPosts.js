@@ -1,141 +1,24 @@
-import styled, { withTheme } from "styled-components";
-import axios from "axios";
+import styled from "styled-components";
 import { TiPencil } from "react-icons/ti";
 import { CgTrash } from "react-icons/cg";
-import { FiHeart } from "react-icons/fi";
 import { AiFillHeart } from "react-icons/ai";
 import { useState, useContext, useRef, useEffect } from "react";
 import UserContext from "../context/UserContext";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ReactTagify } from "react-tagify";
-import ReactTooltip from "react-tooltip";
-import { updatePost, getTrending } from "../services/post";
+import { updatePost } from "../services/post";
 import Modal from "react-modal";
 import Likes from '../components/Likes';
 
 Modal.setAppElement("#root");
 
-export default function FetchPosts({
-  post,
-  userId,
-  setDependency,
-  fetchDependency,
-  setTrending,
-}) {
-  const [isLiked, setIsLiked] = useState(false);
-  const [likes, setLikes] = useState(0);
+export default function FetchPosts({ post, userId, setDependency, fetchDependency }) {
   const [isEditing, setEditing] = useState(false);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const { token } = useContext(UserContext);
-  const [names, setNames] = useState([]);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
-  //LIKE PART
-
-  // useEffect(() => {
-  //   const promise = axios.get(`http://localhost:4000/likes/${post.id}`, config);
-  //   const promise2 = axios.get(`http://localhost:4000/likes/count/${post.id}`);
-  //   const promise3 = axios.get(
-  //     `http://localhost:4000/likes/names/${post.id}`,
-  //     config
-  //   );
-  //   promise.then((response) => {
-  //     if (response.data) {
-  //       setIsLiked(true);
-  //     }
-  //   });
-  //   promise2.then((response) => {
-  //     setLikes(Number(response.data.count));
-  //   });
-
-  //   promise3.then((response) => {
-  //     const nameResponse = response.data;
-  //     setNames(nameResponse);
-  //   });
-
-  //   promise.catch((error) => {
-  //     console.error("error");
-  //   });
-
-  //   promise2.catch((error) => {
-  //     console.error("error");
-  //   });
-
-  //   promise3.catch((error) => {
-  //     console.error("error");
-  //   });
-  // }, []);
-
-  // function like() {
-  //   const promise = axios.post(
-  //     `http://localhost:4000/likes`,
-  //     {
-  //       postId: post.id,
-  //     },
-  //     config
-  //   );
-  //   promise.then((response) => {
-  //     if (response.status === 201) {
-  //       setIsLiked(true);
-  //       setLikes(likes + 1);
-  //     }
-  //   });
-
-  //   promise.catch((error) => {
-  //     console.error("error");
-  //   });
-
-  //   const promise2 = axios.get(
-  //     `http://localhost:4000/likes/names/${post.id}`,
-  //     config
-  //   );
-  //   promise2.then((response) => {
-  //     const nameResponse = response.data;
-  //     setNames(nameResponse);
-  //   });
-  //   promise2.catch((error) => {
-  //     console.error("error");
-  //   });
-  // }
-
-  // function dislike() {
-  //   const promise = axios.delete(
-  //     `http://localhost:4000/likes/${post.id}`,
-  //     config
-  //   );
-  //   promise.then((response) => {
-  //     if (response.status === 200) {
-  //       setIsLiked(false);
-  //       setLikes(likes - 1);
-  //       const promise2 = axios.get(
-  //         `http://localhost:4000/likes/names/${post.id}`,
-  //         config
-  //       );
-  //       promise2.then((response) => {
-  //         const nameResponse = response.data;
-
-  //         setNames(nameResponse);
-  //       });
-  //       promise2.catch((error) => {
-  //         console.error("error");
-  //       });
-  //     }
-  //   });
-
-  //   promise.catch((error) => {
-  //     console.error("error");
-  //   });
-  // }
-
-  // LIKE END
 
   function redirectUser() {
     navigate(`/user/${post.userId}`);
@@ -207,17 +90,14 @@ export default function FetchPosts({
         <ClickSyle onClick={redirectUser}>
           <img src={post.imageProfile} />
         </ClickSyle>
-
-        <Likes post={post} userId={userId} setDependency={setDependency} fetchDependency= {fetchDependency} />
+        <Likes post={post} />
       </LeftSide>
       <RightTop>
         <TopBox>
           <h1>
             <ClickSyle onClick={redirectUser}>{post.name} </ClickSyle>
             {userId === post.userId ? (
-              <span>
-                <Pencil onClick={toggleEditing} /> <Trash />
-              </span>
+              <span><Pencil onClick={toggleEditing} /> <Trash /></span>
             ) : null}{" "}
           </h1>
           {isEditing ? (
@@ -229,16 +109,11 @@ export default function FetchPosts({
               onKeyDown={handleKeyDown}
             />
           ) : (
-            <>
               <p>
-                <ReactTagify
-                  tagStyle={tagStyle}
-                  tagClicked={(tag) => choiceHashtag(tag)}
-                >
+                <ReactTagify tagStyle={tagStyle} tagClicked={(tag) => choiceHashtag(tag)}>
                   {post.description}
                 </ReactTagify>
               </p>
-            </>
           )}
         </TopBox>
         <LinkPart>
@@ -359,7 +234,7 @@ const Texts = styled.div`
 const Image = styled.div`
   display: flex;
   align-items: center;
-    img {
+  img {
     width: 155px;
     height: 157px;
     border-radius: 0px 11px 11px 0px;
@@ -385,12 +260,6 @@ const TextArea = styled.textarea`
 `;
 
 //style icons:
-
-const Heart = styled(FiHeart)`
-  width: 20px;
-  height: 20px;
-  color: #ffffff;
-`;
 
 const Pencil = styled(TiPencil)`
   width: 20px;
