@@ -49,6 +49,8 @@ export default function FetchPosts({
     promise.then((response) => {
       if (response.data) {
         setIsLiked(true);
+      } else {
+        setIsLiked(false);
       }
     });
     promise2.then((response) => {
@@ -71,7 +73,7 @@ export default function FetchPosts({
     promise3.catch((error) => {
       console.error("error");
     });
-  }, []);
+  }, [post]);
 
   function like() {
     const promise = axios.post(
@@ -220,11 +222,12 @@ export default function FetchPosts({
         ) : (
           <ReactTooltip id={`${post.id}`} place="bottom" type="light">
             {names.length > 1
-              ? `${names[0].name}, ${names[1].name} and others ${likes - 2
-              } people`
+              ? `${names[0].name}, ${names[1].name} and others ${
+                  likes - 2
+                } people`
               : names.length === 1
-                ? `${names[0].name} and others 0 people`
-                : "0 likes"}
+              ? `${names[0].name} and others 0 people`
+              : "0 likes"}
           </ReactTooltip>
         )}
       </LeftSide>
@@ -377,7 +380,7 @@ const Texts = styled.div`
 const Image = styled.div`
   display: flex;
   align-items: center;
-    img {
+  img {
     width: 155px;
     height: 157px;
     border-radius: 0px 11px 11px 0px;
