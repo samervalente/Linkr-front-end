@@ -1,11 +1,13 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import UserContext from "../context/UserContext";
 import { sendPost, getPosts, getPostsByHashtagName, getTrending } from '../services/post';
 
-export default function CreatePost({ token, imageProfile, setPost, setUserId }) {
+export default function CreatePost({ imageProfile, setTrending, setDependency, fetchDependency }) {
     const [loading, setLoading] = useState(false);
     const [url, setUrl] = useState('');
     const [text, setText] = useState('');
+    const { token } = useContext(UserContext);
 
     async function createPost(event) {
         event.preventDefault();
@@ -22,32 +24,13 @@ export default function CreatePost({ token, imageProfile, setPost, setUserId }) 
         const response = await sendPost(body, config);
 
         if (response === 201) {
+            setDependency(!fetchDependency);
             setUrl('');
             setText('');
             setLoading(false);
-            fetchPosts();
         } else {
             setLoading(false);
             alert("Houve um erro ao publicar seu link");
-        }
-    }
-    
-
-    async function fetchPosts() {
-        const config = {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }
-        const response =await getPosts(config)
-        if (response) {
-           const trendingAtualized =  await getTrending()
-            
-            setPost(response.posts);
-            setUserId(response.userId);
-            
-        } else {
-            alert("An error occured while trying to fetch the posts, please refresh the page");
         }
     }
 

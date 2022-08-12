@@ -20,6 +20,7 @@ export default function Timeline() {
   const [isLoading, setIsLoading] = useState(true);
   const [trending, setTrending] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [fetchDependency, setDependency] = useState(false)
 
   useEffect(() => {
     if (!token || !imageProfile) {
@@ -43,7 +44,7 @@ export default function Timeline() {
       console.error("error")
       setIsModalOpen(true)
     });
-  }, []);
+  }, [fetchDependency]);
 
   const customStyle = { 
     content:{
@@ -83,7 +84,7 @@ export default function Timeline() {
    
     fetchData()
     
-  }, [])
+  }, [fetchDependency])
 
   function closeModal(){
     if(isModalOpen)
@@ -110,11 +111,11 @@ export default function Timeline() {
         <Title>timeline</Title>
         <Sides>
           <RightSide>
-            {<CreatePost token={token} imageProfile={imageProfile} setPost={setPost} setUserId={setUserId} setTrending={setTrending} />}
+            {<CreatePost imageProfile={imageProfile} setTrending={setTrending} setDependency={setDependency} fetchDependency={fetchDependency} />}
             {
               <>{posts.length > 0 ? posts.map((post, index) => {
                 return (
-                  <FetchPosts key={index} post={post} userId={userId} />
+                  <FetchPosts key={index} post={post} userId={userId} setTrending={setTrending} setDependency={setDependency} fetchDependency={fetchDependency} />
                 )}): <Load>"Carregando posts..."</Load>
                 }
               </>

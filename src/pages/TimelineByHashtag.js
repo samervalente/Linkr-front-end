@@ -12,7 +12,9 @@ import { Oval} from "react-loader-spinner";
 
 export default function Timeline() {
   const navigate = useNavigate();
+
   const [posts, setPost] = useState([]);
+  const [userId, setUserId] = useState('');
   const { token, imageProfile, menuDisplay, setMenuDisplay } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
   const [trending, setTrending] = useState([])
@@ -25,10 +27,19 @@ export default function Timeline() {
       navigate('/');
       return
     }
+
+    const config = {
+      headers: {
+          Authorization: `Bearer ${token}`
+      }
+  }
    
-    const promise = axios.get(`http://localhost:4000/posts/${hashtag}`);
+
+    const promise = axios.get(`http://localhost:4000/posts/${hashtag}`, config);
     promise.then(response => {
-      setPost(response.data)
+    
+      setPost(response.data.posts);
+      setUserId(response.data.userId);
       setIsLoading(false)
     })
 
@@ -45,7 +56,7 @@ export default function Timeline() {
    
     fetchData()
     
-  }, [])
+  }, [fetchDependency])
 
   function checkMenu() {
     if (menuDisplay) {
@@ -54,10 +65,17 @@ export default function Timeline() {
   }
 
   function fetchPostsByHashtagName(name){
-    const promise = axios.get(`http://localhost:4000/posts/${name}`);
+    setDependency(!fetchDependency)
+    setIsLoading(false)
+    const config = {
+      headers: {
+          Authorization: `Bearer ${token}`
+      }
+  }
+    const promise = axios.get(`http://localhost:4000/posts/${name}`, config);
     promise.then(response => {
-      setPost(response.data)
-      setIsLoading(false)
+      setPost(response.data.posts)
+      
     })
   }
 
@@ -78,9 +96,10 @@ export default function Timeline() {
           <RightSide>
             
             {
-              <>{posts.map(post => {
+
+              <>{posts.map((post, index )=> {
                   return (
-                    <FetchPosts post={post} setDependency={setDependency} fetchDependency={fetchDependency} />
+                    <FetchPosts key={index} post={post} userId={userId} setTrending={setTrending} setDependency={setDependency} fetchDependency={fetchDependency}  />
                   )})
                 }
               </>
