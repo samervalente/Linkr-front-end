@@ -24,7 +24,6 @@ export default function FetchPosts({
   const [isEditing, setEditing] = useState(false);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
-  const [description, setDescription] = useState(post.description);
   const { token } = useContext(UserContext);
   const [names, setNames] = useState([]);
   const navigate = useNavigate();
@@ -158,13 +157,11 @@ export default function FetchPosts({
     };
 
     const response = await updatePost(post.id, body, config);
-    setDependency(!fetchDependency);
 
     if (response === 200) {
+      setDependency(!fetchDependency);
       setLoading(false);
       setEditing(false);
-      setDescription(text);
-
       setText("");
     } else {
       setLoading(false);

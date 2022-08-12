@@ -111,7 +111,7 @@ export default function Timeline() {
         <Title>timeline</Title>
         <Sides>
           <RightSide>
-            {<CreatePost token={token} imageProfile={imageProfile} setPost={setPost} setUserId={setUserId} setTrending={setTrending} />}
+            {<CreatePost imageProfile={imageProfile} setTrending={setTrending} setDependency={setDependency} fetchDependency={fetchDependency} />}
             {
               <>{posts.length > 0 ? posts.map((post, index) => {
                 return (
