@@ -17,8 +17,7 @@ export default function Input({ label, type, variant }) {
 }
 
 const ButtonSection = styled.button`
-  background-color: ${(props) =>
-  props.variant === "disable" ? "var(--ligthgray)" : "var(--blue)"};
+  background-color: ${(props) => props.variant === "disable" ? "var(--ligthgray)" : "var(--blue)"};
   color: white;
   height: 65px;
   width: 80%;
