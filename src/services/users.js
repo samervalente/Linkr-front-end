@@ -9,7 +9,6 @@ function getUrlAPI(endpoint) {
   export async function getUsers(name){
     return axios.get(getUrlAPI(`users?name=${name}`))
     .then(res => {
-      
         return res.data
     })
     .catch(err => {

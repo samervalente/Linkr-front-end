@@ -9,21 +9,12 @@ import { getUsers } from "../services/users";
 
 
 export default function Top() {
-  const {token, setToken, imageProfile, setImageProfile, menuDisplay, setMenuDisplay } = useContext(UserContext);
+  const {setToken, imageProfile, setImageProfile, menuDisplay, setMenuDisplay } = useContext(UserContext);
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false)
   const [value, setValue] = useState("")
   const [users, setUsers] = useState([])
   
-  // useEffect( () => {
-  //           async function fetchData(){
-  //             const randomUsers = await getUsers()
-  //             setUsers(randomUsers)
-  //           }
-  //           fetchData()
-  // }, [visible])
-
-
   function checkMenu() {
     if (menuDisplay) {
       setMenuDisplay(false);
@@ -73,7 +64,7 @@ export default function Top() {
                   
               }}
               onChange={async event => {
-                setValue(event.target.value)
+                setValue(event.target.value.trim())
                   
               }
               } />
