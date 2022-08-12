@@ -25,6 +25,7 @@ export default function FetchPosts({
   const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState(post.description);
   const { token } = useContext(UserContext);
+  const [names, setNames] = useState([]);
   const navigate = useNavigate();
 
   const config = {
@@ -33,9 +34,11 @@ export default function FetchPosts({
     },
   };
   //LIKE PART
+
   useEffect(() => {
     const promise = axios.get(`http://localhost:4000/likes/${post.id}`, config);
     const promise2 = axios.get(`http://localhost:4000/likes/count/${post.id}`);
+    const promise3 = axios.get(`http://localhost:4000/likes/names/${post.id}`);
     promise.then((response) => {
       if (response.data) {
         setIsLiked(true);
@@ -45,11 +48,20 @@ export default function FetchPosts({
       setLikes(Number(response.data.count));
     });
 
+    promise3.then((response) => {
+      const nameResponse = response.data;
+      setNames(nameResponse);
+    });
+
     promise.catch((error) => {
       console.error("error");
     });
 
     promise2.catch((error) => {
+      console.error("error");
+    });
+
+    promise3.catch((error) => {
       console.error("error");
     });
   }, []);
@@ -72,6 +84,15 @@ export default function FetchPosts({
     promise.catch((error) => {
       console.error("error");
     });
+
+    const promise2 = axios.get(`http://localhost:4000/likes/names/${post.id}`);
+    promise2.then((response) => {
+      const nameResponse = response.data;
+      setNames(nameResponse);
+    });
+    promise2.catch((error) => {
+      console.error("error");
+    });
   }
 
   function dislike() {
@@ -87,6 +108,16 @@ export default function FetchPosts({
     });
 
     promise.catch((error) => {
+      console.error("error");
+    });
+
+    const promise2 = axios.get(`http://localhost:4000/likes/names/${post.id}`);
+    promise2.then((response) => {
+      const nameResponse = response.data;
+
+      setNames(nameResponse);
+    });
+    promise2.catch((error) => {
       console.error("error");
     });
   }
@@ -152,12 +183,25 @@ export default function FetchPosts({
         <LeftSide>
           <img src={post.imageProfile} />
           {isLiked ? <FillHeart onClick={dislike} /> : <Heart onClick={like} />}
-          <a data-tip data-for="likes">
+          <a data-tip data-for={`${post.id}`}>
             <span>{likes} likes</span>
           </a>
-          <ReactTooltip id="likes" place="bottom" type="dark">
-            <span>Hi!</span>
-          </ReactTooltip>
+          {isLiked ? (
+            <ReactTooltip id={`${post.id}`} place="bottom" type="light">
+              Você{names.length > 0 ? `, ${names[0].name}` : <></>} and others{" "}
+              {likes - 2} people
+            </ReactTooltip>
+          ) : (
+            <ReactTooltip id={`${post.id}`} place="bottom" type="light">
+              {names.length > 1
+                ? `${names[0].name}, ${names[1].name} and others ${
+                    likes - 2
+                  } people`
+                : names.length === 1
+                ? `${names[0].name} and others 0 people`
+                : "0 likes"}
+            </ReactTooltip>
+          )}
         </LeftSide>
         <TopBox>
           <h1>
