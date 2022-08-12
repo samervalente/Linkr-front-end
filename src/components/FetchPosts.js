@@ -40,7 +40,10 @@ export default function FetchPosts({
   useEffect(() => {
     const promise = axios.get(`http://localhost:4000/likes/${post.id}`, config);
     const promise2 = axios.get(`http://localhost:4000/likes/count/${post.id}`);
-    const promise3 = axios.get(`http://localhost:4000/likes/names/${post.id}`);
+    const promise3 = axios.get(
+      `http://localhost:4000/likes/names/${post.id}`,
+      config
+    );
     promise.then((response) => {
       if (response.data) {
         setIsLiked(true);
@@ -87,7 +90,10 @@ export default function FetchPosts({
       console.error("error");
     });
 
-    const promise2 = axios.get(`http://localhost:4000/likes/names/${post.id}`);
+    const promise2 = axios.get(
+      `http://localhost:4000/likes/names/${post.id}`,
+      config
+    );
     promise2.then((response) => {
       const nameResponse = response.data;
       setNames(nameResponse);
@@ -107,7 +113,8 @@ export default function FetchPosts({
         setIsLiked(false);
         setLikes(likes - 1);
         const promise2 = axios.get(
-          `http://localhost:4000/likes/names/${post.id}`
+          `http://localhost:4000/likes/names/${post.id}`,
+          config
         );
         promise2.then((response) => {
           const nameResponse = response.data;
