@@ -11,14 +11,10 @@ function App() {
   const [token, setToken] = useState("");
   const [imageProfile, setImageProfile] = useState("");
   const [menuDisplay, setMenuDisplay] = useState(false);
-  const contextValue = {
-    token,
-    setToken,
-    imageProfile,
-    setImageProfile,
-    menuDisplay,
-    setMenuDisplay,
-  };
+
+  const [page, setPage] = useState('timeline');
+  const contextValue = { token, setToken, imageProfile, setImageProfile, menuDisplay, setMenuDisplay, page, setPage };
+
   return (
     <UserContext.Provider value={contextValue}>
       <BrowserRouter>

@@ -27,3 +27,14 @@ export async function sendLoginData(payload) {
       return err.response.data;
     });
 }
+
+export async function validateToken(body, config) {
+  return axios
+  .post(getUrlAPI("auth/validate"), body, config)
+  .then((res) => {
+    return res.status;
+  })
+  .catch((err) => {
+    return err.response.data;
+  });
+}
