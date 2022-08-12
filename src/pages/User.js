@@ -124,7 +124,7 @@ export default function User() {
     <Conteiner onClick={checkMenu}>
       <Top setDependency={setDependency} fetchDependency={fetchDependency} />
       <Content>
-        <Title>{name}'s posts</Title>
+        <Title>{name ? `${name}'s posts` : "Pagina não encontrada!"}</Title>
         <Sides>
           <RightSide>
             {posts.length > 0 ? (
