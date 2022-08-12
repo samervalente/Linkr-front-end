@@ -14,6 +14,7 @@ Modal.setAppElement("#root");
 export default function User() {
   const navigate = useNavigate();
   const [posts, setPost] = useState([]);
+  const [name, setName] = useState("");
   const [userId, setUserId] = useState("");
   const { token, imageProfile, menuDisplay, setMenuDisplay, setPage } =
     useContext(UserContext);
@@ -36,6 +37,7 @@ export default function User() {
     };
 
     const promise = axios.get(`http://localhost:4000/user/posts/${id}`, config);
+    const promise2 = axios.get(`http://localhost:4000/find/${id}`);
     promise.then((response) => {
       setPost(response.data.posts);
       setUserId(response.data.userId);
@@ -43,6 +45,16 @@ export default function User() {
     });
 
     promise.catch((error) => {
+      console.error("error");
+      setIsModalOpen(true);
+    });
+
+    promise2.then((response) => {
+      console.log(response.data);
+      setName(response.data.name);
+    });
+
+    promise2.catch((error) => {
       console.error("error");
       setIsModalOpen(true);
     });
@@ -112,9 +124,7 @@ export default function User() {
     <Conteiner onClick={checkMenu}>
       <Top setDependency={setDependency} fetchDependency={fetchDependency} />
       <Content>
-        <Title>
-          {posts.length > 0 ? `${posts[0].name}'s posts ` : "Carregando..."}
-        </Title>
+        <Title>{name}'s posts</Title>
         <Sides>
           <RightSide>
             {posts.length > 0 ? (
