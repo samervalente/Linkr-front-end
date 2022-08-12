@@ -3,11 +3,11 @@ import CreatePost from "../components/CreatePost";
 import Top from "../components/Top";
 import FetchPosts from '../components/FetchPosts';
 import { useContext, useEffect, useState } from "react";
-import {Link, useNavigate, useParams} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
 import axios from 'axios';
 import { getTrending } from "../services/post";
-import { Oval} from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 import Modal from "react-modal";
 
 Modal.setAppElement('#root');
@@ -16,7 +16,7 @@ export default function Timeline() {
   const navigate = useNavigate();
   const [posts, setPost] = useState([]);
   const [userId, setUserId] = useState('');
-  const { token, imageProfile, menuDisplay, setMenuDisplay } = useContext(UserContext);
+  const { token, imageProfile, menuDisplay, setMenuDisplay, setPage } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
   const [trending, setTrending] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -24,6 +24,7 @@ export default function Timeline() {
 
   useEffect(() => {
     if (!token || !imageProfile) {
+      setPage('timeline');
       navigate('/');
       return
     }
@@ -32,7 +33,7 @@ export default function Timeline() {
         Authorization: `Bearer ${token}`
       }
     }
-    
+
     const promise = axios.get(`http://localhost:4000/posts`, config);
     promise.then(response => {
       setPost(response.data.posts);
@@ -46,8 +47,8 @@ export default function Timeline() {
     });
   }, [fetchDependency]);
 
-  const customStyle = { 
-    content:{
+  const customStyle = {
+    content: {
       top: "50%",
       left: "50%",
       right: "auto",
@@ -70,24 +71,24 @@ export default function Timeline() {
     }
   }
 
-  useEffect( () => {
-    async function fetchData(){
+  useEffect(() => {
+    async function fetchData() {
       const config = {
         headers: {
           Authorization: `Bearer ${token}`
         }
       }
-      
+
       const trendingTopics = await getTrending(config)
       setTrending(trendingTopics)
     }
-   
+
     fetchData()
-    
+
   }, [fetchDependency])
 
-  function closeModal(){
-    if(isModalOpen)
+  function closeModal() {
+    if (isModalOpen)
       setIsModalOpen(false)
   }
 
@@ -97,12 +98,12 @@ export default function Timeline() {
     }
   }
 
-  const trendingTopics = trending.length > 0? 
-  trending.map((hashtag) => {
-    return <Link to={`/hashtag/${hashtag.tag}`}>
-          <li>#{hashtag.tag}</li>
+  const trendingTopics = trending.length > 0 ?
+    trending.map((hashtag, index) => {
+      return <Link key={index} to={`/hashtag/${hashtag.tag}`}>
+        <li>#{hashtag.tag}</li>
       </Link>
-  }):  "Searching for hashtags..."
+    }) : "Searching for hashtags..."
 
   return (
     <Conteiner onClick={checkMenu}>
@@ -112,37 +113,29 @@ export default function Timeline() {
         <Sides>
           <RightSide>
             {<CreatePost imageProfile={imageProfile} setTrending={setTrending} setDependency={setDependency} fetchDependency={fetchDependency} />}
-            {
-              <>{posts.length > 0 ? posts.map((post, index) => {
-                return (
-                  <FetchPosts key={index} post={post} userId={userId} setTrending={setTrending} setDependency={setDependency} fetchDependency={fetchDependency} />
-                )}): <Load>"Carregando posts..."</Load>
-                }
-              </>
-            }
-            {isLoading && <Oval />}
-            {!isLoading && posts.length === 0 && (
-              <p>There are no posts yet</p>
+            {posts.length > 0 ? (
+              posts.map((post, index) => <FetchPosts key={index} post={post} userId={userId} setTrending={setTrending} setDependency={setDependency} fetchDependency={fetchDependency} />)
+            ) : (
+              isLoading ? <><Load>"Carregando posts..."</Load><Oval /></> : <Load>There are no posts yet</Load>
             )}
-            {isModalOpen ? 
+            {isModalOpen ?
               <Modal isOpen={isModalOpen} style={customStyle}>
                 <h2>An error occured while trying to fetch the posts, please refresh the page</h2>
                 <button onClick={closeModal}>Ok</button>
-              </Modal> 
-              : 
+              </Modal>
+              :
               <></>}
           </RightSide>
-          
+
           <LeftSide>
-              <div className="trendingTitle">
-                <h1>trending</h1>
-              </div>
-              <div className="divBar"></div>
-              <ul>
+            <div className="trendingTitle">
+              <h1>trending</h1>
+            </div>
+            <div className="divBar"></div>
+            <ul>
               {trendingTopics}
-              </ul>
+            </ul>
           </LeftSide>
-          
         </Sides>
       </Content>
     </Conteiner>
