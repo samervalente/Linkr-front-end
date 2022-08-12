@@ -87,7 +87,7 @@ export default function Timeline() {
 
   return (
     <Conteiner onClick={checkMenu}>
-      <Top />
+      <Top setDependency={setDependency} fetchDependency={fetchDependency} />
       <Content>
         <Title># {hashtag}</Title>
         <Sides>

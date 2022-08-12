@@ -110,7 +110,7 @@ export default function User() {
 
   return (
     <Conteiner onClick={checkMenu}>
-      <Top />
+      <Top setDependency={setDependency} fetchDependency={fetchDependency} />
       <Content>
         <Title>
           {posts.length > 0 ? `${posts[0].name}'s posts ` : "Carregando..."}
