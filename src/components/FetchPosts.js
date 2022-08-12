@@ -17,8 +17,7 @@ export default function FetchPosts({
   userId,
   setDependency,
   fetchDependency,
-  setTrending
-  
+  setTrending,
 }) {
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(0);
@@ -35,7 +34,7 @@ export default function FetchPosts({
       Authorization: `Bearer ${token}`,
     },
   };
- 
+
   //LIKE PART
 
   useEffect(() => {
@@ -107,20 +106,21 @@ export default function FetchPosts({
       if (response.status === 200) {
         setIsLiked(false);
         setLikes(likes - 1);
+        const promise2 = axios.get(
+          `http://localhost:4000/likes/names/${post.id}`
+        );
+        promise2.then((response) => {
+          const nameResponse = response.data;
+
+          setNames(nameResponse);
+        });
+        promise2.catch((error) => {
+          console.error("error");
+        });
       }
     });
 
     promise.catch((error) => {
-      console.error("error");
-    });
-
-    const promise2 = axios.get(`http://localhost:4000/likes/names/${post.id}`);
-    promise2.then((response) => {
-      const nameResponse = response.data;
-
-      setNames(nameResponse);
-    });
-    promise2.catch((error) => {
       console.error("error");
     });
   }
@@ -153,12 +153,11 @@ export default function FetchPosts({
     const response = await updatePost(post.id, body, config);
     setDependency(!fetchDependency);
 
-
     if (response === 200) {
       setLoading(false);
       setEditing(false);
       setDescription(text);
-     
+
       setText("");
     } else {
       setLoading(false);
@@ -173,9 +172,8 @@ export default function FetchPosts({
   }, [isEditing]);
 
   function choiceHashtag(name) {
-    
     name = name.replace("#", "").toLowerCase();
-    
+
     navigate(`/hashtag/${name}`);
     setDependency(!fetchDependency);
   }
@@ -239,7 +237,6 @@ export default function FetchPosts({
                   {post.description}
                 </ReactTagify>
               </p>
-             
             </>
           )}
         </TopBox>
