@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import CreatePost from "../components/CreatePost";
 import Top from "../components/Top";
 import FetchPosts from "../components/FetchPosts";
 import { useContext, useEffect, useState } from "react";
@@ -26,7 +25,7 @@ export default function User() {
   console.log(posts);
   useEffect(() => {
     if (!token || !imageProfile) {
-      setPage(`/user/${id}`);
+      setPage(`user/${id}`);
       navigate("/");
       return;
     }
