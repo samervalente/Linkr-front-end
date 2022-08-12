@@ -115,8 +115,8 @@ export default function Timeline() {
             {
               <>{posts.length > 0 ? posts.map((post, index) => {
                 return (
-                  <FetchPosts key={index} post={post} userId={userId} setTrending={setTrending} setDependency={setDependency} fetchDependency={fetchDependency}  />
-                )}): "Carregando posts..."
+                  <FetchPosts key={index} post={post} userId={userId} setTrending={setTrending} setDependency={setDependency} fetchDependency={fetchDependency} />
+                )}): <Load>"Carregando posts..."</Load>
                 }
               </>
             }
@@ -176,8 +176,6 @@ const Sides = styled.div`
   width: 100%;
   
 `;
-
-
 
 const RightSide = styled.div`
   width: 611px;
@@ -264,4 +262,10 @@ const LeftSide = styled.div`
 
 `;
 
+const Load = styled.div`
+  font-family: 'Lato';
+  color: #FFFFFF;
+  margin-top: 20px;
+  margin-bottom: 40px;
+`
 

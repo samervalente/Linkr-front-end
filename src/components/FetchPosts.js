@@ -9,8 +9,10 @@ import UserContext from "../context/UserContext";
 import { Link, useNavigate } from "react-router-dom";
 import { ReactTagify } from "react-tagify";
 import ReactTooltip from "react-tooltip";
-
 import { updatePost, getTrending } from "../services/post";
+import Modal from "react-modal";
+
+Modal.setAppElement('#root');
 
 export default function FetchPosts({
   post,
@@ -27,6 +29,8 @@ export default function FetchPosts({
   const { token } = useContext(UserContext);
   const [names, setNames] = useState([]);
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  
 
   const config = {
     headers: {
@@ -187,6 +191,13 @@ export default function FetchPosts({
     cursor: "pointer",
   };
 
+  //MODAL
+
+  function openModal(){
+    if(isModalOpen)
+      setIsModalOpen(true)
+  }
+
   return (
     <PostBox>
       <LeftTop>
@@ -280,15 +291,17 @@ const PostBox = styled.div`
 
 const LinkPart = styled.div`
   a {
-    width: 503px;
-    height: 155px;
+    width: 504px;
+    height: 159px;
     border: 1px solid #4d4d4d;
     border-radius: 11px;
     margin-left: 86px;
     margin-top: -28px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     text-decoration: none;
+    position: relative;
   }
 `;
 
@@ -359,8 +372,14 @@ const Texts = styled.div`
 `;
 
 const Image = styled.div`
+  display: flex;
+  align-items: center;
+  margin-right: -18px;
   img {
+    width: 155px;
+    height: 157px;
     border-radius: 0px 12px 13px 0px;
+    
   }
 `;
 
