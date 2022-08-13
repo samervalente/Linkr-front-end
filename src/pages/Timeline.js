@@ -36,6 +36,7 @@ export default function Timeline() {
     const promise = axios.get(`http://localhost:4000/posts`, config);
     promise.then(response => {
       setPost(response.data.posts);
+      console.log(response.data.posts)
       setUserId(response.data.userId);
       setIsLoading(false)
     });
