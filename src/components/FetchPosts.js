@@ -81,27 +81,27 @@ export default function FetchPosts({ post, userId, setDependency, fetchDependenc
 
   //MODAL
 
-  function openModal(){
+  function openModal() {
     setIsModalOpen(true);
     console.log("fui clicado")
   }
 
-  function closeModal(){
+  function closeModal() {
     setIsModalOpen(false);
   }
 
-  function deletePost(){
+  function deletePost() {
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       }
     };
-    
+
     const promise = axios.delete(`http://localhost:4000/posts/${post.id}`, config);
     promise.then((response) => {
       setIsModalOpen(false);
       setDependency(!fetchDependency);
-      
+
     })
 
     promise.catch((error) => {
@@ -162,21 +162,21 @@ export default function FetchPosts({ post, userId, setDependency, fetchDependenc
               onKeyDown={handleKeyDown}
             />
           ) : (
-              <p>
-                <ReactTagify tagStyle={tagStyle} tagClicked={(tag) => choiceHashtag(tag)}>
-                  {post.description}
-                </ReactTagify>
-              </p>
+            <p>
+              <ReactTagify tagStyle={tagStyle} tagClicked={(tag) => choiceHashtag(tag)}>
+                {post.description}
+              </ReactTagify>
+            </p>
           )}
-          {isModalOpen ? 
+          {isModalOpen ?
             <Dialog isOpen={isModalOpen} /*style={customStyle}*/>
               <h2>Are you sure you want to delete this post?</h2>
               <div>
                 <No onClick={closeModal}>No, go back</No>
                 <Yes onClick={deletePost}>Yes, delete it</Yes>
               </div>
-            </Dialog> 
-            : 
+            </Dialog>
+            :
             <></>}
         </TopBox>
         <LinkPart>
@@ -259,6 +259,11 @@ const PostBox = styled.div`
   margin-bottom: 16px;
   display: flex;
   padding: 18px;
+
+  @media(max-width: 611px) {
+    width: 100%;
+    border-radius: 0;
+  }
 `;
 
 const LinkPart = styled.div`
@@ -279,7 +284,6 @@ const TopBox = styled.div`
   flex-direction: column;
 
   h1 {
-    width: 495px;
     font-family: "Lato";
     color: #ffffff;
     font-size: 19px;
@@ -293,7 +297,19 @@ const TopBox = styled.div`
     color: #b7b7b7;
     margin: 8px 0;
     min-height: 44px;
+    word-break: break-word;
   }
+
+  @media(max-width: 611px) {
+    h1 {
+      font-size: 17px;
+    }
+
+    p {
+      font-size: 15px;
+    }
+  }
+
 `;
 
 const LeftSide = styled.div`
@@ -308,6 +324,10 @@ const LeftSide = styled.div`
     border-radius: 25px;
     object-fit: cover;
     margin-bottom: 18px;
+    @media(max-width: 611px) {
+      width: 40px;
+      height: 40px;
+    }
   }
   span {
     color: #ffffff;
@@ -320,7 +340,7 @@ const LeftSide = styled.div`
 const RightTop = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 0 20px;
+  margin-left: 20px;
 `;
 
 const Texts = styled.div`
@@ -341,22 +361,40 @@ const Texts = styled.div`
     color: #9b9595;
     font-size: 11px;
     text-align: justify;
+    word-break: break-word;
   }
 
   h4 {
     color: #cecece;
     font-size: 11px;
+    word-break: break-word;
+  }
+
+  @media(max-width: 611px) {
+    h1 {
+      font-size: 11px;
+    }
+
+    h2, h4 {
+      font-size: 9px;
+    }
   }
 `;
 
 const Image = styled.div`
   display: flex;
   align-items: center;
+  margin-left: 8px;
   img {
     width: 155px;
     height: 157px;
     border-radius: 0px 11px 11px 0px;
     object-fit: cover;
+  }
+  @media(max-width: 611px) {
+    img {
+      width: 95px;
+    }
   }
 `;
 
