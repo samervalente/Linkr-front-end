@@ -32,8 +32,8 @@ const Container = styled.div`
   div {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     height: 100vh;
+    justify-content: center;
 
     .title {
       font-size: 106px;
@@ -57,5 +57,33 @@ const Container = styled.div`
   .rightSide {
     background-color: var(--gray);
     width: 38%;
+  }
+
+  @media(max-width: 768px) {
+    flex-direction: column;
+
+    .leftSide{
+        width: 100%;
+        height: 175px;
+        padding-left:0;
+        align-items: center;
+
+        .title {
+          font-size: 76px;
+      }   
+
+        p{
+            font-size:23px;
+            line-height: 30px;
+            width: 70%;
+            text-align: justify;
+        }
+    }
+
+    .rightSide{
+      justify-content: flex-start;
+      width: 100%;
+      height: calc(100vh - 175px);
+    }
   }
 `;

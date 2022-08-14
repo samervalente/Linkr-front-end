@@ -9,7 +9,6 @@ import { getUsers } from "../services/users";
 
 export default function Top({ fetchDependency, setDependency }) {
   const {
-    token,
     setToken,
     imageProfile,
     setImageProfile,
@@ -88,7 +87,7 @@ export default function Top({ fetchDependency, setDependency }) {
             {users.length > 0
               ? users.map((user) => (
                   <div className="userSection">
-                    <img
+                    <img alt="user profile"
                       src={user.imageProfile}
                       onClick={() => {
                         redirectUser(user.id)
@@ -295,4 +294,6 @@ const Heart = styled(AiOutlineSearch)`
   border-radius: 0px 8px 8px 0px;
   padding-right: 10px;
   cursor: pointer;
+
+ 
 `;

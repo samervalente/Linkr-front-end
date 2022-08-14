@@ -59,11 +59,10 @@ const Container = styled.div`
         flex-direction: column;
 
         .leftSide{
-        background-color: var(--black);
-        width: 100%;
-        height: 175px;
-        padding-left:0;
-        align-items: center;
+            width: 100%;
+            height: 175px;
+            padding-left:0;
+            align-items: center;
 
         .title{
             font-size:76px;
@@ -79,10 +78,8 @@ const Container = styled.div`
     }
 
         .rightSide{
-            background-color: var(--gray);
             width: 100%;
-            height: calc(100vh - 175px);
-            
+            height: calc(100vh - 175px);      
         }
     
   }
