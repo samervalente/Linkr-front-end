@@ -313,7 +313,7 @@ const TopBox = styled.div`
 `;
 
 const LeftSide = styled.div`
-  width: 90px;
+  
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -341,10 +341,10 @@ const RightTop = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 20px;
+  width: 100%;
 `;
 
 const Texts = styled.div`
-  width: 70%;
   height: 100%;
   display: flex;
   flex-direction: column;
