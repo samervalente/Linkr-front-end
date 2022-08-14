@@ -9,6 +9,7 @@ import { ReactTagify } from "react-tagify";
 import { updatePost } from "../services/post";
 import Modal from "react-modal";
 import Likes from '../components/Likes';
+import axios from 'axios';
 
 Modal.setAppElement("#root");
 
@@ -80,9 +81,59 @@ export default function FetchPosts({ post, userId, setDependency, fetchDependenc
 
   //MODAL
 
-  function openModal() {
-    if (isModalOpen) setIsModalOpen(true);
+  function openModal(){
+    setIsModalOpen(true);
+    console.log("fui clicado")
   }
+
+  function closeModal(){
+    setIsModalOpen(false);
+  }
+
+  function deletePost(){
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    };
+    
+    const promise = axios.delete(`http://localhost:4000/posts/${post.id}`, config);
+    promise.then((response) => {
+      setIsModalOpen(false);
+      setDependency(!fetchDependency);
+      
+    })
+
+    promise.catch((error) => {
+      console.log(error);
+      setIsModalOpen(false);
+      alert('It was not possible to delete the post');
+    })
+  }
+
+  /*const customStyle = { 
+    content:{
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      width: "597px",
+      height: "262px",
+      backgroundColor: "#333333",
+      borderRadius: "50px",
+      color: "white",
+      textAlign: "center",
+      fontFamily: "Lato",
+      fontSize: "25px",
+      padding: "60px",
+      fontWeight: "700",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between"
+    }
+  }*/
 
   return (
     <PostBox>
@@ -97,7 +148,9 @@ export default function FetchPosts({ post, userId, setDependency, fetchDependenc
           <h1>
             <ClickSyle onClick={redirectUser}>{post.name} </ClickSyle>
             {userId === post.userId ? (
-              <span><Pencil onClick={toggleEditing} /> <Trash /></span>
+              <span>
+                <Pencil onClick={toggleEditing} /> <Trash onClick={openModal} />
+              </span>
             ) : null}{" "}
           </h1>
           {isEditing ? (
@@ -115,6 +168,16 @@ export default function FetchPosts({ post, userId, setDependency, fetchDependenc
                 </ReactTagify>
               </p>
           )}
+          {isModalOpen ? 
+            <Dialog isOpen={isModalOpen} /*style={customStyle}*/>
+              <h2>Are you sure you want to delete this post?</h2>
+              <div>
+                <No onClick={closeModal}>No, go back</No>
+                <Yes onClick={deletePost}>Yes, delete it</Yes>
+              </div>
+            </Dialog> 
+            : 
+            <></>}
         </TopBox>
         <LinkPart>
           <a href={post.url} target="_blank">
@@ -132,6 +195,61 @@ export default function FetchPosts({ post, userId, setDependency, fetchDependenc
     </PostBox>
   );
 }
+
+const Dialog = styled(Modal)`
+  margin: 50vh;
+  margin-left: 50%;
+  transform: translate(-50%, -50%);
+  width: 597px;
+  height: 262px;
+  background-color: #333333;
+  border-radius: 50px;
+  font-family: Lato;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  h2{
+    width: 338px;
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 25px;
+    text-align: center;
+    line-height: 31px;
+  }
+
+  div{
+    width: 300px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+`
+
+const No = styled.button`
+    width: 134px;
+    height: 37px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 5px;
+    border: none;
+    background-color: #FFFFFF;
+    color: #1877F2;
+`
+
+const Yes = styled.button`
+    width: 134px;
+    height: 37px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 5px;
+    border: none;
+    background-color: #1877F2;
+    color: #FFFFFF;
+
+`
 
 const PostBox = styled.div`
   width: 611px;
