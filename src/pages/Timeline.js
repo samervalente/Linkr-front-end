@@ -127,7 +127,6 @@ export default function Timeline() {
               :
               <></>}
           </RightSide>
-
           <LeftSide>
             <div className="trendingTitle">
               <h1>trending</h1>
@@ -149,11 +148,19 @@ const Conteiner = styled.div`
   background-color: #333333;
   min-height: 100vh;
   padding-top: 150px;
+
+  @media(max-width: 611px) {
+    padding-top: 91px;
+  }
 `;
 
 const Content = styled.div`
   display: flex;
   flex-direction: column;
+
+  @media(max-width: 611px) {
+    width: 100%;
+  }
 `;
 
 const Title = styled.h1`
@@ -163,19 +170,28 @@ const Title = styled.h1`
   line-height: 64px;
   color: #ffffff;
   margin-bottom: 40px;
+
+  @media(max-width: 611px) {
+    margin-left: 17px;
+    font-size: 33px;
+    margin-bottom: 20px;
+  }
 `;
 
 const Sides = styled.div`
   display: flex;
   width: 100%;
-  
 `;
 
 const RightSide = styled.div`
   width: 611px;
   display: flex;
   flex-direction: column;
-  align-items: center;  
+  align-items: center;
+
+  @media(max-width: 611px) {
+    width: 100%;
+  }
 
 `;
 
@@ -186,14 +202,13 @@ const LeftSide = styled.div`
   border-radius: 16px;
   margin-left: 25px;
   color:white;
-
   font-family: 'Oswald';
 
   .trendingTitle{
     padding: 10px 16px;
     h1{
-    font-size: 27px;
-  }
+      font-size: 27px;
+    }
   }
 
   .divBar{
@@ -203,7 +218,6 @@ const LeftSide = styled.div`
   }
 
   ul{
-    
     height: 80%;
     padding: 10px 16px;
 
@@ -221,39 +235,36 @@ const LeftSide = styled.div`
     overflow:auto;
 
     ::-webkit-scrollbar {
-    background:none;
-    width: 8px;
-    height: 2 em;
-     
-  
-  }
+      background:none;
+      width: 8px;
+      height: 2 em;
+    }
 
-  ::-webkit-scrollbar-track {
-    background-color: #171717;
-  border-radius: 100vw;
-  margin-block: 0.5em;
-}
+    ::-webkit-scrollbar-track {
+      background-color: #171717;
+      border-radius: 100vw;
+      margin-block: 0.5em;
+    }
 
-:-webkit-scrollbar-thumb {
-  width: 5px;
-  background: hsl(120 100% 20% / 1);
-  border: 0.25em solid red 3px;
-  border-radius: 100vw;
-}
+    :-webkit-scrollbar-thumb {
+      width: 5px;
+      background: hsl(120 100% 20% / 1);
+      border: 0.25em solid red 3px;
+      border-radius: 100vw;
+    }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--ligthgray);
- 
-  border-radius: 16px;
-}
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--ligthgray);
+      border-radius: 16px;
+    }
 
     -ms-overflow-style: none; 
     scrollbar-width: none; 
   }
 
-
-
-
+  @media(max-width: 960px) {
+    display: none;
+  }
 `;
 
 const Load = styled.div`
@@ -261,5 +272,5 @@ const Load = styled.div`
   color: #FFFFFF;
   margin-top: 20px;
   margin-bottom: 40px;
-`
+`;
 

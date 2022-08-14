@@ -76,6 +76,15 @@ const Conteiner = styled.div`
         object-fit: cover;
         border-radius: 25px;
         margin-right: 18px;
+
+        @media(max-width: 611px) {
+            display: none;
+        }
+    }
+
+    @media(max-width: 611px) {
+        width: 100%;
+        border-radius: 0;
     }
 `;
 
@@ -91,6 +100,9 @@ const Form = styled.form`
         line-height: 24px;
         color: #707070;
         margin-bottom: 10px;
+        @media(max-width: 611px) {
+            font-size: 17px;
+        }
     }
 `;
 
@@ -107,6 +119,9 @@ const Input = styled.input`
     font-size: 15px;
     line-height: 18px;
     margin-bottom: 5px;
+    @media(max-width: 611px) {
+        font-size: 13px;
+    }
 `;
 
 const TextArea = styled.textarea`
@@ -122,6 +137,9 @@ const TextArea = styled.textarea`
     font-size: 15px;
     line-height: 18px;
     resize: none;
+    @media(max-width: 611px) {
+        font-size: 13px;
+    }
 `;
 
 const Button = styled.button`
@@ -142,4 +160,9 @@ const Button = styled.button`
     align-items: center;
     justify-content: center;
     cursor: pointer;
+
+    @media(max-width: 611px) {
+        height: 22px;
+        font-size: 13px;
+    }
 `;
