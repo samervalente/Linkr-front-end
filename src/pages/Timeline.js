@@ -179,7 +179,7 @@ const Conteiner = styled.div`
   padding-top: 150px;
 
   @media (max-width: 611px) {
-    padding-top: 91px;
+    padding-top: 146px;
   }
 `;
 

@@ -153,6 +153,16 @@ const Conteiner = styled.div`
     object-fit: cover;
     border-radius: 26.5px;
   }
+
+  @media (max-width: 611px) {
+    h1 {
+      font-size: 45px;
+    }
+    img {
+      width: 44px;
+      height: 44px;
+    }
+  }
 `;
 
 const ImageSide = styled.div`
@@ -201,6 +211,14 @@ const SearchBarSection = styled.div`
       color: #c6c6c6;
       padding-left: 12px;
     }
+  }
+
+  @media (max-width: 611px) {
+    width: 90%;
+    position: fixed;
+    top: 82px;
+    left: 50%;
+    transform: translate(-50%, 0);
   }
 `;
 
