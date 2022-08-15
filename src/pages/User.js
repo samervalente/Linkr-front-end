@@ -8,6 +8,7 @@ import axios from "axios";
 import { getTrending } from "../services/post";
 import { Oval } from "react-loader-spinner";
 import Modal from "react-modal";
+import SearchBar from '../components/SearchBar';
 
 Modal.setAppElement("#root");
 
@@ -126,6 +127,9 @@ export default function User() {
   return (
     <Conteiner onClick={checkMenu}>
       <Top setDependency={setDependency} fetchDependency={fetchDependency} />
+      <SearchBarBox>
+        <SearchBar fetchDependency={fetchDependency} setDependency={setDependency} />
+        </SearchBarBox>
       <Content>
         <Title>{name ? `${name}'s posts` : "Pagina não encontrada!"}</Title>
         <Sides>
@@ -195,6 +199,19 @@ const Content = styled.div`
     width: 100%;
   }
 `;
+
+const SearchBarBox = styled.div`
+  display: none;
+  @media (max-width: 611px) {
+    display: flex;
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+`;
+
 
 const Title = styled.h1`
   font-family: "Oswald", sans-serif;

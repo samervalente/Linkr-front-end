@@ -1,10 +1,9 @@
 import styled from "styled-components";
 import { AiOutlineDown, AiOutlineUp, AiOutlineSearch } from "react-icons/ai";
-import { useState, useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
-import { DebounceInput } from "react-debounce-input";
-import { getUsers } from "../services/users";
+import SearchBar from "./SearchBar";
 
 
 export default function Top({ fetchDependency, setDependency }) {
@@ -16,10 +15,6 @@ export default function Top({ fetchDependency, setDependency }) {
     setMenuDisplay,
   } = useContext(UserContext);
   const navigate = useNavigate();
-  const [visible, setVisible] = useState(false);
-  const [value, setValue] = useState("");
-  const [users, setUsers] = useState([]);
-
 
   function checkMenu() {
     if (menuDisplay) {
@@ -34,11 +29,6 @@ export default function Top({ fetchDependency, setDependency }) {
     }
   }
 
-  function redirectUser(id) {
-    setDependency(!fetchDependency);
-    navigate(`/user/${id}`);
-  }
-
   function logout() {
     localStorage.removeItem("token");
     setToken("");
@@ -47,15 +37,6 @@ export default function Top({ fetchDependency, setDependency }) {
     navigate("/");
   }
 
-  useEffect(() => {
-    async function fetchData() {
-      const users = await getUsers(value);
-      setUsers(users);
-    }
-    setVisible(value.length === 0 ? false : true);
-
-    fetchData();
-  }, [value]);
 
   return (
     <Conteiner>
@@ -65,47 +46,10 @@ export default function Top({ fetchDependency, setDependency }) {
         </Link>
 
         {/*Search Bar */}
-        <SearchBarSection visible={visible}>
-          <div className="search">
-            <DebounceInput
-              className="SearchBar"
-              minLength={3}
-              debounceTimeout={300}
-              placeholder="Search for people"
-              onClick={(event) => {
-                event.preventDefault();
-              }}
-
-              onChange={async event => {
-                setValue(event.target.value.trim())
-                  
-              }
-              } />
-               <Heart  />
-          </div>
-          <Suggestions visible={visible}>
-            {users.length > 0
-              ? users.map((user) => (
-                  <div className="userSection">
-                    <img alt="user profile"
-                      src={user.imageProfile}
-                      onClick={() => {
-                        redirectUser(user.id)
-                        setVisible(false)
-                      }}
-                    />
-                    <span onClick={() => {
-                      redirectUser(user.id)
-                      setVisible(false)
-                    }}>
-                      {user.name}
-                    </span>
-                  </div>
-                ))
-              : "Searching for users..."}
-          </Suggestions>
-        </SearchBarSection>
-
+        <SearchBarBox>
+        <SearchBar fetchDependency={fetchDependency} setDependency={setDependency} />
+        </SearchBarBox>
+      
         <ImageSide onClick={menu}>
           {menuDisplay ? (
             <AiOutlineUp color="white" size="26px" />
@@ -179,6 +123,15 @@ const Header = styled.div`
   padding: 0 25px;
   height: 100%;
   color: white;
+`;
+
+const SearchBarBox = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  @media (max-width: 611px) {
+    display: none;
+  }
 `;
 
 const SearchBarSection = styled.div`
