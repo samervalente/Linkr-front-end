@@ -36,8 +36,11 @@ export default function User() {
       },
     };
 
-    const promise = axios.get(`http://localhost:4000/user/posts/${id}`, config);
-    const promise2 = axios.get(`http://localhost:4000/find/${id}`);
+    const promise = axios.get(
+      `https://linkr-driven.herokuapp.com/user/posts/${id}`,
+      config
+    );
+    const promise2 = axios.get(`https://linkr-driven.herokuapp.com/find/${id}`);
     promise.then((response) => {
       setPost(response.data.posts);
       setUserId(response.data.userId);
@@ -179,7 +182,7 @@ const Conteiner = styled.div`
   min-height: 100vh;
   padding-top: 150px;
 
-  @media(max-width: 611px) {
+  @media (max-width: 611px) {
     padding-top: 91px;
   }
 `;
@@ -188,7 +191,7 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
 
-  @media(max-width: 611px) {
+  @media (max-width: 611px) {
     width: 100%;
   }
 `;
@@ -201,7 +204,7 @@ const Title = styled.h1`
   color: #ffffff;
   margin-bottom: 40px;
 
-  @media(max-width: 611px) {
+  @media (max-width: 611px) {
     margin-left: 17px;
     font-size: 33px;
     margin-bottom: 20px;
@@ -219,9 +222,9 @@ const RightSide = styled.div`
   flex-direction: column;
   align-items: center;
 
-  @media(max-width: 611px) {
-        width: 100%;
-    }
+  @media (max-width: 611px) {
+    width: 100%;
+  }
 `;
 
 const LeftSide = styled.div`
@@ -291,7 +294,7 @@ const LeftSide = styled.div`
     scrollbar-width: none;
   }
 
-  @media(max-width: 960px) {
+  @media (max-width: 960px) {
     display: none;
   }
 `;

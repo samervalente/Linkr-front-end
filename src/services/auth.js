@@ -2,8 +2,8 @@ import axios from "axios";
 
 function getUrlAPI(endpoint) {
   const local = `http://localhost:4000/${endpoint}`;
-  const prod = `https://linkr-driven.herokuapp.com/${endpoint}`
-  return local
+  const prod = `https://linkr-driven.herokuapp.com/${endpoint}`;
+  return prod;
 }
 
 export async function sendRegisterData(payload) {
@@ -30,11 +30,11 @@ export async function sendLoginData(payload) {
 
 export async function validateToken(body, config) {
   return axios
-  .post(getUrlAPI("auth/validate"), body, config)
-  .then((res) => {
-    return res.status;
-  })
-  .catch((err) => {
-    return err.response.data;
-  });
+    .post(getUrlAPI("auth/validate"), body, config)
+    .then((res) => {
+      return res.status;
+    })
+    .catch((err) => {
+      return err.response.data;
+    });
 }

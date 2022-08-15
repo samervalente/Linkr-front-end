@@ -8,12 +8,17 @@ import { useNavigate } from "react-router-dom";
 import { ReactTagify } from "react-tagify";
 import { updatePost } from "../services/post";
 import Modal from "react-modal";
-import Likes from '../components/Likes';
-import axios from 'axios';
+import Likes from "../components/Likes";
+import axios from "axios";
 
 Modal.setAppElement("#root");
 
-export default function FetchPosts({ post, userId, setDependency, fetchDependency }) {
+export default function FetchPosts({
+  post,
+  userId,
+  setDependency,
+  fetchDependency,
+}) {
   const [isEditing, setEditing] = useState(false);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
@@ -83,7 +88,7 @@ export default function FetchPosts({ post, userId, setDependency, fetchDependenc
 
   function openModal() {
     setIsModalOpen(true);
-    console.log("fui clicado")
+    console.log("fui clicado");
   }
 
   function closeModal() {
@@ -94,21 +99,23 @@ export default function FetchPosts({ post, userId, setDependency, fetchDependenc
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
-      }
+      },
     };
 
-    const promise = axios.delete(`http://localhost:4000/posts/${post.id}`, config);
+    const promise = axios.delete(
+      `https://linkr-driven.herokuapp.com/posts/${post.id}`,
+      config
+    );
     promise.then((response) => {
       setIsModalOpen(false);
       setDependency(!fetchDependency);
-
-    })
+    });
 
     promise.catch((error) => {
       console.log(error);
       setIsModalOpen(false);
-      alert('It was not possible to delete the post');
-    })
+      alert("It was not possible to delete the post");
+    });
   }
 
   /*const customStyle = { 
@@ -163,12 +170,15 @@ export default function FetchPosts({ post, userId, setDependency, fetchDependenc
             />
           ) : (
             <p>
-              <ReactTagify tagStyle={tagStyle} tagClicked={(tag) => choiceHashtag(tag)}>
+              <ReactTagify
+                tagStyle={tagStyle}
+                tagClicked={(tag) => choiceHashtag(tag)}
+              >
                 {post.description}
               </ReactTagify>
             </p>
           )}
-          {isModalOpen ?
+          {isModalOpen ? (
             <Dialog isOpen={isModalOpen} /*style={customStyle}*/>
               <h2>Are you sure you want to delete this post?</h2>
               <div>
@@ -176,8 +186,9 @@ export default function FetchPosts({ post, userId, setDependency, fetchDependenc
                 <Yes onClick={deletePost}>Yes, delete it</Yes>
               </div>
             </Dialog>
-            :
-            <></>}
+          ) : (
+            <></>
+          )}
         </TopBox>
         <LinkPart>
           <a href={post.url} target="_blank">
@@ -211,45 +222,45 @@ const Dialog = styled(Modal)`
   justify-content: space-between;
   align-items: center;
 
-  h2{
+  h2 {
     width: 338px;
-    color: #FFFFFF;
+    color: #ffffff;
     font-weight: 700;
     font-size: 25px;
     text-align: center;
     line-height: 31px;
   }
 
-  div{
+  div {
     width: 300px;
     display: flex;
     justify-content: space-between;
   }
-
-`
+`;
 
 const No = styled.button`
-    width: 134px;
-    height: 37px;
-    font-size: 16px;
-    font-weight: 700;
-    border-radius: 5px;
-    border: none;
-    background-color: #FFFFFF;
-    color: #1877F2;
-`
+  width: 134px;
+  height: 37px;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 5px;
+  border: none;
+  background-color: #ffffff;
+  color: #1877f2;
+  cursor: pointer;
+`;
 
 const Yes = styled.button`
-    width: 134px;
-    height: 37px;
-    font-size: 16px;
-    font-weight: 700;
-    border-radius: 5px;
-    border: none;
-    background-color: #1877F2;
-    color: #FFFFFF;
-
-`
+  width: 134px;
+  height: 37px;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 5px;
+  border: none;
+  background-color: #1877f2;
+  color: #ffffff;
+  cursor: pointer;
+`;
 
 const PostBox = styled.div`
   width: 611px;
@@ -260,7 +271,7 @@ const PostBox = styled.div`
   display: flex;
   padding: 18px;
 
-  @media(max-width: 611px) {
+  @media (max-width: 611px) {
     width: 100%;
     border-radius: 0;
   }
@@ -300,7 +311,7 @@ const TopBox = styled.div`
     word-break: break-word;
   }
 
-  @media(max-width: 611px) {
+  @media (max-width: 611px) {
     h1 {
       font-size: 17px;
     }
@@ -309,11 +320,9 @@ const TopBox = styled.div`
       font-size: 15px;
     }
   }
-
 `;
 
 const LeftSide = styled.div`
-  
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -324,7 +333,7 @@ const LeftSide = styled.div`
     border-radius: 25px;
     object-fit: cover;
     margin-bottom: 18px;
-    @media(max-width: 611px) {
+    @media (max-width: 611px) {
       width: 40px;
       height: 40px;
     }
@@ -370,12 +379,13 @@ const Texts = styled.div`
     word-break: break-word;
   }
 
-  @media(max-width: 611px) {
+  @media (max-width: 611px) {
     h1 {
       font-size: 11px;
     }
 
-    h2, h4 {
+    h2,
+    h4 {
       font-size: 9px;
     }
   }
@@ -391,7 +401,7 @@ const Image = styled.div`
     border-radius: 0px 11px 11px 0px;
     object-fit: cover;
   }
-  @media(max-width: 611px) {
+  @media (max-width: 611px) {
     img {
       width: 95px;
     }
