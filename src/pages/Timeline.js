@@ -215,7 +215,7 @@ export default function Timeline() {
             ) : isLoading ? (
               <>
                 <Load>Carregando posts...</Load>
-                <Oval />
+                <Oval color="#6D6D6D" secondaryColor="rgba(0,0,0,0)" />
               </>
             ) : (
               <Load>There are no posts yet</Load>
