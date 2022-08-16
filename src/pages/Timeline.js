@@ -42,7 +42,6 @@ export default function Timeline() {
     );
     promise.then((response) => {
       setPost(response.data.posts);
-      console.log(response.data.posts);
       setUserId(response.data.userId);
       setIsLoading(false);
     });

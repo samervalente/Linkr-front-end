@@ -6,6 +6,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import UserContext from "../context/UserContext";
 import axios from "axios";
 import { getTrending } from "../services/post";
+import { followUnfollowUser } from "../services/users";
 import { Oval } from "react-loader-spinner";
 import Modal from "react-modal";
 import SearchBar from '../components/SearchBar';
@@ -23,9 +24,13 @@ export default function User() {
   const [trending, setTrending] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [fetchDependency, setDependency] = useState(false);
+  const [follow, setFollow] = useState(false)
+  const [reqProcess, setReqProcess] = useState(false)
   const { id } = useParams();
-  console.log(posts);
+ 
+
   useEffect(() => {
+  
     if (!token || !imageProfile) {
       setPage(`user/${id}`);
       navigate("/");
@@ -42,10 +47,12 @@ export default function User() {
       config
     );
     const promise2 = axios.get(`https://linkr-driven.herokuapp.com/find/${id}`);
-    promise.then((response) => {
+    promise.then(async (response) => {
       setPost(response.data.posts);
       setUserId(response.data.userId);
       setIsLoading(false);
+      const status = await followUnfollowUser({userId:response.data.userId, followedId:id}, 'status')
+      setFollow(status)
     });
 
     promise.catch((error) => {
@@ -54,7 +61,6 @@ export default function User() {
     });
 
     promise2.then((response) => {
-      console.log(response.data);
       setName(response.data.name);
     });
 
@@ -88,7 +94,9 @@ export default function User() {
     },
   };
 
+
   useEffect(() => {
+   
     async function fetchData() {
       const config = {
         headers: {
@@ -113,6 +121,19 @@ export default function User() {
     }
   }
 
+
+  useEffect(() => {
+    const body = {
+      userId, followedId:id
+    }
+    async function fetchData() {
+      follow ? followUnfollowUser(body, 'follow'): followUnfollowUser(body, 'unfollow') 
+      setReqProcess(false)
+    }
+    fetchData();
+  
+  },[follow])
+  
   const trendingTopics =
     trending.length > 0
       ? trending.map((hashtag, index) => {
@@ -131,7 +152,24 @@ export default function User() {
         <SearchBar fetchDependency={fetchDependency} setDependency={setDependency} />
         </SearchBarBox>
       <Content>
-        <Title>{name ? `${name}'s posts` : "Pagina não encontrada!"}</Title>
+        <Title>{name ? `${name}'s posts` : "Pagina não encontrada!"}
+     
+          {id != userId? 
+          follow ? 
+       
+          <FollowButton  disable={reqProcess} variant={'unfollow'} onClick={() => {
+            setFollow(!follow)
+            setReqProcess(true)
+            }}>
+            {reqProcess ? <Oval height='20' color='white' /> : 'Unfollow'}
+          </FollowButton> : 
+          <FollowButton disable={reqProcess} variant={'follow'} onClick={() => {
+            setFollow(!follow)
+            setReqProcess(true)
+          }}>
+             {reqProcess ? <Oval height='20' color='white' /> : 'Follow'}
+          </FollowButton>  : ""}
+        </Title>
         <Sides>
           <RightSide>
             {posts.length > 0 ? (
@@ -220,6 +258,11 @@ const Title = styled.h1`
   line-height: 64px;
   color: #ffffff;
   margin-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+ 
 
   @media (max-width: 611px) {
     margin-left: 17px;
@@ -227,6 +270,26 @@ const Title = styled.h1`
     margin-bottom: 20px;
   }
 `;
+
+const FollowButton = styled.div`
+ 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    width: 112px;
+    border: none;
+    border-radius: 5px;
+    background-color: ${props => props.variant === 'follow' ? "#1877F2;": "white;"};
+    color:${props => props.variant === 'unfollow' ? "#1877F2;": "white;"};
+    font-family: 'Lato';
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+  
+
+`
+
 
 const Sides = styled.div`
   display: flex;
