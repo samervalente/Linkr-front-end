@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import useInterval from "use-interval";
 import CreatePost from "../components/CreatePost";
 import Top from "../components/Top";
 import FetchPosts from "../components/FetchPosts";
@@ -6,16 +7,20 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
 import axios from "axios";
-import { getTrending } from "../services/post";
+import { getPosts, getTrending } from "../services/post";
 import { Oval } from "react-loader-spinner";
 import Modal from "react-modal";
-import SearchBar from '../components/SearchBar';
+import SearchBar from "../components/SearchBar";
+import NewPostsButton from "../shared/newPostsButton";
 
 Modal.setAppElement("#root");
 
 export default function Timeline() {
   const navigate = useNavigate();
   const [posts, setPost] = useState([]);
+  const [countPost, setCountPost] = useState(0);
+  const [newCount, setNewCount] = useState(0);
+  const [haveNewPost, setHaveNewPost] = useState(false);
   const [userId, setUserId] = useState("");
   const { token, imageProfile, menuDisplay, setMenuDisplay, setPage } =
     useContext(UserContext);
@@ -24,25 +29,23 @@ export default function Timeline() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [fetchDependency, setDependency] = useState(false);
 
-  useEffect(() => {
-    if (!token || !imageProfile) {
-      setPage("timeline");
-      navigate("/");
-      return;
-    }
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
+  //console.log(`Posts atuais: ${countPost}`);
+  //console.log(`Posts novos contados na requisição: ${newCount}`);
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
+  function loadPost() {
     const promise = axios.get(
       `https://linkr-driven.herokuapp.com/posts`,
       config
     );
     promise.then((response) => {
       setPost(response.data.posts);
-      console.log(response.data.posts);
+      setCountPost(newCount);
+      setHaveNewPost(false);
       setUserId(response.data.userId);
       setIsLoading(false);
     });
@@ -50,6 +53,63 @@ export default function Timeline() {
     promise.catch((error) => {
       console.error("error");
       setIsModalOpen(true);
+    });
+  }
+
+  useInterval(() => {
+    const promise = axios.get(
+      "https://linkr-driven.herokuapp.com/postscount",
+      config
+    );
+    promise.then((response) => {
+      setNewCount(response.data.count);
+      if (Number(countPost) < Number(newCount)) {
+        setHaveNewPost(true);
+      } else if (Number(countPost) > Number(newCount)) {
+        setCountPost(newCount);
+      }
+    });
+
+    promise.catch((error) => {
+      console.error("error");
+    });
+  }, 15000);
+
+  useEffect(() => {
+    if (!token || !imageProfile) {
+      setPage("timeline");
+      navigate("/");
+      return;
+    }
+
+    const promise = axios.get(
+      `https://linkr-driven.herokuapp.com/posts`,
+      config
+    );
+    promise.then((response) => {
+      setPost(response.data.posts);
+      setUserId(response.data.userId);
+      setIsLoading(false);
+    });
+
+    promise.catch((error) => {
+      console.error("error");
+      setIsModalOpen(true);
+    });
+  }, [fetchDependency]);
+
+  useEffect(() => {
+    const promise = axios.get(
+      `https://linkr-driven.herokuapp.com/postscount`,
+      config
+    );
+    promise.then((response) => {
+      setCountPost(response.data.count);
+      setNewCount(response.data.count);
+    });
+
+    promise.catch((error) => {
+      console.error("error");
     });
   }, [fetchDependency]);
 
@@ -117,8 +177,11 @@ export default function Timeline() {
     <Conteiner onClick={checkMenu}>
       <Top setDependency={setDependency} fetchDependency={fetchDependency} />
       <SearchBarBox>
-        <SearchBar fetchDependency={fetchDependency} setDependency={setDependency} />
-        </SearchBarBox>
+        <SearchBar
+          fetchDependency={fetchDependency}
+          setDependency={setDependency}
+        />
+      </SearchBarBox>
       <Content>
         <Title>timeline</Title>
         <Sides>
@@ -131,6 +194,13 @@ export default function Timeline() {
                 fetchDependency={fetchDependency}
               />
             }
+            {haveNewPost ? (
+              <div onClick={loadPost}>
+                <NewPostsButton countNewPosts={newCount - countPost} />
+              </div>
+            ) : (
+              <></>
+            )}
             {posts.length > 0 ? (
               posts.map((post, index) => (
                 <FetchPosts
