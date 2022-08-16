@@ -34,7 +34,7 @@ export default function Timeline() {
     };
 
     const promise = axios.get(
-      `https://linkr-driven.herokuapp.com	/posts/${hashtag}`,
+      `https://linkr-driven.herokuapp.com/posts/${hashtag}`,
       config
     );
     promise.then((response) => {
