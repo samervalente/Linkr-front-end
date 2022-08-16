@@ -154,10 +154,12 @@ const Heart = styled(FiHeart)`
   width: 20px;
   height: 20px;
   color: #ffffff;
+  cursor: pointer;
 `;
 
 const FillHeart = styled(AiFillHeart)`
   width: 20px;
   height: 20px;
   color: red;
+  cursor: pointer;
 `;
