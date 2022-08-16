@@ -1,9 +1,11 @@
 import styled from "styled-components";
+import { FaSyncAlt } from "react-icons/fa";
 
 export default function NewPostsButton({ countNewPosts }) {
   return (
     <NewPosts>
       <span>{countNewPosts} new posts, load more!</span>
+      <Sync />
     </NewPosts>
   );
 }
@@ -29,4 +31,10 @@ const NewPosts = styled.div`
     width: 100%;
     border-radius: 0;
   }
+`;
+const Sync = styled(FaSyncAlt)`
+  width: 14px;
+  height: 14px;
+  color: #ffffff;
+  margin-left: 5px;
 `;

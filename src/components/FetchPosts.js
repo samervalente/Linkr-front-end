@@ -130,7 +130,7 @@ export default function FetchPosts({
     };
 
     const promise = axios.delete(
-      `https://linkr-driven.herokuapp.com/posts/${post.id}`,
+      `https://linkr-driven.herokuapp.com	/posts/${post.id}`,
       config
     );
     promise.then((response) => {

@@ -100,7 +100,7 @@ export default function Timeline() {
 
   useEffect(() => {
     const promise = axios.get(
-      `https://linkr-driven.herokuapp.com/postscount`,
+      `https://linkr-driven.herokuapp.com	/postscount`,
       config
     );
     promise.then((response) => {
@@ -214,7 +214,7 @@ export default function Timeline() {
               ))
             ) : isLoading ? (
               <>
-                <Load>"Carregando posts..."</Load>
+                <Load>Carregando posts...</Load>
                 <Oval />
               </>
             ) : (

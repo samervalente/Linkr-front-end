@@ -16,3 +16,15 @@ export async function getUsers(name) {
       return err.response.data;
     });
 }
+
+export async function followUnfollowUser(body, action){
+ 
+  return axios
+  .post(getUrlAPI(`users/follow?action=${action}`), body)
+  .then(res => {
+    return res.data
+  })
+  .catch(err => {
+    alert("Could not complete the operation")
+  })
+}
