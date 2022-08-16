@@ -3,7 +3,7 @@ import { IoPaperPlaneOutline } from "react-icons/io5";
 import { useState, useContext } from "react";
 import UserContext from "../context/UserContext";
 
-export default function Likes({ post }) {
+export default function Comments() {
     const { token, imageProfile } = useContext(UserContext);
     const [comment, setComment] = useState('');
     const [loading, setLoading] = useState(false);
