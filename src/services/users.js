@@ -1,7 +1,7 @@
 import axios from "axios";
 
 function getUrlAPI(endpoint) {
-  const local = `https://linkr-driven.herokuapp.com/${endpoint}`;
+  const local = `http://localhost:4000/${endpoint}`;
   const prod = `https://linkr-driven.herokuapp.com/${endpoint}`;
   return prod;
 }
@@ -18,13 +18,13 @@ export async function getUsers(name) {
 }
 
 export async function followUnfollowUser(body, action){
-  
+ 
   return axios
   .post(getUrlAPI(`users/follow?action=${action}`), body)
   .then(res => {
     return res.data
   })
   .catch(err => {
-    return err.response.data
+    alert("Could not complete the operation")
   })
 }

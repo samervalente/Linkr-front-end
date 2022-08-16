@@ -24,10 +24,10 @@ export default function Likes({ post }) {
       config
     );
     const promise2 = axios.get(
-      `https://linkr-driven.herokuapp.com/likes/count/${post.id}`
+      `https://linkr-driven.herokuapp.com	/likes/count/${post.id}`
     );
     const promise3 = axios.get(
-      `https://linkr-driven.herokuapp.com/likes/names/${post.id}`,
+      `https://linkr-driven.herokuapp.com	/likes/names/${post.id}`,
       config
     );
     promise.then((response) => {
@@ -61,7 +61,7 @@ export default function Likes({ post }) {
 
   function like() {
     const promise = axios.post(
-      `https://linkr-driven.herokuapp.com/likes`,
+      `https://linkr-driven.herokuapp.com	/likes`,
       {
         postId: post.id,
       },
@@ -79,7 +79,7 @@ export default function Likes({ post }) {
     });
 
     const promise2 = axios.get(
-      `https://linkr-driven.herokuapp.com/likes/names/${post.id}`,
+      `https://linkr-driven.herokuapp.com	/likes/names/${post.id}`,
       config
     );
     promise2.then((response) => {
@@ -93,7 +93,7 @@ export default function Likes({ post }) {
 
   function dislike() {
     const promise = axios.delete(
-      `https://linkr-driven.herokuapp.com/likes/${post.id}`,
+      `https://linkr-driven.herokuapp.com	/likes/${post.id}`,
       config
     );
     promise.then((response) => {
@@ -101,7 +101,7 @@ export default function Likes({ post }) {
         setIsLiked(false);
         setLikes(likes - 1);
         const promise2 = axios.get(
-          `https://linkr-driven.herokuapp.com/likes/names/${post.id}`,
+          `https://linkr-driven.herokuapp.com	/likes/names/${post.id}`,
           config
         );
         promise2.then((response) => {
@@ -154,10 +154,12 @@ const Heart = styled(FiHeart)`
   width: 20px;
   height: 20px;
   color: #ffffff;
+  cursor: pointer;
 `;
 
 const FillHeart = styled(AiFillHeart)`
   width: 20px;
   height: 20px;
   color: red;
+  cursor: pointer;
 `;

@@ -43,7 +43,7 @@ export default function User() {
     };
 
     const promise = axios.get(
-      `https://linkr-driven.herokuapp.com/user/posts/${id}`,
+      `https://linkr-driven.herokuapp.com	/user/posts/${id}`,
       config
     );
     const promise2 = axios.get(`https://linkr-driven.herokuapp.com/find/${id}`);
@@ -51,8 +51,9 @@ export default function User() {
       setPost(response.data.posts);
       setUserId(response.data.userId);
       setIsLoading(false);
-      const status = await followUnfollowUser({userId:response.data.userId, followedId:id}, 'status')
-      setFollow(status)
+        const status = await followUnfollowUser({userId:response.data.userId, followedId:id}, 'status')
+        setFollow(status)
+      
     });
 
     promise.catch((error) => {
@@ -122,18 +123,27 @@ export default function User() {
   }
 
 
-  useEffect(() => {
+  async function followUser(){
+    setReqProcess(true)
     const body = {
       userId, followedId:id
     }
-    async function fetchData() {
-      follow ? followUnfollowUser(body, 'follow'): followUnfollowUser(body, 'unfollow') 
+      await followUnfollowUser(body, 'follow')
+      setFollow(!follow)
       setReqProcess(false)
+  }
+
+  async function unfollowUser(){
+    setReqProcess(true)
+    const body = {
+      userId, followedId:id
     }
-    fetchData();
-  
-  },[follow])
-  
+    await followUnfollowUser(body, 'unfollow')
+    setFollow(!follow)
+    setReqProcess(false) 
+  }
+
+
   const trendingTopics =
     trending.length > 0
       ? trending.map((hashtag, index) => {
@@ -153,20 +163,14 @@ export default function User() {
         </SearchBarBox>
       <Content>
         <Title>{name ? `${name}'s posts` : "Pagina não encontrada!"}
-     
+       
           {id != userId? 
           follow ? 
-       
-          <FollowButton  disable={reqProcess} variant={'unfollow'} onClick={() => {
-            setFollow(!follow)
-            setReqProcess(true)
-            }}>
+           
+          <FollowButton  disable={reqProcess} variant={'unfollow'} onClick={unfollowUser}>
             {reqProcess ? <Oval height='20' color='white' /> : 'Unfollow'}
           </FollowButton> : 
-          <FollowButton disable={reqProcess} variant={'follow'} onClick={() => {
-            setFollow(!follow)
-            setReqProcess(true)
-          }}>
+          <FollowButton disable={reqProcess} variant={'follow'} onClick={followUser}>
              {reqProcess ? <Oval height='20' color='white' /> : 'Follow'}
           </FollowButton>  : ""}
         </Title>
@@ -261,7 +265,11 @@ const Title = styled.h1`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
+
+  button{
+    
+    cursor: pointer;
+  }
  
 
   @media (max-width: 611px) {

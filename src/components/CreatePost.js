@@ -69,7 +69,7 @@ const Conteiner = styled.div`
     border-radius: 16px;
     background-color: #ffffff;
     padding: 16px 22px;
-    margin-bottom: 29px;
+    margin-bottom: 13px;
     img {
         width: 50px;
         height: 50px;

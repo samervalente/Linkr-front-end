@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { TiPencil } from "react-icons/ti";
 import { CgTrash } from "react-icons/cg";
-import { AiFillHeart } from "react-icons/ai";
+import { AiOutlineComment } from "react-icons/ai";
 import { useState, useContext, useRef, useEffect } from "react";
 import UserContext from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ import { ReactTagify } from "react-tagify";
 import { updatePost } from "../services/post";
 import Modal from "react-modal";
 import Likes from "../components/Likes";
+import Comments from "./Comments";
 import axios from "axios";
 
 Modal.setAppElement("#root");
@@ -25,6 +26,8 @@ export default function FetchPosts({
   const { token } = useContext(UserContext);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [comments, setComments] = useState(0);
+  const [openComment, setOpenComment] = useState(false);
 
   function redirectUser() {
     navigate(`/user/${post.userId}`);
@@ -103,7 +106,7 @@ export default function FetchPosts({
     };
 
     const promise = axios.delete(
-      `https://linkr-driven.herokuapp.com/posts/${post.id}`,
+      `https://linkr-driven.herokuapp.com	/posts/${post.id}`,
       config
     );
     promise.then((response) => {
@@ -143,12 +146,15 @@ export default function FetchPosts({
   }*/
 
   return (
+    <Conteiner>
     <PostBox>
       <LeftSide>
         <ClickSyle onClick={redirectUser}>
           <img src={post.imageProfile} />
         </ClickSyle>
         <Likes post={post} />
+        <CommentIcon onClick={() => setOpenComment(!openComment)}/>
+        <span>{comments} comments</span>
       </LeftSide>
       <RightTop>
         <TopBox>
@@ -204,8 +210,24 @@ export default function FetchPosts({
         </LinkPart>
       </RightTop>
     </PostBox>
+    {openComment ? <Comments id={post.id} /> : null }
+    </Conteiner>
   );
 }
+
+const Conteiner = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 611px;
+  background-color: #1E1E1E;
+  margin-top: 16px;
+  border-radius: 16px;
+
+  @media (max-width: 611px) {
+    width: 100%;
+    border-radius: 0;
+  }
+`
 
 const Dialog = styled(Modal)`
   margin: 50vh;
@@ -267,9 +289,8 @@ const PostBox = styled.div`
   min-height: 276px;
   background-color: #171717;
   border-radius: 16px;
-  margin-bottom: 16px;
   display: flex;
-  padding: 18px;
+  padding: 18px 18px 18px 11px;
 
   @media (max-width: 611px) {
     width: 100%;
@@ -327,6 +348,7 @@ const LeftSide = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  min-width: 85px;
   img {
     width: 50px;
     height: 50px;
@@ -340,16 +362,19 @@ const LeftSide = styled.div`
   }
   span {
     color: #ffffff;
+    font-family: 'Lato';
     font-size: 12px;
     font-weight: 400;
     margin-top: 6px;
+    text-align: center;
+    white-space: nowrap;
   }
 `;
 
 const RightTop = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 20px;
+  margin-left: 10px;
   width: 100%;
 `;
 
@@ -439,10 +464,12 @@ const Trash = styled(CgTrash)`
   cursor: pointer;
 `;
 
-const FillHeart = styled(AiFillHeart)`
-  width: 20px;
-  height: 20px;
-  color: red;
+const CommentIcon = styled(AiOutlineComment)`
+    margin-top: 15px;
+    width: 20px;
+    height: 20px;
+    color: #ffffff;
+    cursor: pointer;
 `;
 
 const ClickSyle = styled.div`
