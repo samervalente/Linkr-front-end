@@ -145,13 +145,6 @@ export default function FetchPosts({
     }
   }*/
 
-  //COMMENT START
-  function insertComment() {
-    setOpenComment(!openComment);
-    console.log("comentar");
-  }
-   //COMMENT END
-
   return (
     <Conteiner>
     <PostBox>
@@ -160,7 +153,7 @@ export default function FetchPosts({
           <img src={post.imageProfile} />
         </ClickSyle>
         <Likes post={post} />
-        <CommentIcon onClick={insertComment}/>
+        <CommentIcon onClick={() => setOpenComment(!openComment)}/>
         <span>{comments} comments</span>
       </LeftSide>
       <RightTop>
@@ -217,7 +210,7 @@ export default function FetchPosts({
         </LinkPart>
       </RightTop>
     </PostBox>
-    {openComment ? <Comments /> : null }
+    {openComment ? <Comments id={post.id} /> : null }
     </Conteiner>
   );
 }
