@@ -2,8 +2,9 @@ import styled from "styled-components";
 import { IoPaperPlaneOutline } from "react-icons/io5";
 import { useState, useContext } from "react";
 import UserContext from "../context/UserContext";
+import { sendComment } from "../services/comment";
 
-export default function Comments() {
+export default function Comments({ id }) {
     const { token, imageProfile } = useContext(UserContext);
     const [comment, setComment] = useState('');
     const [loading, setLoading] = useState(false);
@@ -12,6 +13,21 @@ export default function Comments() {
             Authorization: `Bearer ${token}`,
         },
     };
+
+    async function insertComment() {
+        setLoading(true);
+        const body = { comment };
+        
+        const response = await sendComment(id, body, config);
+
+        if (response === 201) {
+            setComment('');
+            setLoading(false);
+        } else {
+            setLoading(false);
+            alert("Houve um erro ao publicar seu comentário");
+        }
+    }
 
 
     return (
@@ -52,7 +68,7 @@ export default function Comments() {
                 onChange={(e) => setComment(e.target.value)}
                 required
             />
-            <PaperPlane />
+            <PaperPlane onClick={insertComment} />
             </InputComment>
         </Conteiner>
     );
