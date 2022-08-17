@@ -24,8 +24,7 @@ export default function Timeline() {
   const [newCount, setNewCount] = useState(0);
   const [haveNewPost, setHaveNewPost] = useState(false);
   const [userId, setUserId] = useState("");
-  const { token, imageProfile, menuDisplay, setMenuDisplay, setPage } =
-    useContext(UserContext);
+  const { token, imageProfile, menuDisplay, setMenuDisplay, setPage } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
   const [trending, setTrending] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,6 +52,8 @@ export default function Timeline() {
       setHaveNewPost(false);
       setUserId(response.data.userId);
       setIsLoading(false);
+      setNextPage(1);
+      setMore(true);
     });
 
     promise.catch((error) => {
@@ -116,7 +117,8 @@ export default function Timeline() {
     }
 
     const promise = axios.get(
-      `https://linkr-driven.herokuapp.com/posts`,
+      //`https://linkr-driven.herokuapp.com/posts`,
+      "https://linkr-driven.herokuapp.com/posts",
       config
     );
     promise.then((response) => {
@@ -147,29 +149,6 @@ export default function Timeline() {
     });
   }, [fetchDependency]);
 
-  const customStyle = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      width: "597px",
-      height: "262px",
-      backgroundColor: "#333333",
-      borderRadius: "50px",
-      color: "white",
-      textAlign: "center",
-      fontFamily: "Lato",
-      fontSize: "25px",
-      padding: "60px",
-      fontWeight: "700",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between",
-    },
-  };
 
   useEffect(() => {
     async function fetchData() {
@@ -262,13 +241,13 @@ export default function Timeline() {
               )}
             </InfiniteScroll>
             {isModalOpen ? (
-              <Modal isOpen={isModalOpen} style={customStyle}>
+              <Dialog isOpen={isModalOpen} >
                 <h2>
                   An error occured while trying to fetch the posts, please
                   refresh the page
                 </h2>
                 <button onClick={closeModal}>Ok</button>
-              </Modal>
+              </Dialog>
             ) : (
               <></>
             )}
@@ -285,6 +264,43 @@ export default function Timeline() {
     </Conteiner>
   );
 }
+
+const Dialog = styled(Modal)`
+  margin: 50vh;
+  margin-left: 50%;
+  transform: translate(-50%, -50%);
+  width: 597px;
+  height: 262px;
+  background-color: #333333;
+  border-radius: 50px;
+  font-family: Lato;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  h2 {
+    width: 338px;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 25px;
+    text-align: center;
+    line-height: 31px;
+  }
+
+  button{
+    width: 134px;
+    height: 37px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 5px;
+    border: none;
+    background-color: #ffffff;
+    color: #1877f2;
+    cursor: pointer;
+  }
+`;
 
 const Conteiner = styled.div`
   display: flex;
