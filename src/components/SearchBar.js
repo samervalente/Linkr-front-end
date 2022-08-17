@@ -46,8 +46,8 @@ export default function SearchBar({ fetchDependency, setDependency }) {
             </div>
             <Suggestions visible={visible}>
                 {users.length > 0
-                    ? users.map((user) => (
-                        <div className="userSection">
+                    ? users.map((user, index) => (
+                        <div key={index} className="userSection">
                             <img alt="user profile"
                                 src={user.imageProfile}
                                 onClick={() => {

@@ -49,7 +49,7 @@ export default function FetchPosts({
 
   getComments();
 
-}, [fetchDependency]);
+}, [post]);
 
 //COMMENT END
 
@@ -234,7 +234,7 @@ export default function FetchPosts({
         </LinkPart>
       </RightTop>
     </PostBox>
-    {openComment ? <Comments id={post.id} postComments={comments} fetchDependency={fetchDependency} setDependency={setDependency} postUserId={post.userId}/> : null }
+    {openComment ? <Comments id={post.id} postComments={comments} fetchDependency={fetchDependency} setDependency={setDependency} postUserId={post.userId} userId={userId} /> : null }
     </Conteiner>
   );
 }

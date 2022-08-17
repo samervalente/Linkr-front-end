@@ -4,10 +4,32 @@ import { useState, useContext } from "react";
 import UserContext from "../context/UserContext";
 import { sendComment } from "../services/comment";
 import { useNavigate } from "react-router-dom";
+import { followUnfollowUser } from "../services/users";
+import { useEffect } from "react";
 
-function SingleComment({ comment, postUserId }) {
+function SingleComment({ comment, postUserId, userId }) {
     const navigate = useNavigate();
-    const status = comment.userId === postUserId ? `post's author` : null ;
+    const [followStatus, setFollowStatus] = useState('');
+
+    useEffect(() => {
+        async function getStatus() {
+            const status = await followUnfollowUser(
+                { userId, followedId: comment.userId },
+                "status"
+            );
+            if (status) {
+                setFollowStatus(`following`);
+            } else {
+                setFollowStatus(null)
+            }
+        }
+
+        if (comment.userId === postUserId) {
+            setFollowStatus(`post's author`);
+        } else {
+            getStatus();
+        }
+    }, []);
 
     function redirectUser() {
         navigate(`/user/${comment.userId}`);
@@ -19,8 +41,8 @@ function SingleComment({ comment, postUserId }) {
             <RightSide>
                 <Top>
                     <h2 onClick={redirectUser}>{comment.name}</h2>
-                    <p>{status ? '• ' : null}</p>
-                    <p>{status}</p>
+                    <p>{followStatus ? '• ' : null}</p>
+                    <p>{followStatus}</p>
                 </Top>
                 <Bottom>
                     <p>{comment.content}</p>
@@ -30,7 +52,7 @@ function SingleComment({ comment, postUserId }) {
     );
 }
 
-export default function Comments({ id, postComments, fetchDependency, setDependency, postUserId }) {
+export default function Comments({ id, postComments, fetchDependency, setDependency, postUserId, userId }) {
     const { token, imageProfile } = useContext(UserContext);
     const [comment, setComment] = useState('');
     const [loading, setLoading] = useState(false);
@@ -58,7 +80,7 @@ export default function Comments({ id, postComments, fetchDependency, setDepende
 
     return (
         <Conteiner>
-            {postComments.map((comment, index) => <SingleComment key={index} comment={comment} postUserId={postUserId} />)}
+            {postComments.map((comment, index) => <SingleComment key={index} comment={comment} postUserId={postUserId} userId={userId} />)}
             <InputComment>
                 <img src={imageProfile} alt='user' />
                 <Input
