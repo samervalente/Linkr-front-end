@@ -330,6 +330,9 @@ const LeftSide = styled.div`
   margin-left: 25px;
   color: white;
   font-family: "Oswald";
+  position: -webkit-sticky;
+  position: sticky;
+  top: 100px;
 
   .trendingTitle {
     padding: 10px 16px;

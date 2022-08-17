@@ -67,6 +67,9 @@ export default function Timeline() {
       navigate("/");
       return;
     }
+    if (nextPage === 0) {
+      return;
+    }
 
     const promise = axios.get(
       `https://linkr-driven.herokuapp.com/posts?page=${nextPage}`,
@@ -355,6 +358,9 @@ const LeftSide = styled.div`
   margin-left: 25px;
   color: white;
   font-family: "Oswald";
+  position: -webkit-sticky;
+  position: sticky;
+  top: 100px;
 
   .trendingTitle {
     padding: 10px 16px;
