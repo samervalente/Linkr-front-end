@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { TiPencil } from "react-icons/ti";
 import { CgTrash } from "react-icons/cg";
 import { AiFillHeart } from "react-icons/ai";
+import { Oval } from "react-loader-spinner";
+
 import { useState, useContext, useRef, useEffect } from "react";
 import UserContext from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +11,7 @@ import { ReactTagify } from "react-tagify";
 import { updatePost } from "../services/post";
 import Modal from "react-modal";
 import Likes from "../components/Likes";
+import Reposts from "./Reposts";
 import axios from "axios";
 
 Modal.setAppElement("#root");
@@ -25,6 +28,7 @@ export default function FetchPosts({
   const { token } = useContext(UserContext);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   function redirectUser() {
     navigate(`/user/${post.userId}`);
@@ -88,7 +92,6 @@ export default function FetchPosts({
 
   function openModal() {
     setIsModalOpen(true);
-    console.log("fui clicado");
   }
 
   function closeModal() {
@@ -118,30 +121,6 @@ export default function FetchPosts({
     });
   }
 
-  /*const customStyle = { 
-    content:{
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      width: "597px",
-      height: "262px",
-      backgroundColor: "#333333",
-      borderRadius: "50px",
-      color: "white",
-      textAlign: "center",
-      fontFamily: "Lato",
-      fontSize: "25px",
-      padding: "60px",
-      fontWeight: "700",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between"
-    }
-  }*/
-
   return (
     <PostBox>
       <LeftSide>
@@ -149,6 +128,7 @@ export default function FetchPosts({
           <img src={post.imageProfile} />
         </ClickSyle>
         <Likes post={post} />
+        <Reposts post={post} setDependency={setDependency} fetchDependency={fetchDependency} />
       </LeftSide>
       <RightTop>
         <TopBox>
@@ -179,7 +159,7 @@ export default function FetchPosts({
             </p>
           )}
           {isModalOpen ? (
-            <Dialog isOpen={isModalOpen} /*style={customStyle}*/>
+            <Dialog isOpen={isModalOpen}>
               <h2>Are you sure you want to delete this post?</h2>
               <div>
                 <No onClick={closeModal}>No, go back</No>
