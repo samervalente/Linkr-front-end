@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { TiPencil } from "react-icons/ti";
 import { CgTrash } from "react-icons/cg";
 import { AiOutlineComment } from "react-icons/ai";
+import { AiFillHeart } from "react-icons/ai";
+import { Oval } from "react-loader-spinner";
 import { useState, useContext, useRef, useEffect } from "react";
 import UserContext from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +12,7 @@ import { updatePost } from "../services/post";
 import Modal from "react-modal";
 import Likes from "../components/Likes";
 import Comments from "./Comments";
+import Reposts from "./Reposts";
 import axios from "axios";
 import { fetchComments } from "../services/comment";
 
@@ -29,6 +32,8 @@ export default function FetchPosts({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [comments, setComments] = useState([]);
   const [openComment, setOpenComment] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
 
   //COMMENT START
   useEffect(() => {
@@ -115,7 +120,6 @@ export default function FetchPosts({
 
   function openModal() {
     setIsModalOpen(true);
-    console.log("fui clicado");
   }
 
   function closeModal() {
@@ -145,30 +149,6 @@ export default function FetchPosts({
     });
   }
 
-  /*const customStyle = { 
-    content:{
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      width: "597px",
-      height: "262px",
-      backgroundColor: "#333333",
-      borderRadius: "50px",
-      color: "white",
-      textAlign: "center",
-      fontFamily: "Lato",
-      fontSize: "25px",
-      padding: "60px",
-      fontWeight: "700",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between"
-    }
-  }*/
-
   return (
     <Conteiner>
     <PostBox>
@@ -179,6 +159,7 @@ export default function FetchPosts({
         <Likes post={post} />
         <CommentIcon onClick={() => setOpenComment(!openComment)}/>
         <span>{comments.length} comments</span>
+        <Reposts post={post} setDependency={setDependency} fetchDependency={fetchDependency} />
       </LeftSide>
       <RightTop>
         <TopBox>
@@ -209,7 +190,7 @@ export default function FetchPosts({
             </p>
           )}
           {isModalOpen ? (
-            <Dialog isOpen={isModalOpen} /*style={customStyle}*/>
+            <Dialog isOpen={isModalOpen}>
               <h2>Are you sure you want to delete this post?</h2>
               <div>
                 <No onClick={closeModal}>No, go back</No>
