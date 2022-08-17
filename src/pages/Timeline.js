@@ -12,7 +12,7 @@ import { Oval } from "react-loader-spinner";
 import Modal from "react-modal";
 import SearchBar from "../components/SearchBar";
 import NewPostsButton from "../shared/newPostsButton";
-import InfiniteScroll from 'react-infinite-scroller';
+import InfiniteScroll from "react-infinite-scroller";
 
 Modal.setAppElement("#root");
 
@@ -128,7 +128,9 @@ export default function Timeline() {
     });
 
     const promise2 = axios.get(
-      `https://linkr-driven.herokuapp.com/postscount`, config);
+      `https://linkr-driven.herokuapp.com/postscount`,
+      config
+    );
     promise2.then((response) => {
       setCountPost(response.data.count);
       setNewCount(response.data.count);
@@ -227,26 +229,31 @@ export default function Timeline() {
             ) : (
               <></>
             )}
-            <InfiniteScroll pageStart={0} loadMore={loadPostScroll} hasMore={more ? true : false} loader={<Load key={0}>Loading ...</Load>} >
-            {posts.length > 0 ? (
-              posts.map((post, index) => (
-                <FetchPosts
-                  key={index}
-                  post={post}
-                  userId={userId}
-                  setTrending={setTrending}
-                  setDependency={setDependency}
-                  fetchDependency={fetchDependency}
-                />
-              ))
-            ) : isLoading ? (
-              <>
-                <Load>Carregando posts...</Load>
-                <Oval color="#6D6D6D" secondaryColor="rgba(0,0,0,0)" />
-              </>
-            ) : (
-              <Load>There are no posts yet</Load>
-            )}
+            <InfiniteScroll
+              pageStart={0}
+              loadMore={loadPostScroll}
+              hasMore={more ? true : false}
+              loader={<Load key={0}>Loading ...</Load>}
+            >
+              {posts.length > 0 ? (
+                posts.map((post, index) => (
+                  <FetchPosts
+                    key={index}
+                    post={post}
+                    userId={userId}
+                    setTrending={setTrending}
+                    setDependency={setDependency}
+                    fetchDependency={fetchDependency}
+                  />
+                ))
+              ) : isLoading ? (
+                <>
+                  <Load>Carregando posts...</Load>
+                  <Oval color="#6D6D6D" secondaryColor="rgba(0,0,0,0)" />
+                </>
+              ) : (
+                <Load>There are no posts yet</Load>
+              )}
             </InfiniteScroll>
             {isModalOpen ? (
               <Modal isOpen={isModalOpen} style={customStyle}>
@@ -260,6 +267,7 @@ export default function Timeline() {
               <></>
             )}
           </RightSide>
+          <SpaceForAlign></SpaceForAlign>
           <LeftSide>
             <div className="trendingTitle">
               <h1>trending</h1>
@@ -337,6 +345,10 @@ const RightSide = styled.div`
   }
 `;
 
+const SpaceForAlign = styled.div`
+  width: 301px;
+`;
+
 const LeftSide = styled.div`
   width: 301px;
   height: 406px;
@@ -345,6 +357,8 @@ const LeftSide = styled.div`
   margin-left: 25px;
   color: white;
   font-family: "Oswald";
+  position: fixed;
+  right: 460px;
 
   .trendingTitle {
     padding: 10px 16px;
