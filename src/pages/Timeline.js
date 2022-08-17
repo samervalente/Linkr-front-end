@@ -270,6 +270,7 @@ export default function Timeline() {
               <></>
             )}
           </RightSide>
+          <SpaceForAlign></SpaceForAlign>
           <LeftSide>
             <div className="trendingTitle">
               <h1>trending</h1>
@@ -347,6 +348,10 @@ const RightSide = styled.div`
   }
 `;
 
+const SpaceForAlign = styled.div`
+  width: 301px;
+`;
+
 const LeftSide = styled.div`
   width: 301px;
   height: 406px;
@@ -355,6 +360,8 @@ const LeftSide = styled.div`
   margin-left: 25px;
   color: white;
   font-family: "Oswald";
+  position: fixed;
+  right: 460px;
 
   .trendingTitle {
     padding: 10px 16px;
