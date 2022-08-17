@@ -1,77 +1,88 @@
 import styled from "styled-components";
+import UserContext from "../context/UserContext";
 import { AiOutlineSearch } from "react-icons/ai";
-import {BsFillCircleFill} from "react-icons/bs"
+import { BsFillCircleFill } from "react-icons/bs";
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { DebounceInput } from "react-debounce-input";
 import { getUsers } from "../services/users";
 export default function SearchBar({ fetchDependency, setDependency }) {
-      const navigate = useNavigate();
-      const [visible, setVisible] = useState(false);
-      const [value, setValue] = useState("");
-      const [users, setUsers] = useState([]);
-   
-      useEffect(() => {
-       const userId = localStorage.getItem("userId")
-        async function fetchData() {
-          const users = await getUsers(value, userId);
-          setUsers(users);
-          
-        }
-        setVisible(value.length === 0 ? false : true);
-    
-        fetchData();
-      }, [value]);
+  const navigate = useNavigate();
+  const [visible, setVisible] = useState(false);
+  const [value, setValue] = useState("");
+  const [users, setUsers] = useState([]);
+  const { token } = useContext(UserContext);
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
-      
-      function redirectUser(id) {
-        setDependency(!fetchDependency);
-        navigate(`/user/${id}`);
-      }
- 
-    return (
-        <SearchBarSection visible={visible}>
-            <div className="search">
-                <DebounceInput
-                    className="SearchBar"
-                    minLength={3}
-                    debounceTimeout={300}
-                    placeholder="Search for people"
-                    onClick={(event) => {
-                        event.preventDefault();
-                    }}
-                    onChange={async event => {
-                        setValue(event.target.value.trim())
+  useEffect(() => {
+    async function fetchData() {
+      const users = await getUsers(value, config);
+      setUsers(users);
+    }
+    setVisible(value.length === 0 ? false : true);
 
-                    }
-                    } />
-                <Heart />
-            </div>
-            <Suggestions visible={visible}>
-                {users.length > 0
-                    ? users.map((user, index) => (
-                        <div key={index} className="userSection">
-                            <img alt="user profile"
-                                src={user.imageProfile}
-                                onClick={() => {
-                                    redirectUser(user.userid)
-                                    setVisible(false)
-                                }}
-                            />
-                            <span onClick={() => {
-                                redirectUser(user.userid)
-                                setVisible(false)
-                            }}>
-                                {user.name}
-                            </span>
-                            {user.followedby ? <span className="statusFollow"><BsFillCircleFill className="circle"/> following</span>: ""}
-                            
-                        </div>
-                    ))
-                    : "Searching for users..."}
-            </Suggestions>
-        </SearchBarSection>
-    )
+    fetchData();
+  }, [value]);
+
+  function redirectUser(id) {
+    setDependency(!fetchDependency);
+    navigate(`/user/${id}`);
+  }
+
+  return (
+    <SearchBarSection visible={visible}>
+      <div className="search">
+        <DebounceInput
+          className="SearchBar"
+          minLength={3}
+          debounceTimeout={300}
+          placeholder="Search for people"
+          onClick={(event) => {
+            event.preventDefault();
+          }}
+          onChange={async (event) => {
+            setValue(event.target.value.trim());
+          }}
+        />
+        <Heart />
+      </div>
+      <Suggestions visible={visible}>
+        {users.length > 0
+          ? users.map((user, index) => (
+              <div key={index} className="userSection">
+                <img
+                  alt="user profile"
+                  src={user.imageProfile}
+                  onClick={() => {
+                    redirectUser(user.userid);
+                    setVisible(false);
+                  }}
+                />
+                <span
+                  onClick={() => {
+                    redirectUser(user.userid);
+                    setVisible(false);
+                  }}
+                >
+                  {user.name}
+                </span>
+                {user.followedby ? (
+                  <span className="statusFollow">
+                    <BsFillCircleFill className="circle" /> following
+                  </span>
+                ) : (
+                  ""
+                )}
+              </div>
+            ))
+          : "Searching for users..."}
+      </Suggestions>
+    </SearchBarSection>
+  );
 }
 
 const SearchBarSection = styled.div`
@@ -108,10 +119,10 @@ const SearchBarSection = styled.div`
 
   @media (max-width: 611px) {
     width: 90%;
-  position: absolute;
-  top: 82px;
-  left: 50%;
-  transform: translate(-50%, 0);
+    position: absolute;
+    top: 82px;
+    left: 50%;
+    transform: translate(-50%, 0);
   }
 `;
 
@@ -123,7 +134,6 @@ const Suggestions = styled.div`
   color: #515151;
   padding: 16px 14px;
   border-radius: 0px 0px 8px 8px;
-  
 
   .userSection {
     width: auto;
@@ -143,47 +153,44 @@ const Suggestions = styled.div`
     }
 
     :hover {
-      background-color: #EFEFEF;
+      background-color: #efefef;
       border-radius: 5px;
     }
 
-    .circle{
+    .circle {
       height: 10px;
     }
 
-    .statusFollow{
+    .statusFollow {
       color: #c5c5c5;
     }
   }
   overflow-y: scroll;
   ::-webkit-scrollbar {
-    background:none;
+    background: none;
     width: 8px;
     height: 2 em;
-     
-  
   }
 
   ::-webkit-scrollbar-track {
-    background-color: #EFEFEF;
-  border-radius: 100vw;
-  margin-block: 0.5em;
-}
+    background-color: #efefef;
+    border-radius: 100vw;
+    margin-block: 0.5em;
+  }
 
-::-webkit-scrollbar-thumb {
-  width: 5px;
-  height: 0.5em;
-  background: black;
-  border: 0.25em solid red 3px;
-  border-radius: 100vw;
-}
+  ::-webkit-scrollbar-thumb {
+    width: 5px;
+    height: 0.5em;
+    background: black;
+    border: 0.25em solid red 3px;
+    border-radius: 100vw;
+  }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--ligthgray);
-  border-radius: 16px;
-} 
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--ligthgray);
+    border-radius: 16px;
+  }
 `;
-
 
 const Heart = styled(AiOutlineSearch)`
   width: 8%;
@@ -194,6 +201,4 @@ const Heart = styled(AiOutlineSearch)`
   border-radius: 0px 8px 8px 0px;
   padding-right: 10px;
   cursor: pointer;
-
- 
 `;
