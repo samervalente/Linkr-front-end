@@ -33,6 +33,7 @@ export default function Top({ fetchDependency, setDependency }) {
     localStorage.removeItem("token");
     setToken("");
     localStorage.removeItem("image");
+    localStorage.removeItem("userId")
     setImageProfile("");
     navigate("/");
   }

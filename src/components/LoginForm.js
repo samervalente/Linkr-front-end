@@ -6,7 +6,7 @@ import { sendLoginData } from "../services/auth";
 import UserContext from "../context/UserContext";
 
 export default function RegisterForm() {
-  const { setToken, setImageProfile } = useContext(UserContext);
+  const { setToken, setImageProfile  } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -21,12 +21,14 @@ export default function RegisterForm() {
       password,
     };
     const response = await sendLoginData(userData);
-    
+     
     if (response) {
+     
       setToken(response.token);
       setImageProfile(response.imageProfile);
       localStorage.setItem("token", response.token);
       localStorage.setItem("image", response.imageProfile)
+      localStorage.setItem("userId", response.userId)
       navigate("/timeline");
     } else {
       setEmail("");

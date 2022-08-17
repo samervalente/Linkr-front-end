@@ -11,7 +11,7 @@ function App() {
   const [token, setToken] = useState("");
   const [imageProfile, setImageProfile] = useState("");
   const [menuDisplay, setMenuDisplay] = useState(false);
-
+  const [userId, setUserId] = useState("")
   const [page, setPage] = useState("timeline");
   const contextValue = {
     token,
@@ -21,7 +21,7 @@ function App() {
     menuDisplay,
     setMenuDisplay,
     page,
-    setPage,
+    setPage
   };
 
   return (

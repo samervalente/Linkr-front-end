@@ -6,9 +6,9 @@ function getUrlAPI(endpoint) {
   return prod;
 }
 
-export async function getUsers(name) {
+export async function getUsers(name, userId) {
   return axios
-    .get(getUrlAPI(`users?name=${name}`))
+    .get(getUrlAPI(`users?name=${name}&id=${userId}`))
     .then((res) => {
       return res.data;
     })

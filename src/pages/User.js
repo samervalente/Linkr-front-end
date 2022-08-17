@@ -43,7 +43,7 @@ export default function User() {
     };
 
     const promise = axios.get(
-      `https://linkr-driven.herokuapp.com	/user/posts/${id}`,
+      `https://linkr-driven.herokuapp.com/user/posts/${id}`,
       config
     );
     const promise2 = axios.get(`https://linkr-driven.herokuapp.com/find/${id}`);
@@ -55,7 +55,7 @@ export default function User() {
         setFollow(status)
       
     });
-
+console.log(userId)
     promise.catch((error) => {
       console.error("error");
       setIsModalOpen(true);

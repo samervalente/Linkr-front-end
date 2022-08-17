@@ -1,31 +1,37 @@
 import styled from "styled-components";
 import { AiOutlineSearch } from "react-icons/ai";
-import { useState, useEffect } from "react";
+import {BsFillCircleFill} from "react-icons/bs"
+import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { DebounceInput } from "react-debounce-input";
 import { getUsers } from "../services/users";
-
+import UserContext from "../context/UserContext";
 export default function SearchBar({ fetchDependency, setDependency }) {
       const navigate = useNavigate();
       const [visible, setVisible] = useState(false);
       const [value, setValue] = useState("");
       const [users, setUsers] = useState([]);
+   
 
+  
       useEffect(() => {
+       const userId = localStorage.getItem("userId")
         async function fetchData() {
-          const users = await getUsers(value);
+          const users = await getUsers(value, userId);
           setUsers(users);
+          
         }
         setVisible(value.length === 0 ? false : true);
     
         fetchData();
       }, [value]);
 
+      
       function redirectUser(id) {
         setDependency(!fetchDependency);
         navigate(`/user/${id}`);
       }
-
+ 
     return (
         <SearchBarSection visible={visible}>
             <div className="search">
@@ -51,16 +57,18 @@ export default function SearchBar({ fetchDependency, setDependency }) {
                             <img alt="user profile"
                                 src={user.imageProfile}
                                 onClick={() => {
-                                    redirectUser(user.id)
+                                    redirectUser(user.userid)
                                     setVisible(false)
                                 }}
                             />
                             <span onClick={() => {
-                                redirectUser(user.id)
+                                redirectUser(user.userid)
                                 setVisible(false)
                             }}>
                                 {user.name}
                             </span>
+                            {user.followedby ? <span className="statusFollow"><BsFillCircleFill className="circle"/> following</span>: ""}
+                            
                         </div>
                     ))
                     : "Searching for users..."}
@@ -70,7 +78,7 @@ export default function SearchBar({ fetchDependency, setDependency }) {
 }
 
 const SearchBarSection = styled.div`
-  width: 90%;
+  width: 50%;
   margin-top: 12px;
   display: flex;
   flex-direction: column;
@@ -128,7 +136,7 @@ const Suggestions = styled.div`
 
     span {
       cursor: pointer;
-      margin-left: 12px;
+      margin-left: 8px;
     }
 
     img {
@@ -140,6 +148,14 @@ const Suggestions = styled.div`
     :hover {
       background-color: #EFEFEF;
       border-radius: 5px;
+    }
+
+    .circle{
+      height: 10px;
+    }
+
+    .statusFollow{
+      color: #c5c5c5;
     }
   }
   overflow-y: scroll;
