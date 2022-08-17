@@ -42,7 +42,7 @@ export default function Timeline() {
 
   function loadPost() {
     const promise = axios.get(
-      `http://localhost:4000/posts`,
+      `https://linkr-driven.herokuapp.com/posts`,
       config
     );
     promise.then((response) => {
@@ -67,7 +67,7 @@ export default function Timeline() {
     }
 
     const promise = axios.get(
-      `http://localhost:4000/posts?page=${nextPage}`,
+      `https://linkr-driven.herokuapp.com/posts?page=${nextPage}`,
       config
     );
     promise.then((response) => {
@@ -86,7 +86,7 @@ export default function Timeline() {
 
   useInterval(() => {
     const promise = axios.get(
-      "http://localhost:4000/postscount",
+      "https://linkr-driven.herokuapp.com/postscount",
       config
     );
     promise.then((response) => {
@@ -111,7 +111,7 @@ export default function Timeline() {
     }
 
     const promise = axios.get(
-      `http://localhost:4000/posts`,
+      `https://linkr-driven.herokuapp.com/posts`,
       config
     );
     promise.then((response) => {
@@ -128,7 +128,7 @@ export default function Timeline() {
     });
 
     const promise2 = axios.get(
-      `http://localhost:4000	/postscount`, config);
+      `https://linkr-driven.herokuapp.com	/postscount`, config);
     promise2.then((response) => {
       setCountPost(response.data.count);
       setNewCount(response.data.count);
