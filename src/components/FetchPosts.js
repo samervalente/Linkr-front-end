@@ -11,6 +11,7 @@ import Modal from "react-modal";
 import Likes from "../components/Likes";
 import Comments from "./Comments";
 import axios from "axios";
+import { fetchComments } from "../services/comment";
 
 Modal.setAppElement("#root");
 
@@ -26,8 +27,31 @@ export default function FetchPosts({
   const { token } = useContext(UserContext);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [comments, setComments] = useState(0);
+  const [comments, setComments] = useState([]);
   const [openComment, setOpenComment] = useState(false);
+
+  //COMMENT START
+  useEffect(() => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  async function getComments() {
+    const response = await fetchComments(post.id, config);
+
+    if (response) {
+      setComments(response);
+    } else {
+      alert("Houve um erro ao buscar comentários. Recarregue a página");
+    }
+  }
+
+  getComments();
+
+}, [post]);
+
+//COMMENT END
 
   function redirectUser() {
     navigate(`/user/${post.userId}`);
@@ -154,7 +178,7 @@ export default function FetchPosts({
         </ClickSyle>
         <Likes post={post} />
         <CommentIcon onClick={() => setOpenComment(!openComment)}/>
-        <span>{comments} comments</span>
+        <span>{comments.length} comments</span>
       </LeftSide>
       <RightTop>
         <TopBox>
@@ -210,7 +234,7 @@ export default function FetchPosts({
         </LinkPart>
       </RightTop>
     </PostBox>
-    {openComment ? <Comments id={post.id} /> : null }
+    {openComment ? <Comments id={post.id} postComments={comments} fetchDependency={fetchDependency} setDependency={setDependency} postUserId={post.userId} userId={userId} /> : null }
     </Conteiner>
   );
 }

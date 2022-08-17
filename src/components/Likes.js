@@ -20,7 +20,7 @@ export default function Likes({ post }) {
 
   useEffect(() => {
     const promise = axios.get(
-      `http://:4000/likes/${post.id}`,
+      `https://linkr-driven.herokuapp.com/likes/${post.id}`,
       config
     );
     const promise2 = axios.get(

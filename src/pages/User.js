@@ -9,7 +9,7 @@ import { getTrending } from "../services/post";
 import { followUnfollowUser } from "../services/users";
 import { Oval } from "react-loader-spinner";
 import Modal from "react-modal";
-import SearchBar from '../components/SearchBar';
+import SearchBar from "../components/SearchBar";
 
 Modal.setAppElement("#root");
 
@@ -24,13 +24,11 @@ export default function User() {
   const [trending, setTrending] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [fetchDependency, setDependency] = useState(false);
-  const [follow, setFollow] = useState(false)
-  const [reqProcess, setReqProcess] = useState(false)
+  const [follow, setFollow] = useState(false);
+  const [reqProcess, setReqProcess] = useState(false);
   const { id } = useParams();
- 
 
   useEffect(() => {
-  
     if (!token || !imageProfile) {
       setPage(`user/${id}`);
       navigate("/");
@@ -51,9 +49,11 @@ export default function User() {
       setPost(response.data.posts);
       setUserId(response.data.userId);
       setIsLoading(false);
-        const status = await followUnfollowUser({userId:response.data.userId, followedId:id}, 'status')
-        setFollow(status)
-      
+      const status = await followUnfollowUser(
+        { userId: response.data.userId, followedId: id },
+        "status"
+      );
+      setFollow(status);
     });
 console.log(userId)
     promise.catch((error) => {
@@ -95,9 +95,7 @@ console.log(userId)
     },
   };
 
-
   useEffect(() => {
-   
     async function fetchData() {
       const config = {
         headers: {
@@ -122,27 +120,27 @@ console.log(userId)
     }
   }
 
-
-  async function followUser(){
-    setReqProcess(true)
+  async function followUser() {
+    setReqProcess(true);
     const body = {
-      userId, followedId:id
-    }
-      await followUnfollowUser(body, 'follow')
-      setFollow(!follow)
-      setReqProcess(false)
+      userId,
+      followedId: id,
+    };
+    await followUnfollowUser(body, "follow");
+    setFollow(!follow);
+    setReqProcess(false);
   }
 
-  async function unfollowUser(){
-    setReqProcess(true)
+  async function unfollowUser() {
+    setReqProcess(true);
     const body = {
-      userId, followedId:id
-    }
-    await followUnfollowUser(body, 'unfollow')
-    setFollow(!follow)
-    setReqProcess(false) 
+      userId,
+      followedId: id,
+    };
+    await followUnfollowUser(body, "unfollow");
+    setFollow(!follow);
+    setReqProcess(false);
   }
-
 
   const trendingTopics =
     trending.length > 0
@@ -159,20 +157,36 @@ console.log(userId)
     <Conteiner onClick={checkMenu}>
       <Top setDependency={setDependency} fetchDependency={fetchDependency} />
       <SearchBarBox>
-        <SearchBar fetchDependency={fetchDependency} setDependency={setDependency} />
-        </SearchBarBox>
+        <SearchBar
+          fetchDependency={fetchDependency}
+          setDependency={setDependency}
+        />
+      </SearchBarBox>
       <Content>
-        <Title>{name ? `${name}'s posts` : "Pagina não encontrada!"}
-       
-          {id != userId? 
-          follow ? 
-           
-          <FollowButton  disable={reqProcess} variant={'unfollow'} onClick={unfollowUser}>
-            {reqProcess ? <Oval height='20' color='white' /> : 'Unfollow'}
-          </FollowButton> : 
-          <FollowButton disable={reqProcess} variant={'follow'} onClick={followUser}>
-             {reqProcess ? <Oval height='20' color='white' /> : 'Follow'}
-          </FollowButton>  : ""}
+        <Title>
+          {name ? `${name}'s posts` : "Pagina não encontrada!"}
+
+          {id != userId ? (
+            follow ? (
+              <FollowButton
+                disable={reqProcess}
+                variant={"unfollow"}
+                onClick={unfollowUser}
+              >
+                {reqProcess ? <Oval height="20" color="white" /> : "Unfollow"}
+              </FollowButton>
+            ) : (
+              <FollowButton
+                disable={reqProcess}
+                variant={"follow"}
+                onClick={followUser}
+              >
+                {reqProcess ? <Oval height="20" color="white" /> : "Follow"}
+              </FollowButton>
+            )
+          ) : (
+            ""
+          )}
         </Title>
         <Sides>
           <RightSide>
@@ -190,7 +204,7 @@ console.log(userId)
             ) : isLoading ? (
               <>
                 <Load>"Carregando posts..."</Load>
-                <Oval />
+                <Oval color="#6D6D6D" secondaryColor="rgba(0,0,0,0)" />
               </>
             ) : (
               <Load>There are no posts yet</Load>
@@ -254,7 +268,6 @@ const SearchBarBox = styled.div`
   }
 `;
 
-
 const Title = styled.h1`
   font-family: "Oswald", sans-serif;
   font-weight: 700;
@@ -266,11 +279,9 @@ const Title = styled.h1`
   justify-content: space-between;
   align-items: center;
 
-  button{
-    
+  button {
     cursor: pointer;
   }
- 
 
   @media (max-width: 611px) {
     margin-left: 17px;
@@ -280,24 +291,21 @@ const Title = styled.h1`
 `;
 
 const FollowButton = styled.div`
- 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 30px;
-    width: 112px;
-    border: none;
-    border-radius: 5px;
-    background-color: ${props => props.variant === 'follow' ? "#1877F2;": "white;"};
-    color:${props => props.variant === 'unfollow' ? "#1877F2;": "white;"};
-    font-family: 'Lato';
-    font-weight: 700;
-    font-size: 14px;
-    cursor: pointer;
-  
-
-`
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  width: 112px;
+  border: none;
+  border-radius: 5px;
+  background-color: ${(props) =>
+    props.variant === "follow" ? "#1877F2;" : "white;"};
+  color: ${(props) => (props.variant === "unfollow" ? "#1877F2;" : "white;")};
+  font-family: "Lato";
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+`;
 
 const Sides = styled.div`
   display: flex;

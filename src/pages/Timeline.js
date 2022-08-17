@@ -12,6 +12,7 @@ import { Oval } from "react-loader-spinner";
 import Modal from "react-modal";
 import SearchBar from "../components/SearchBar";
 import NewPostsButton from "../shared/newPostsButton";
+import InfiniteScroll from 'react-infinite-scroller';
 
 Modal.setAppElement("#root");
 
@@ -28,6 +29,8 @@ export default function Timeline() {
   const [trending, setTrending] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [fetchDependency, setDependency] = useState(false);
+  const [more, setMore] = useState(true);
+  const [nextPage, setNextPage] = useState(0);
 
   //console.log(`Posts atuais: ${countPost}`);
   //console.log(`Posts novos contados na requisição: ${newCount}`);
@@ -48,6 +51,31 @@ export default function Timeline() {
       setHaveNewPost(false);
       setUserId(response.data.userId);
       setIsLoading(false);
+    });
+
+    promise.catch((error) => {
+      console.error("error");
+      setIsModalOpen(true);
+    });
+  }
+
+  function loadPostScroll() {
+    if (!token || !imageProfile) {
+      setPage("timeline");
+      navigate("/");
+      return;
+    }
+
+    const promise = axios.get(
+      `https://linkr-driven.herokuapp.com/posts?page=${nextPage}`,
+      config
+    );
+    promise.then((response) => {
+      setPost([...posts, ...response.data.posts]);
+      setMore(response.data.posts.length > 0 ? true : false);
+      setUserId(response.data.userId);
+      setIsLoading(false);
+      setNextPage(nextPage + 1);
     });
 
     promise.catch((error) => {
@@ -90,25 +118,23 @@ export default function Timeline() {
       setPost(response.data.posts);
       setUserId(response.data.userId);
       setIsLoading(false);
+      setNextPage(1);
+      setMore(true);
     });
 
     promise.catch((error) => {
       console.error("error");
       setIsModalOpen(true);
     });
-  }, [fetchDependency]);
 
-  useEffect(() => {
-    const promise = axios.get(
-      `https://linkr-driven.herokuapp.com	/postscount`,
-      config
-    );
-    promise.then((response) => {
+    const promise2 = axios.get(
+      `https://linkr-driven.herokuapp.com	/postscount`, config);
+    promise2.then((response) => {
       setCountPost(response.data.count);
       setNewCount(response.data.count);
     });
 
-    promise.catch((error) => {
+    promise2.catch((error) => {
       console.error("error");
     });
   }, [fetchDependency]);
@@ -201,6 +227,7 @@ export default function Timeline() {
             ) : (
               <></>
             )}
+            <InfiniteScroll pageStart={0} loadMore={loadPostScroll} hasMore={more ? true : false} loader={<Load key={0}>Loading ...</Load>} >
             {posts.length > 0 ? (
               posts.map((post, index) => (
                 <FetchPosts
@@ -215,11 +242,12 @@ export default function Timeline() {
             ) : isLoading ? (
               <>
                 <Load>Carregando posts...</Load>
-                <Oval />
+                <Oval color="#6D6D6D" secondaryColor="rgba(0,0,0,0)" />
               </>
             ) : (
               <Load>There are no posts yet</Load>
             )}
+            </InfiniteScroll>
             {isModalOpen ? (
               <Modal isOpen={isModalOpen} style={customStyle}>
                 <h2>

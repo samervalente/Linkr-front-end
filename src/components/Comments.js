@@ -3,8 +3,56 @@ import { IoPaperPlaneOutline } from "react-icons/io5";
 import { useState, useContext } from "react";
 import UserContext from "../context/UserContext";
 import { sendComment } from "../services/comment";
+import { useNavigate } from "react-router-dom";
+import { followUnfollowUser } from "../services/users";
+import { useEffect } from "react";
 
-export default function Comments({ id }) {
+function SingleComment({ comment, postUserId, userId }) {
+    const navigate = useNavigate();
+    const [followStatus, setFollowStatus] = useState('');
+
+    useEffect(() => {
+        async function getStatus() {
+            const status = await followUnfollowUser(
+                { userId, followedId: comment.userId },
+                "status"
+            );
+            if (status) {
+                setFollowStatus(`following`);
+            } else {
+                setFollowStatus(null)
+            }
+        }
+
+        if (comment.userId === postUserId) {
+            setFollowStatus(`post's author`);
+        } else {
+            getStatus();
+        }
+    }, []);
+
+    function redirectUser() {
+        navigate(`/user/${comment.userId}`);
+    }
+
+    return (
+        <CommentContent>
+            <img src={comment.imageProfile} alt='user' />
+            <RightSide>
+                <Top>
+                    <h2 onClick={redirectUser}>{comment.name}</h2>
+                    <p>{followStatus ? '• ' : null}</p>
+                    <p>{followStatus}</p>
+                </Top>
+                <Bottom>
+                    <p>{comment.content}</p>
+                </Bottom>
+            </RightSide>
+        </CommentContent>
+    );
+}
+
+export default function Comments({ id, postComments, fetchDependency, setDependency, postUserId, userId }) {
     const { token, imageProfile } = useContext(UserContext);
     const [comment, setComment] = useState('');
     const [loading, setLoading] = useState(false);
@@ -17,11 +65,12 @@ export default function Comments({ id }) {
     async function insertComment() {
         setLoading(true);
         const body = { comment };
-        
+
         const response = await sendComment(id, body, config);
 
         if (response === 201) {
             setComment('');
+            setDependency(!fetchDependency);
             setLoading(false);
         } else {
             setLoading(false);
@@ -29,46 +78,20 @@ export default function Comments({ id }) {
         }
     }
 
-
     return (
         <Conteiner>
-            <SingleComment>
-                <img src={imageProfile} alt='user' />
-                <RightSide>
-                    <Top>
-                        <h2>Nome do autor</h2>
-                        <p>• </p>
-                        <p>following</p>
-                    </Top>
-                    <Bottom>
-                        <p>Adorei esse post, ajuda muito a usar Material UI com React! Adorei esse post, ajuda muito a usar Material UI com React! Adorei esse post, ajuda muito a usar Material UI com React!</p>
-                    </Bottom>
-                </RightSide>
-            </SingleComment>
-            <SingleComment>
-                <img src={imageProfile} alt='user' />
-                <RightSide>
-                    <Top>
-                        <h2>Nome do autor</h2>
-                        <p>• </p>
-                        <p>following</p>
-                    </Top>
-                    <Bottom>
-                        <p>Adorei esse post, ajuda muito a usar Material UI com React!</p>
-                    </Bottom>
-                </RightSide>
-            </SingleComment>
+            {postComments.map((comment, index) => <SingleComment key={index} comment={comment} postUserId={postUserId} userId={userId} />)}
             <InputComment>
-            <img src={imageProfile} alt='user' />
-            <Input
-                type="text"
-                disabled={loading}
-                placeholder='write a comment...'
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                required
-            />
-            <PaperPlane onClick={insertComment} />
+                <img src={imageProfile} alt='user' />
+                <Input
+                    type="text"
+                    disabled={loading}
+                    placeholder='write a comment...'
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    required
+                />
+                <PaperPlane onClick={insertComment} />
             </InputComment>
         </Conteiner>
     );
@@ -116,7 +139,7 @@ const Input = styled.input`
     }
 `;
 
-const SingleComment = styled.div`
+const CommentContent = styled.div`
     display: flex;
     padding-top: 15px;
     border-bottom: 1px solid #353535;
@@ -139,6 +162,7 @@ const Top = styled.div`
     h2 {
         font-weight: 700;
         color: #F3F3F3;
+        cursor: pointer;
     }
     p {
         font-weight: 400;

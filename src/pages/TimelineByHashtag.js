@@ -7,7 +7,7 @@ import UserContext from "../context/UserContext";
 import axios from "axios";
 import { getTrending } from "../services/post";
 import { Oval } from "react-loader-spinner";
-import SearchBar from '../components/SearchBar';
+import SearchBar from "../components/SearchBar";
 
 export default function Timeline() {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ export default function Timeline() {
     };
 
     const promise = axios.get(
-      `https://linkr-driven.herokuapp.com	/posts/${hashtag}`,
+      `https://linkr-driven.herokuapp.com/posts/${hashtag}`,
       config
     );
     promise.then((response) => {
@@ -95,8 +95,11 @@ export default function Timeline() {
     <Conteiner onClick={checkMenu}>
       <Top setDependency={setDependency} fetchDependency={fetchDependency} />
       <SearchBarBox>
-        <SearchBar fetchDependency={fetchDependency} setDependency={setDependency} />
-        </SearchBarBox>
+        <SearchBar
+          fetchDependency={fetchDependency}
+          setDependency={setDependency}
+        />
+      </SearchBarBox>
       <Content>
         <Title># {hashtag}</Title>
         <Sides>
@@ -115,7 +118,7 @@ export default function Timeline() {
             ) : isLoading ? (
               <>
                 <Load>"Carregando posts..."</Load>
-                <Oval />
+                <Oval color="#6D6D6D" secondaryColor="rgba(0,0,0,0)" />
               </>
             ) : (
               <Load>There are no posts with this tag</Load>
@@ -166,7 +169,6 @@ const SearchBarBox = styled.div`
     transform: translate(-50%, 0);
   }
 `;
-
 
 const Title = styled.h1`
   font-family: "Oswald", sans-serif;
