@@ -12,7 +12,8 @@ import { Oval } from "react-loader-spinner";
 import Modal from "react-modal";
 import SearchBar from "../components/SearchBar";
 import NewPostsButton from "../shared/newPostsButton";
-import InfiniteScroll from 'react-infinite-scroller';
+import InfiniteScroll from "react-infinite-scroller";
+import LoadingScroll from "../shared/LoadingScroll";
 
 Modal.setAppElement("#root");
 
@@ -31,6 +32,7 @@ export default function Timeline() {
   const [fetchDependency, setDependency] = useState(false);
   const [more, setMore] = useState(true);
   const [nextPage, setNextPage] = useState(0);
+  const [firstLoad, setFirstLoad] = useState(false);
 
   //console.log(`Posts atuais: ${countPost}`);
   //console.log(`Posts novos contados na requisição: ${newCount}`);
@@ -120,6 +122,7 @@ export default function Timeline() {
       setIsLoading(false);
       setNextPage(1);
       setMore(true);
+      setFirstLoad(true);
     });
 
     promise.catch((error) => {
@@ -128,7 +131,9 @@ export default function Timeline() {
     });
 
     const promise2 = axios.get(
-      `https://linkr-driven.herokuapp.com/postscount`, config);
+      `https://linkr-driven.herokuapp.com/postscount`,
+      config
+    );
     promise2.then((response) => {
       setCountPost(response.data.count);
       setNewCount(response.data.count);
@@ -227,26 +232,31 @@ export default function Timeline() {
             ) : (
               <></>
             )}
-            <InfiniteScroll pageStart={0} loadMore={loadPostScroll} hasMore={more ? true : false} loader={<Load key={0}>Loading ...</Load>} >
-            {posts.length > 0 ? (
-              posts.map((post, index) => (
-                <FetchPosts
-                  key={index}
-                  post={post}
-                  userId={userId}
-                  setTrending={setTrending}
-                  setDependency={setDependency}
-                  fetchDependency={fetchDependency}
-                />
-              ))
-            ) : isLoading ? (
-              <>
-                <Load>Carregando posts...</Load>
-                <Oval color="#6D6D6D" secondaryColor="rgba(0,0,0,0)" />
-              </>
-            ) : (
-              <Load>There are no posts yet</Load>
-            )}
+            <InfiniteScroll
+              pageStart={0}
+              loadMore={loadPostScroll}
+              hasMore={more ? true : false}
+              loader={firstLoad === true && <LoadingScroll key={0} />}
+            >
+              {posts.length > 0 ? (
+                posts.map((post, index) => (
+                  <FetchPosts
+                    key={index}
+                    post={post}
+                    userId={userId}
+                    setTrending={setTrending}
+                    setDependency={setDependency}
+                    fetchDependency={fetchDependency}
+                  />
+                ))
+              ) : isLoading ? (
+                <>
+                  <Load>Carregando posts...</Load>
+                  <Oval color="#6D6D6D" secondaryColor="rgba(0,0,0,0)" />
+                </>
+              ) : (
+                <Load>There are no posts yet</Load>
+              )}
             </InfiniteScroll>
             {isModalOpen ? (
               <Modal isOpen={isModalOpen} style={customStyle}>
