@@ -128,7 +128,7 @@ export default function Timeline() {
     });
 
     const promise2 = axios.get(
-      `https://linkr-driven.herokuapp.com	/postscount`, config);
+      `https://linkr-driven.herokuapp.com/postscount`, config);
     promise2.then((response) => {
       setCountPost(response.data.count);
       setNewCount(response.data.count);

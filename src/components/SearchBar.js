@@ -2,18 +2,15 @@ import styled from "styled-components";
 import { AiOutlineSearch } from "react-icons/ai";
 import {BsFillCircleFill} from "react-icons/bs"
 import { useState, useEffect, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { DebounceInput } from "react-debounce-input";
 import { getUsers } from "../services/users";
-import UserContext from "../context/UserContext";
 export default function SearchBar({ fetchDependency, setDependency }) {
       const navigate = useNavigate();
       const [visible, setVisible] = useState(false);
       const [value, setValue] = useState("");
       const [users, setUsers] = useState([]);
    
-
-  
       useEffect(() => {
        const userId = localStorage.getItem("userId")
         async function fetchData() {
