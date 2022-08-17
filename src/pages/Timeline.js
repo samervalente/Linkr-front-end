@@ -96,19 +96,15 @@ export default function Timeline() {
       console.error("error");
       setIsModalOpen(true);
     });
-  }, [fetchDependency]);
 
-  useEffect(() => {
-    const promise = axios.get(
-      `https://linkr-driven.herokuapp.com	/postscount`,
-      config
-    );
-    promise.then((response) => {
+    const promise2 = axios.get(
+      `https://linkr-driven.herokuapp.com	/postscount`, config);
+    promise2.then((response) => {
       setCountPost(response.data.count);
       setNewCount(response.data.count);
     });
 
-    promise.catch((error) => {
+    promise2.catch((error) => {
       console.error("error");
     });
   }, [fetchDependency]);
