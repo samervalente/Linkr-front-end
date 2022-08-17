@@ -124,6 +124,7 @@ export default function Timeline() {
               <Load>There are no posts with this tag</Load>
             )}
           </RightSide>
+          <SpaceForAlign></SpaceForAlign>
           <LeftSide>
             <div className="trendingTitle">
               <h1>trending</h1>
@@ -208,6 +209,8 @@ const LeftSide = styled.div`
   margin-left: 25px;
   color: white;
   font-family: "Oswald";
+  position: fixed;
+  right: 460px;
 
   .trendingTitle {
     padding: 10px 16px;
@@ -277,4 +280,8 @@ const Load = styled.div`
   color: #ffffff;
   margin-top: 20px;
   margin-bottom: 40px;
+`;
+
+const SpaceForAlign = styled.div`
+  width: 301px;
 `;
