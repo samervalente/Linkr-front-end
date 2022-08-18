@@ -1,9 +1,7 @@
 import axios from "axios";
 
 function getUrlAPI(endpoint) {
-  const local = `https://linkr-driven.herokuapp.com/${endpoint}`;
-  const prod = `https://linkr-driven.herokuapp.com/${endpoint}`;
-  return prod;
+  return `https://linkr-driven.herokuapp.com/${endpoint}`;
 }
 
 export async function sendRegisterData(payload) {

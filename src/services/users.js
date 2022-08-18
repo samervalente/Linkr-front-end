@@ -1,14 +1,12 @@
 import axios from "axios";
 
 function getUrlAPI(endpoint) {
-  const local = `https://linkr-driven.herokuapp.com/${endpoint}`;
-  const prod = `https://linkr-driven.herokuapp.com/${endpoint}`;
-  return prod;
+  return `https://linkr-driven.herokuapp.com/${endpoint}`;
 }
 
-export async function getUsers(name, userId) {
+export async function getUsers(name, config) {
   return axios
-    .get(getUrlAPI(`users?name=${name}&id=${userId}`))
+    .get(getUrlAPI(`users?name=${name}`), config)
     .then((res) => {
       return res.data;
     })
@@ -17,14 +15,13 @@ export async function getUsers(name, userId) {
     });
 }
 
-export async function followUnfollowUser(body, action){
- 
+export async function followUnfollowUser(body, action) {
   return axios
-  .post(getUrlAPI(`users/follow?action=${action}`), body)
-  .then(res => {
-    return res.data
-  })
-  .catch(err => {
-    alert("Could not complete the operation")
-  })
+    .post(getUrlAPI(`users/follow?action=${action}`), body)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      alert("Could not complete the operation");
+    });
 }

@@ -12,7 +12,8 @@ import { Oval } from "react-loader-spinner";
 import Modal from "react-modal";
 import SearchBar from "../components/SearchBar";
 import NewPostsButton from "../shared/newPostsButton";
-import InfiniteScroll from 'react-infinite-scroller';
+import InfiniteScroll from "react-infinite-scroller";
+import LoadingScroll from "../shared/LoadingScroll";
 
 Modal.setAppElement("#root");
 
@@ -23,15 +24,15 @@ export default function Timeline() {
   const [newCount, setNewCount] = useState(0);
   const [haveNewPost, setHaveNewPost] = useState(false);
   const [userId, setUserId] = useState("");
-  const { token, imageProfile, menuDisplay, setMenuDisplay, setPage } =
-    useContext(UserContext);
+  const { token, imageProfile, menuDisplay, setMenuDisplay, setPage } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
   const [trending, setTrending] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [fetchDependency, setDependency] = useState(false);
   const [more, setMore] = useState(true);
   const [nextPage, setNextPage] = useState(0);
-
+  const [firstLoad, setFirstLoad] = useState(false);
+  const [haveFollowing, setHaveFollowing] = useState(false)
   //console.log(`Posts atuais: ${countPost}`);
   //console.log(`Posts novos contados na requisição: ${newCount}`);
   const config = {
@@ -51,6 +52,8 @@ export default function Timeline() {
       setHaveNewPost(false);
       setUserId(response.data.userId);
       setIsLoading(false);
+      setNextPage(1);
+      setMore(true);
     });
 
     promise.catch((error) => {
@@ -58,11 +61,15 @@ export default function Timeline() {
       setIsModalOpen(true);
     });
   }
-  console.log(posts)
+ 
+
   function loadPostScroll() {
     if (!token || !imageProfile) {
       setPage("timeline");
       navigate("/");
+      return;
+    }
+    if (nextPage === 0) {
       return;
     }
 
@@ -71,6 +78,7 @@ export default function Timeline() {
       config
     );
     promise.then((response) => {
+      
       setPost([...posts, ...response.data.posts]);
       setMore(response.data.posts.length > 0 ? true : false);
       setUserId(response.data.userId);
@@ -111,15 +119,18 @@ export default function Timeline() {
     }
 
     const promise = axios.get(
-      `https://linkr-driven.herokuapp.com/posts`,
+      //`https://linkr-driven.herokuapp.com/posts`,
+      "https://linkr-driven.herokuapp.com/posts",
       config
     );
     promise.then((response) => {
+      setHaveFollowing(response.data.haveFolloweds)
       setPost(response.data.posts);
       setUserId(response.data.userId);
       setIsLoading(false);
       setNextPage(1);
       setMore(true);
+      setFirstLoad(true);
     });
 
     promise.catch((error) => {
@@ -128,7 +139,9 @@ export default function Timeline() {
     });
 
     const promise2 = axios.get(
-      `https://linkr-driven.herokuapp.com/postscount`, config);
+      `https://linkr-driven.herokuapp.com/postscount`,
+      config
+    );
     promise2.then((response) => {
       setCountPost(response.data.count);
       setNewCount(response.data.count);
@@ -139,29 +152,6 @@ export default function Timeline() {
     });
   }, [fetchDependency]);
 
-  const customStyle = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      width: "597px",
-      height: "262px",
-      backgroundColor: "#333333",
-      borderRadius: "50px",
-      color: "white",
-      textAlign: "center",
-      fontFamily: "Lato",
-      fontSize: "25px",
-      padding: "60px",
-      fontWeight: "700",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between",
-    },
-  };
 
   useEffect(() => {
     async function fetchData() {
@@ -227,35 +217,40 @@ export default function Timeline() {
             ) : (
               <></>
             )}
-            <InfiniteScroll pageStart={0} loadMore={loadPostScroll} hasMore={more ? true : false} loader={<Load key={0}>Loading ...</Load>} >
-            {posts.length > 0 ? (
-              posts.map((post, index) => (
-                <FetchPosts
-                  key={index}
-                  post={post}
-                  userId={userId}
-                  setTrending={setTrending}
-                  setDependency={setDependency}
-                  fetchDependency={fetchDependency}
-                />
-              ))
-            ) : isLoading ? (
-              <>
-                <Load>Carregando posts...</Load>
-                <Oval color="#6D6D6D" secondaryColor="rgba(0,0,0,0)" />
-              </>
-            ) : (
-              <Load>There are no posts yet</Load>
-            )}
+            <InfiniteScroll
+              pageStart={0}
+              loadMore={loadPostScroll}
+              hasMore={more ? true : false}
+              loader={firstLoad === true && <LoadingScroll key={0} />}
+            >
+              {posts.length > 0 ? (
+                posts.map((post, index) => (
+                  <FetchPosts
+                    key={index}
+                    post={post}
+                    userId={userId}
+                    setTrending={setTrending}
+                    setDependency={setDependency}
+                    fetchDependency={fetchDependency}
+                  />
+                ))
+              ) : isLoading ? (
+                <>
+                  <Load>Carregando posts...</Load>
+                  <Oval color="#6D6D6D" secondaryColor="rgba(0,0,0,0)" />
+                </>
+              ) : (
+                <Load>{haveFollowing ? "No posts found from your friends" : "You don't follow anyone yet. Search for new friends!"}</Load>
+              )}
             </InfiniteScroll>
             {isModalOpen ? (
-              <Modal isOpen={isModalOpen} style={customStyle}>
+              <Dialog isOpen={isModalOpen} >
                 <h2>
                   An error occured while trying to fetch the posts, please
                   refresh the page
                 </h2>
                 <button onClick={closeModal}>Ok</button>
-              </Modal>
+              </Dialog>
             ) : (
               <></>
             )}
@@ -272,6 +267,43 @@ export default function Timeline() {
     </Conteiner>
   );
 }
+
+const Dialog = styled(Modal)`
+  margin: 50vh;
+  margin-left: 50%;
+  transform: translate(-50%, -50%);
+  width: 597px;
+  height: 262px;
+  background-color: #333333;
+  border-radius: 50px;
+  font-family: Lato;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  h2 {
+    width: 338px;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 25px;
+    text-align: center;
+    line-height: 31px;
+  }
+
+  button{
+    width: 134px;
+    height: 37px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 5px;
+    border: none;
+    background-color: #ffffff;
+    color: #1877f2;
+    cursor: pointer;
+  }
+`;
 
 const Conteiner = styled.div`
   display: flex;
@@ -345,6 +377,9 @@ const LeftSide = styled.div`
   margin-left: 25px;
   color: white;
   font-family: "Oswald";
+  position: -webkit-sticky;
+  position: sticky;
+  top: 100px;
 
   .trendingTitle {
     padding: 10px 16px;

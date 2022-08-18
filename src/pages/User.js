@@ -55,7 +55,7 @@ export default function User() {
       );
       setFollow(status);
     });
-console.log(userId)
+    console.log(userId);
     promise.catch((error) => {
       console.error("error");
       setIsModalOpen(true);
@@ -221,7 +221,6 @@ console.log(userId)
               <></>
             )}
           </RightSide>
-
           <LeftSide>
             <div className="trendingTitle">
               <h1>trending</h1>
@@ -331,6 +330,9 @@ const LeftSide = styled.div`
   margin-left: 25px;
   color: white;
   font-family: "Oswald";
+  position: -webkit-sticky;
+  position: sticky;
+  top: 100px;
 
   .trendingTitle {
     padding: 10px 16px;
