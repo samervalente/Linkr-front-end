@@ -33,6 +33,7 @@ export default function Timeline() {
   const [more, setMore] = useState(true);
   const [nextPage, setNextPage] = useState(0);
   const [firstLoad, setFirstLoad] = useState(false);
+  const [haveFollowing, setHaveFollowing] = useState(false)
 
   console.log(`Posts atuais: ${countPost}`);
   console.log(`Posts novos contados na requisição: ${newCount}`);
@@ -125,6 +126,7 @@ export default function Timeline() {
       config
     );
     promise.then((response) => {
+      setHaveFollowing(response.data.haveFolloweds)
       setPost(response.data.posts);
       setUserId(response.data.userId);
       setIsLoading(false);
@@ -269,7 +271,8 @@ export default function Timeline() {
                   <Oval color="#6D6D6D" secondaryColor="rgba(0,0,0,0)" />
                 </>
               ) : (
-                <Load>There are no posts yet</Load>
+                <Load>{haveFollowing ? "No posts found from your friends" : "You don't follow anyone yet. Search for new friends!"}</Load>
+               
               )}
             </InfiniteScroll>
             {isModalOpen ? (
