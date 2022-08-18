@@ -15,6 +15,7 @@ import NewPostsButton from "../shared/newPostsButton";
 import InfiniteScroll from "react-infinite-scroller";
 import LoadingScroll from "../shared/LoadingScroll";
 
+
 Modal.setAppElement("#root");
 
 export default function Timeline() {
@@ -128,6 +129,8 @@ export default function Timeline() {
       setNextPage(1);
       setMore(true);
       setFirstLoad(true);
+      
+      console.log(response.data.posts)
     });
 
     promise.catch((error) => {

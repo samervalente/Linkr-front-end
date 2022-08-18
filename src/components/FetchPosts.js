@@ -15,6 +15,7 @@ import Comments from "./Comments";
 import Reposts from "./Reposts";
 import axios from "axios";
 import { fetchComments } from "../services/comment";
+import { BiRepost } from "react-icons/bi";
 
 Modal.setAppElement("#root");
 
@@ -151,6 +152,13 @@ export default function FetchPosts({
 
   return (
     <Conteiner>
+    {post.reposterId === null 
+    ? 
+    "" 
+    : 
+    <RepostBar>
+        <RepostIcon/><span>Re-posted by {userId === post.reposterId ? "you" : post.reposterName}</span>
+    </RepostBar>}
     <PostBox>
       <LeftSide>
         <ClickSyle onClick={redirectUser}>
@@ -219,6 +227,26 @@ export default function FetchPosts({
     </Conteiner>
   );
 }
+
+const RepostBar = styled.div`
+  height: 30px;
+  display: flex;
+  align-items: center;
+
+  p{
+    color: #FFFFFF;
+    font-family: 'Lato';
+    font-size: 11px;
+    display: flex;
+  }
+
+  span{
+    color: #FFFFFF;
+    font-family: 'Lato';
+    font-size: 11px;
+    display: flex;
+  }
+`
 
 const Conteiner = styled.div`
   display: flex;
@@ -480,3 +508,10 @@ const CommentIcon = styled(AiOutlineComment)`
 const ClickSyle = styled.div`
   cursor: pointer;
 `;
+
+const RepostIcon = styled(BiRepost)`
+    color: #FFFFFF;
+    width: 30px;
+    height: 25px;
+    margin-left: 13px;
+`
