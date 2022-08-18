@@ -92,14 +92,16 @@ const SearchBarSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: ${(props) => (props.visible ? "176px" : "")};
+  height: ${(props) => (props.visible ? "174px" : "")};
   border-radius: 8px;
   background-color: ${(props) => (props.visible ? "#E7E7E7" : "none")};
+
 
   .search {
     display: flex;
     width: 100%;
     height: 45px;
+   
 
     .SearchBar {
       border-radius: 8px 0px 0px 8px;
@@ -110,6 +112,7 @@ const SearchBarSection = styled.div`
       font-family: "Lato";
       font-size: 16px;
       padding-left: 12px;
+     
     }
 
     ::placeholder {
@@ -125,10 +128,12 @@ const SearchBarSection = styled.div`
     left: 50%;
     transform: translate(-50%, 0);
   }
+ 
 `;
 
 const Suggestions = styled.div`
-  display: ${(props) => (props.visible ? "block" : "none")};
+  display: ${(props) => (props.visible ? "flex" : "none")};
+  flex-direction:column;
   background-color: #e7e7e7;
   height: 100%;
   width: 100%;
@@ -148,6 +153,7 @@ const Suggestions = styled.div`
     }
 
     img {
+      border-radius: 50%;
       cursor: pointer;
       width: 40px;
       height: 40px;
@@ -166,19 +172,18 @@ const Suggestions = styled.div`
       color: #c5c5c5;
     }
   }
+
   overflow-y: scroll;
   ::-webkit-scrollbar {
     background: none;
     width: 8px;
     height: 2 em;
   }
-
   ::-webkit-scrollbar-track {
     background-color: #efefef;
     border-radius: 100vw;
     margin-block: 0.5em;
   }
-
   ::-webkit-scrollbar-thumb {
     width: 5px;
     height: 0.5em;
@@ -186,11 +191,17 @@ const Suggestions = styled.div`
     border: 0.25em solid red 3px;
     border-radius: 100vw;
   }
-
   ::-webkit-scrollbar-thumb:hover {
     background: var(--ligthgray);
     border-radius: 16px;
   }
+
+  @media (max-width: 611px) {
+    
+    
+  }
+
+  z-index: 1;
 `;
 
 const Heart = styled(AiOutlineSearch)`

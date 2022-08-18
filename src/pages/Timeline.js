@@ -305,6 +305,7 @@ const Conteiner = styled.div`
   padding-top: 150px;
 
   @media (max-width: 611px) {
+  
     padding-top: 146px;
   }
 `;
@@ -320,6 +321,7 @@ const Content = styled.div`
 
 const SearchBarBox = styled.div`
   display: none;
+
   @media (max-width: 611px) {
     display: flex;
     width: 100%;
@@ -327,6 +329,7 @@ const SearchBarBox = styled.div`
     top: 0px;
     left: 50%;
     transform: translate(-50%, 0);
+    z-index: 1;
   }
 `;
 

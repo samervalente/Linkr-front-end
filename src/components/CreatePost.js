@@ -78,6 +78,7 @@ const Conteiner = styled.div`
         margin-right: 18px;
 
         @media(max-width: 611px) {
+           
             display: none;
         }
     }
@@ -89,6 +90,7 @@ const Conteiner = styled.div`
 `;
 
 const Form = styled.form`
+   
     display: flex;
     width: 100%;
     flex-direction: column;
@@ -104,6 +106,7 @@ const Form = styled.form`
             font-size: 17px;
         }
     }
+  
 `;
 
 const Input = styled.input`
