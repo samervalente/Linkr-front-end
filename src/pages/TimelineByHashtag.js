@@ -8,6 +8,8 @@ import axios from "axios";
 import { getTrending } from "../services/post";
 import { Oval } from "react-loader-spinner";
 import SearchBar from "../components/SearchBar";
+import InfiniteScroll from "react-infinite-scroller";
+import LoadingScroll from "../shared/LoadingScroll";
 
 export default function Timeline() {
   const navigate = useNavigate();
@@ -20,6 +22,39 @@ export default function Timeline() {
   const [trending, setTrending] = useState([]);
   const { hashtag } = useParams();
   const [fetchDependency, setDependency] = useState(false);
+  const [more, setMore] = useState(true);
+  const [nextPage, setNextPage] = useState(0);
+  const [firstLoad, setFirstLoad] = useState(false);
+
+  function loadPostScroll() {
+    if (!token || !imageProfile) {
+      setPage(`hashtag/${hashtag}`);
+      navigate("/");
+      return;
+    }
+    if (nextPage === 0) {
+      return;
+    }
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const promise = axios.get(
+      `https://linkr-driven.herokuapp.com/posts/${hashtag}?page=${nextPage}`,
+      config
+    );
+    promise.then((response) => {
+      setPost([...posts, ...response.data.posts]);
+      setMore(response.data.posts.length > 0 ? true : false);
+      setUserId(response.data.userId);
+      setIsLoading(false);
+      setNextPage(nextPage + 1);
+    });
+
+    promise.catch(() => alert("Unable to render posts"));
+  }
 
   useEffect(() => {
     if (!token || !imageProfile) {
@@ -41,6 +76,9 @@ export default function Timeline() {
       setPost(response.data.posts);
       setUserId(response.data.userId);
       setIsLoading(false);
+      setNextPage(1);
+      setMore(true);
+      setFirstLoad(true);
     });
 
     promise.catch(() => alert("Unable to render posts"));
@@ -104,6 +142,12 @@ export default function Timeline() {
         <Title># {hashtag}</Title>
         <Sides>
           <RightSide>
+          <InfiniteScroll
+              pageStart={0}
+              loadMore={loadPostScroll}
+              hasMore={more ? true : false}
+              loader={firstLoad === true && <LoadingScroll key={0} />}
+            >
             {posts.length > 0 ? (
               posts.map((post, index) => (
                 <FetchPosts
@@ -123,6 +167,7 @@ export default function Timeline() {
             ) : (
               <Load>There are no posts with this tag</Load>
             )}
+            </InfiniteScroll>
           </RightSide>
           <LeftSide>
             <div className="trendingTitle">
