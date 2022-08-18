@@ -92,7 +92,7 @@ const SearchBarSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 176px;
+  height: ${(props) => (props.visible ? "176px" : "")};
   border-radius: 8px;
   background-color: ${(props) => (props.visible ? "#E7E7E7" : "none")};
 
