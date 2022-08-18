@@ -10,6 +10,8 @@ import { followUnfollowUser } from "../services/users";
 import { Oval } from "react-loader-spinner";
 import Modal from "react-modal";
 import SearchBar from "../components/SearchBar";
+import InfiniteScroll from "react-infinite-scroller";
+import LoadingScroll from "../shared/LoadingScroll";
 
 Modal.setAppElement("#root");
 
@@ -27,6 +29,47 @@ export default function User() {
   const [follow, setFollow] = useState(false);
   const [reqProcess, setReqProcess] = useState(false);
   const { id } = useParams();
+  const [more, setMore] = useState(true);
+  const [nextPage, setNextPage] = useState(0);
+  const [firstLoad, setFirstLoad] = useState(false);
+
+  function loadPostScroll() {
+    if (!token || !imageProfile) {
+      setPage(`user/${id}`);
+      navigate("/");
+      return;
+    }
+    if (nextPage === 0) {
+      return;
+    }
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const promise = axios.get(
+      `https://linkr-driven.herokuapp.com/user/posts/${id}?page=${nextPage}`,
+      config
+    );
+    promise.then(async (response) => {
+      setPost([...posts, ...response.data.posts]);
+      setMore(response.data.posts.length > 0 ? true : false);
+      setUserId(response.data.userId);
+      setIsLoading(false);
+      setNextPage(nextPage + 1);
+      const status = await followUnfollowUser(
+        { userId: response.data.userId, followedId: id },
+        "status"
+      );
+      setFollow(status);
+    });
+
+    promise.catch((error) => {
+      console.error("error");
+      setIsModalOpen(true);
+    });
+  }
 
   useEffect(() => {
     if (!token || !imageProfile) {
@@ -45,10 +88,14 @@ export default function User() {
       config
     );
     const promise2 = axios.get(`https://linkr-driven.herokuapp.com/find/${id}`);
+
     promise.then(async (response) => {
       setPost(response.data.posts);
       setUserId(response.data.userId);
       setIsLoading(false);
+      setNextPage(1);
+      setMore(true);
+      setFirstLoad(true);
       const status = await followUnfollowUser(
         { userId: response.data.userId, followedId: id },
         "status"
@@ -190,6 +237,12 @@ export default function User() {
         </Title>
         <Sides>
           <RightSide>
+          <InfiniteScroll
+              pageStart={0}
+              loadMore={loadPostScroll}
+              hasMore={more ? true : false}
+              loader={firstLoad === true && <LoadingScroll key={0} />}
+            >
             {posts.length > 0 ? (
               posts.map((post, index) => (
                 <FetchPosts
@@ -220,6 +273,7 @@ export default function User() {
             ) : (
               <></>
             )}
+            </InfiniteScroll>
           </RightSide>
           <LeftSide>
             <div className="trendingTitle">
