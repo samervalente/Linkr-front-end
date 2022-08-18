@@ -21,7 +21,7 @@ function App() {
     menuDisplay,
     setMenuDisplay,
     page,
-    setPage
+    setPage,
   };
 
   return (
