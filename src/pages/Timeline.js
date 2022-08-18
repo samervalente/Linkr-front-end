@@ -15,7 +15,6 @@ import NewPostsButton from "../shared/newPostsButton";
 import InfiniteScroll from "react-infinite-scroller";
 import LoadingScroll from "../shared/LoadingScroll";
 
-
 Modal.setAppElement("#root");
 
 export default function Timeline() {
@@ -25,7 +24,8 @@ export default function Timeline() {
   const [newCount, setNewCount] = useState(0);
   const [haveNewPost, setHaveNewPost] = useState(false);
   const [userId, setUserId] = useState("");
-  const { token, imageProfile, menuDisplay, setMenuDisplay, setPage } = useContext(UserContext);
+  const { token, imageProfile, menuDisplay, setMenuDisplay, setPage } =
+    useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
   const [trending, setTrending] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,9 +33,9 @@ export default function Timeline() {
   const [more, setMore] = useState(true);
   const [nextPage, setNextPage] = useState(0);
   const [firstLoad, setFirstLoad] = useState(false);
-  const [haveFollowing, setHaveFollowing] = useState(false)
-  //console.log(`Posts atuais: ${countPost}`);
-  //console.log(`Posts novos contados na requisição: ${newCount}`);
+
+  console.log(`Posts atuais: ${countPost}`);
+  console.log(`Posts novos contados na requisição: ${newCount}`);
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -53,8 +53,6 @@ export default function Timeline() {
       setHaveNewPost(false);
       setUserId(response.data.userId);
       setIsLoading(false);
-      setNextPage(1);
-      setMore(true);
     });
 
     promise.catch((error) => {
@@ -62,7 +60,6 @@ export default function Timeline() {
       setIsModalOpen(true);
     });
   }
- 
 
   function loadPostScroll() {
     if (!token || !imageProfile) {
@@ -79,7 +76,6 @@ export default function Timeline() {
       config
     );
     promise.then((response) => {
-      
       setPost([...posts, ...response.data.posts]);
       setMore(response.data.posts.length > 0 ? true : false);
       setUserId(response.data.userId);
@@ -99,7 +95,12 @@ export default function Timeline() {
       config
     );
     promise.then((response) => {
-      setNewCount(response.data.count);
+      const arrayCounts = response.data;
+      let soma = 0;
+      for (let i = 0; i < arrayCounts.length; i++) {
+        soma = soma + Number(arrayCounts[i].count);
+      }
+      setNewCount(soma);
       if (Number(countPost) < Number(newCount)) {
         setHaveNewPost(true);
       } else if (Number(countPost) > Number(newCount)) {
@@ -120,20 +121,16 @@ export default function Timeline() {
     }
 
     const promise = axios.get(
-      //`https://linkr-driven.herokuapp.com/posts`,
-      "https://linkr-driven.herokuapp.com/posts",
+      `https://linkr-driven.herokuapp.com/posts`,
       config
     );
     promise.then((response) => {
-      setHaveFollowing(response.data.haveFolloweds)
       setPost(response.data.posts);
       setUserId(response.data.userId);
       setIsLoading(false);
       setNextPage(1);
       setMore(true);
       setFirstLoad(true);
-      
-      console.log(response.data.posts)
     });
 
     promise.catch((error) => {
@@ -146,8 +143,13 @@ export default function Timeline() {
       config
     );
     promise2.then((response) => {
-      setCountPost(response.data.count);
-      setNewCount(response.data.count);
+      const arrayCounts = response.data;
+      let soma = 0;
+      for (let i = 0; i < arrayCounts.length; i++) {
+        soma = soma + Number(arrayCounts[i].count);
+      }
+      setCountPost(soma);
+      setNewCount(soma);
     });
 
     promise2.catch((error) => {
@@ -155,6 +157,29 @@ export default function Timeline() {
     });
   }, [fetchDependency]);
 
+  const customStyle = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      width: "597px",
+      height: "262px",
+      backgroundColor: "#333333",
+      borderRadius: "50px",
+      color: "white",
+      textAlign: "center",
+      fontFamily: "Lato",
+      fontSize: "25px",
+      padding: "60px",
+      fontWeight: "700",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+    },
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -243,17 +268,17 @@ export default function Timeline() {
                   <Oval color="#6D6D6D" secondaryColor="rgba(0,0,0,0)" />
                 </>
               ) : (
-                <Load>{haveFollowing ? "No posts found from your friends" : "You don't follow anyone yet. Search for new friends!"}</Load>
+                <Load>There are no posts yet</Load>
               )}
             </InfiniteScroll>
             {isModalOpen ? (
-              <Dialog isOpen={isModalOpen} >
+              <Modal isOpen={isModalOpen} style={customStyle}>
                 <h2>
                   An error occured while trying to fetch the posts, please
                   refresh the page
                 </h2>
                 <button onClick={closeModal}>Ok</button>
-              </Dialog>
+              </Modal>
             ) : (
               <></>
             )}
@@ -270,43 +295,6 @@ export default function Timeline() {
     </Conteiner>
   );
 }
-
-const Dialog = styled(Modal)`
-  margin: 50vh;
-  margin-left: 50%;
-  transform: translate(-50%, -50%);
-  width: 597px;
-  height: 262px;
-  background-color: #333333;
-  border-radius: 50px;
-  font-family: Lato;
-  padding: 50px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-
-  h2 {
-    width: 338px;
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 25px;
-    text-align: center;
-    line-height: 31px;
-  }
-
-  button{
-    width: 134px;
-    height: 37px;
-    font-size: 16px;
-    font-weight: 700;
-    border-radius: 5px;
-    border: none;
-    background-color: #ffffff;
-    color: #1877f2;
-    cursor: pointer;
-  }
-`;
 
 const Conteiner = styled.div`
   display: flex;
