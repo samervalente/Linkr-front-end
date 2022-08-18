@@ -143,6 +143,7 @@ export default function Timeline() {
         <Sides>
           <RightSide>
           <InfiniteScroll
+              style={{width: '100%'}}
               pageStart={0}
               loadMore={loadPostScroll}
               hasMore={more ? true : false}

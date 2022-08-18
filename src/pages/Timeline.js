@@ -239,13 +239,14 @@ export default function Timeline() {
               />
             }
             {haveNewPost ? (
-              <div onClick={loadPost}>
+              <MorePosts onClick={loadPost}>
                 <NewPostsButton countNewPosts={newCount - countPost} />
-              </div>
+              </MorePosts>
             ) : (
               <></>
             )}
             <InfiniteScroll
+              style={{width: '100%'}}
               pageStart={0}
               loadMore={loadPostScroll}
               hasMore={more ? true : false}
@@ -358,6 +359,10 @@ const RightSide = styled.div`
   @media (max-width: 611px) {
     width: 100%;
   }
+`;
+
+const MorePosts = styled.div`
+  width: 100%;
 `;
 
 const LeftSide = styled.div`
