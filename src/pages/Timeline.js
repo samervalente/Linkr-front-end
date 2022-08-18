@@ -58,7 +58,7 @@ export default function Timeline() {
       setIsModalOpen(true);
     });
   }
-
+  console.log(posts)
   function loadPostScroll() {
     if (!token || !imageProfile) {
       setPage("timeline");

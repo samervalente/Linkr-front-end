@@ -70,7 +70,7 @@ export default function Timeline() {
       },
     };
     const promise = axios.get(
-      `https://linkr-driven.herokuapp.com	/posts/${name}`,
+      `https://linkr-driven.herokuapp.com/posts/${name}`,
       config
     );
     promise.then((response) => {

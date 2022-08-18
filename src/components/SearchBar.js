@@ -12,6 +12,7 @@ export default function SearchBar({ fetchDependency, setDependency }) {
       const [users, setUsers] = useState([]);
    
       useEffect(() => {
+        console.log(userId)
        const userId = localStorage.getItem("userId")
         async function fetchData() {
           const users = await getUsers(value, userId);

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 function getUrlAPI(endpoint) {
-  const local = `http://localhost:4000/${endpoint}`;
+  const local = `https://linkr-driven.herokuapp.com/${endpoint}`;
   return `https://linkr-driven.herokuapp.com/${endpoint}`;
 }
 
