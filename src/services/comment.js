@@ -11,7 +11,6 @@ export async function sendComment(id, body, config) {
       return res.status;
     })
     .catch((err) => {
-      console.log(err);
       return err.response.data;
     });
 }
@@ -23,7 +22,6 @@ export async function fetchComments(id, config) {
       return res.data;
     })
     .catch((err) => {
-      console.log(err);
       return err.response.data;
     });
 }

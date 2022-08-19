@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { TiPencil } from "react-icons/ti";
 import { CgTrash } from "react-icons/cg";
 import { AiOutlineComment } from "react-icons/ai";
-import { AiFillHeart } from "react-icons/ai";
 import { Oval } from "react-loader-spinner";
 import { useState, useContext, useRef, useEffect } from "react";
 import UserContext from "../context/UserContext";
@@ -147,7 +146,6 @@ export default function FetchPosts({
     });
 
     promise.catch((error) => {
-      console.log(error);
       setIsModalOpen(false);
       alert("It was not possible to delete the post");
     });
@@ -165,9 +163,9 @@ export default function FetchPosts({
     <PostBox>
       <LeftSide>
         <ClickSyle onClick={redirectUser}>
-          <img src={post.imageProfile} />
+          <img src={post.imageProfile} alt='user' />
         </ClickSyle>
-        <Likes post={post} />
+        <Likes post={post} setDependency={setDependency} fetchDependency={fetchDependency} />
         <CommentIcon onClick={() => setOpenComment(!openComment)}/>
         <span>{comments.length} comments</span>
         <Reposts post={post} setDependency={setDependency} fetchDependency={fetchDependency} />
@@ -222,7 +220,7 @@ export default function FetchPosts({
               <h4>{post.url}</h4>
             </Texts>
             <Image>
-              <img src={post.urlImage}></img>
+              <img src={post.urlImage} alt='user'></img>
             </Image>
           </a>
         </LinkPart>
