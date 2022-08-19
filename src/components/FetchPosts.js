@@ -33,7 +33,7 @@ export default function FetchPosts({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [comments, setComments] = useState([]);
   const [openComment, setOpenComment] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
 
   //COMMENT START
@@ -134,6 +134,8 @@ export default function FetchPosts({
       },
     };
 
+    setIsLoading(true)
+
     const promise = axios.delete(
       `https://linkr-driven.herokuapp.com	/posts/${post.id}`,
       config
@@ -141,6 +143,7 @@ export default function FetchPosts({
     promise.then((response) => {
       setIsModalOpen(false);
       setDependency(!fetchDependency);
+      setIsLoading(false)
     });
 
     promise.catch((error) => {
@@ -204,10 +207,12 @@ export default function FetchPosts({
                 <No onClick={closeModal}>No, go back</No>
                 <Yes onClick={deletePost}>Yes, delete it</Yes>
               </div>
+              <p>{isLoading ? <Oval fontSize="10px" color="#6D6D6D" secondaryColor="rgba(0,0,0,0)" /> : ""}</p>        
             </Dialog>
           ) : (
             <></>
           )}
+    
         </TopBox>
         <LinkPart>
           <a href={post.url} target="_blank">
@@ -271,10 +276,10 @@ const Dialog = styled(Modal)`
   background-color: #333333;
   border-radius: 50px;
   font-family: Lato;
-  padding: 50px;
+  padding: 25px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  
   align-items: center;
 
   h2 {
@@ -284,12 +289,18 @@ const Dialog = styled(Modal)`
     font-size: 25px;
     text-align: center;
     line-height: 31px;
+    margin-bottom: 20px;
   }
 
   div {
     width: 300px;
     display: flex;
     justify-content: space-between;
+  }
+
+  p{
+    margin-top: 20px;
+    margin-left: 225px;
   }
 `;
 
