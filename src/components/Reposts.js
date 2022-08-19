@@ -43,12 +43,26 @@ export default function Reposts({post, setDependency, fetchDependency}){
       promise.catch((error) => {
         console.error("error");
       });
-      }
+    }
+
+    useEffect(() => {
+      console.log("entrou")
+      const promise = axios.get(`http://localhost:4000/repostscount/${post.id}`);
+      promise.then((response) => {
+        setRepostCount(response.data);
+        console.log(response.data)
+      });
+
+      promise.catch((error) => {
+        console.error("error");
+      });
+
+    }, [fetchDependency])
 
     return(
         <>
             <Repost onClick={openModal} />
-            <span>{repostCount} re-posts</span>
+            <span>{repostCount.qtdReposts ? repostCount.qtdReposts : 0} re-posts</span>
             {isModalOpen ? (
                 <Dialog isOpen={isModalOpen}>
                 <h2>Do you want to re-post this link?</h2>
