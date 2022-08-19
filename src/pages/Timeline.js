@@ -7,7 +7,7 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
 import axios from "axios";
-import { getPosts, getTrending } from "../services/post";
+import { getTrending } from "../services/post";
 import { Oval } from "react-loader-spinner";
 import Modal from "react-modal";
 import SearchBar from "../components/SearchBar";
@@ -24,8 +24,7 @@ export default function Timeline() {
   const [newCount, setNewCount] = useState(0);
   const [haveNewPost, setHaveNewPost] = useState(false);
   const [userId, setUserId] = useState("");
-  const { token, imageProfile, menuDisplay, setMenuDisplay, setPage } =
-    useContext(UserContext);
+  const { token, imageProfile, menuDisplay, setMenuDisplay, setPage } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true);
   const [trending, setTrending] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,8 +34,6 @@ export default function Timeline() {
   const [firstLoad, setFirstLoad] = useState(false);
   const [haveFollowing, setHaveFollowing] = useState(false)
 
-  console.log(`Posts atuais: ${countPost}`);
-  console.log(`Posts novos contados na requisição: ${newCount}`);
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -57,7 +54,6 @@ export default function Timeline() {
     });
 
     promise.catch((error) => {
-      console.error("error");
       setIsModalOpen(true);
     });
   }
@@ -85,7 +81,6 @@ export default function Timeline() {
     });
 
     promise.catch((error) => {
-      console.error("error");
       setIsModalOpen(true);
     });
   }
@@ -110,7 +105,7 @@ export default function Timeline() {
     });
 
     promise.catch((error) => {
-      console.error("error");
+      setIsModalOpen(true);
     });
   }, 15000);
 
@@ -136,7 +131,6 @@ export default function Timeline() {
     });
 
     promise.catch((error) => {
-      console.error("error");
       setIsModalOpen(true);
     });
 
@@ -155,7 +149,7 @@ export default function Timeline() {
     });
 
     promise2.catch((error) => {
-      console.error("error");
+      setIsModalOpen(true);
     });
   }, [fetchDependency]);
 
@@ -235,7 +229,6 @@ export default function Timeline() {
             {
               <CreatePost
                 imageProfile={imageProfile}
-                setTrending={setTrending}
                 setDependency={setDependency}
                 fetchDependency={fetchDependency}
               />

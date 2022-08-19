@@ -66,7 +66,6 @@ export default function User() {
     });
 
     promise.catch((error) => {
-      console.error("error");
       setIsModalOpen(true);
     });
   }
@@ -102,9 +101,7 @@ export default function User() {
       );
       setFollow(status);
     });
-    console.log(userId);
     promise.catch((error) => {
-      console.error("error");
       setIsModalOpen(true);
     });
 
@@ -113,7 +110,6 @@ export default function User() {
     });
 
     promise2.catch((error) => {
-      console.error("error");
       setIsModalOpen(true);
     });
   }, [fetchDependency]);

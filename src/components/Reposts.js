@@ -9,7 +9,6 @@ Modal.setAppElement("#root");
 
 export default function Reposts({ post, setDependency, fetchDependency }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [repost, setRepost] = useState([]);
   const { token } = useContext(UserContext);
   const [repostCount, setRepostCount] = useState(0);
 
@@ -36,30 +35,27 @@ export default function Reposts({ post, setDependency, fetchDependency }) {
       config
     );
     promise.then((response) => {
-      setRepost([]);
       setDependency(!fetchDependency);
       setIsModalOpen(false);
     });
 
     promise.catch((error) => {
-      console.error("error");
+      alert("It was not possible to repost the post");
     });
   }
 
   useEffect(() => {
-    console.log("entrou");
     const promise = axios.get(
       `https://linkr-driven.herokuapp.com/repostscount/${post.id}`
     );
     promise.then((response) => {
       setRepostCount(response.data);
-      console.log(response.data);
     });
 
     promise.catch((error) => {
-      console.error("error");
+      alert("An error has occurred");
     });
-  }, [fetchDependency]);
+  }, [post]);
 
   return (
     <>

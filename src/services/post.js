@@ -11,7 +11,6 @@ export async function sendPost(body, config) {
       return res.status;
     })
     .catch((err) => {
-      console.log(err);
       return err.response.data;
     });
 }
@@ -42,7 +41,6 @@ export async function getPostsByHashtagName(hashtagName) {
   return axios
     .get(getUrlAPI(`posts/${hashtagName}`))
     .then((res) => {
-      console.log(res.data);
       return res.data;
     })
     .catch((err) => {
@@ -57,7 +55,6 @@ export async function updatePost(id, body, config) {
       return res.status;
     })
     .catch((err) => {
-      console.log(err);
       return err.response.data;
     });
 }

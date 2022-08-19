@@ -17,7 +17,6 @@ export default function RegisterForm(){
        
        setRegisterProcess(true)
        const response =  await sendRegisterData(userData)
-       console.log(response)
        setRegisterProcess(false)
        response === 201 ? navigate("/") : alert(response)
     }

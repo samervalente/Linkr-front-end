@@ -6,7 +6,7 @@ import { useState, useContext, useEffect } from "react";
 import UserContext from "../context/UserContext";
 import ReactTooltip from "react-tooltip";
 
-export default function Likes({ post }) {
+export default function Likes({ post, setDependency, fetchDependency }) {
   const [isLiked, setIsLiked] = useState(false);
   const [likes, setLikes] = useState(0);
   const { token } = useContext(UserContext);
@@ -47,15 +47,15 @@ export default function Likes({ post }) {
     });
 
     promise.catch((error) => {
-      console.error("error");
+      alert("An error has occurred");
     });
 
     promise2.catch((error) => {
-      console.error("error");
+      alert("An error has occurred");
     });
 
     promise3.catch((error) => {
-      console.error("error");
+      alert("An error has occurred");
     });
   }, [post]);
 
@@ -69,13 +69,14 @@ export default function Likes({ post }) {
     );
     promise.then((response) => {
       if (response.status === 201) {
+        setDependency(!fetchDependency);
         setIsLiked(true);
         setLikes(likes + 1);
       }
     });
 
     promise.catch((error) => {
-      console.error("error");
+      alert("It was not possible to like the post");
     });
 
     const promise2 = axios.get(
@@ -87,7 +88,7 @@ export default function Likes({ post }) {
       setNames(nameResponse);
     });
     promise2.catch((error) => {
-      console.error("error");
+      alert("It was not possible to like the post");
     });
   }
 
@@ -98,6 +99,7 @@ export default function Likes({ post }) {
     );
     promise.then((response) => {
       if (response.status === 200) {
+        setDependency(!fetchDependency);
         setIsLiked(false);
         setLikes(likes - 1);
         const promise2 = axios.get(
@@ -110,13 +112,13 @@ export default function Likes({ post }) {
           setNames(nameResponse);
         });
         promise2.catch((error) => {
-          console.error("error");
+          alert("It was not possible to dislike the post");
         });
       }
     });
 
     promise.catch((error) => {
-      console.error("error");
+      alert("It was not possible to dislike the post");
     });
   }
 

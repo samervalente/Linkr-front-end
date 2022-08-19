@@ -114,6 +114,7 @@ export default function Timeline() {
     promise.then((response) => {
       setPost(response.data.posts);
     });
+    promise.catch(() => alert("Unable to render posts"));
   }
 
   const trendingTopics =

@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { useState, useContext } from 'react';
 import UserContext from "../context/UserContext";
-import { sendPost, getPosts, getPostsByHashtagName, getTrending } from '../services/post';
+import { sendPost } from '../services/post';
 
-export default function CreatePost({ imageProfile, setTrending, setDependency, fetchDependency }) {
+export default function CreatePost({ imageProfile, setDependency, fetchDependency }) {
     const [loading, setLoading] = useState(false);
     const [url, setUrl] = useState('');
     const [text, setText] = useState('');
@@ -90,7 +90,6 @@ const Conteiner = styled.div`
 `;
 
 const Form = styled.form`
-   
     display: flex;
     width: 100%;
     flex-direction: column;

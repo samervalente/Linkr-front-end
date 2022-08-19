@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { AiOutlineDown, AiOutlineUp, AiOutlineSearch } from "react-icons/ai";
-import { useContext, useEffect } from "react";
+import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
+import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
 import SearchBar from "./SearchBar";
