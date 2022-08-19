@@ -7,83 +7,87 @@ import UserContext from "../context/UserContext";
 
 Modal.setAppElement("#root");
 
-export default function Reposts({post, setDependency, fetchDependency}){
+export default function Reposts({ post, setDependency, fetchDependency }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [repost, setRepost] = useState([]);
+  const { token } = useContext(UserContext);
+  const [repostCount, setRepostCount] = useState(0);
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [repost, setRepost] = useState([]); 
-    const {token} = useContext(UserContext);
-    const [repostCount, setRepostCount] = useState(0);
-  
-    function openModal() {
-        setIsModalOpen(true);
-      }
+  function openModal() {
+    setIsModalOpen(true);
+  }
 
-    function closeModal() {
+  function closeModal() {
     setIsModalOpen(false);
-    }
+  }
 
-    function getReposts(){
-    
-      const body = {};
+  function getReposts() {
+    const body = {};
 
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-  
-      const promise = axios.post(`https://linkr-driven.herokuapp.com/reposts/${post.id}`, body, config);
-      promise.then((response) => {
-        setRepost([]);
-        setDependency(!fetchDependency);
-        setIsModalOpen(false)
-        
-      });
-  
-      promise.catch((error) => {
-        console.error("error");
-      });
-    }
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
 
-    useEffect(() => {
-      console.log("entrou")
-      const promise = axios.get(`http://localhost:4000/repostscount/${post.id}`);
-      promise.then((response) => {
-        setRepostCount(response.data);
-        console.log(response.data)
-      });
+    const promise = axios.post(
+      `https://linkr-driven.herokuapp.com/reposts/${post.id}`,
+      body,
+      config
+    );
+    promise.then((response) => {
+      setRepost([]);
+      setDependency(!fetchDependency);
+      setIsModalOpen(false);
+    });
 
-      promise.catch((error) => {
-        console.error("error");
-      });
+    promise.catch((error) => {
+      console.error("error");
+    });
+  }
 
-    }, [fetchDependency])
+  useEffect(() => {
+    console.log("entrou");
+    const promise = axios.get(
+      `https://linkr-driven.herokuapp.com/repostscount/${post.id}`
+    );
+    promise.then((response) => {
+      setRepostCount(response.data);
+      console.log(response.data);
+    });
 
-    return(
-        <>
-            <Repost onClick={openModal} />
-            <span>{repostCount.qtdReposts ? repostCount.qtdReposts : 0} re-posts</span>
-            {isModalOpen ? (
-                <Dialog isOpen={isModalOpen}>
-                <h2>Do you want to re-post this link?</h2>
-                <div>
-                    <No onClick={closeModal}>No, cancel</No>
-                    <Yes onClick={getReposts}>Yes, share!</Yes>
-                </div>
-                </Dialog>
-            ) : (
-                <></>
-            )}
-        </>
-    )
+    promise.catch((error) => {
+      console.error("error");
+    });
+  }, [fetchDependency]);
+
+  return (
+    <>
+      <Repost onClick={openModal} />
+      <span>
+        {repostCount.qtdReposts ? repostCount.qtdReposts : 0} re-posts
+      </span>
+      {isModalOpen ? (
+        <Dialog isOpen={isModalOpen}>
+          <h2>Do you want to re-post this link?</h2>
+          <div>
+            <No onClick={closeModal}>No, cancel</No>
+            <Yes onClick={getReposts}>Yes, share!</Yes>
+          </div>
+        </Dialog>
+      ) : (
+        <></>
+      )}
+    </>
+  );
 }
 
 const Repost = styled(BiRepost)`
-    color: #FFFFFF;
-    width: 30px;
-    height: 25px;
-    margin-top: 20px;
-    cursor: pointer;
+  color: #ffffff;
+  width: 30px;
+  height: 25px;
+  margin-top: 20px;
+  cursor: pointer;
 `;
 
 const Dialog = styled(Modal)`
@@ -140,4 +144,3 @@ const Yes = styled.button`
   color: #ffffff;
   cursor: pointer;
 `;
-
